@@ -9,7 +9,7 @@ const index = ({
   description,
   tags,
 }) => (
-  <div className="w-[500px] m-4 bg-white rounded-xl max-h-screen overflow-y-auto">
+  <div className="w-[40%] m-4 bg-white rounded-xl max-h-screen overflow-y-auto">
     <div className="m-4">
       <h2>{`${number}. ${title}`}</h2>
     </div>

@@ -15,10 +15,7 @@ const index = ({ problem }) => (
       tags={problem.tags}
     />
     <div className="grow">
-      <Editor
-        templates={problem.templates}
-        availableLanguage={problem.availableLanguage}
-      />
+      <Editor templates={problem.templates} />
       <OutputPanel testcases={problem.testcases} />
     </div>
   </main>
