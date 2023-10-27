@@ -209,26 +209,26 @@ export default function index() {
   const [problems, setProblems] = useState(testData.problems);
 
   return (
-    <table className="border-separate border-spacing-x-0 border-spacing-2 w-[1000px] ">
+    <table className="border-separate border-spacing-y-4 mx-11 text-xl  rounded-[20px] border-4 w-[1000px] ">
       <thead>
         <tr>
-          <th>문제 번호</th>
-          <th>상태</th>
-          <th>문제 제목</th>
-          <th>정답률</th>
-          <th>난이도</th>
+          <th className="py-2 border-black border-b-2">번호</th>
+          <th className="py-2 border-black border-b-2">상태</th>
+          <th className="py-2 border-black border-b-2">제목</th>
+          <th className="py-2 border-black border-b-2">정답률</th>
+          <th className="py-2 border-black border-b-2">난이도</th>
         </tr>
       </thead>
       <tbody>
         {problems.map((problem) => (
-          <tr key={problem.id} className="my-5 bg-[#D9D9D9]">
-            <td>{problem.number}</td>
-            <td>{problem.status}</td>
-            <td>
+          <tr key={problem.id} className=" bg-[#ebeaea] rounded">
+            <td className="px-2 py-3 text-center">{problem.number}</td>
+            <td className="px-2 text-center">{problem.status}</td>
+            <td className="w-[600px] px-2">
               <Link to={`/problems/${problem.number}`}>{problem.title}</Link>
             </td>
-            <td>{problem.acceptance}</td>
-            <td>{problem.difficulty}</td>
+            <td className="px-2 text-center">{`${problem.acceptance}%`}</td>
+            <td className="px-2 text-center">{problem.difficulty}</td>
           </tr>
         ))}
       </tbody>
