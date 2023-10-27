@@ -209,7 +209,7 @@ export default function index() {
   const [problems, setProblems] = useState(testData.problems);
 
   return (
-    <table className="border-separate border-spacing-x-0 border-spacing-2">
+    <table className="border-separate border-spacing-x-0 border-spacing-2 w-[1000px] ">
       <thead>
         <tr>
           <th>문제 번호</th>
