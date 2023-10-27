@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from '../../UI/molecules/Navigation/Navbar';
+import Header from '../../UI/molecules/Navigation/Header';
 import ProblemList from '../../UI/molecules/Problem/ProblemList';
 import Footer from '../../UI/molecules/Navigation/Footer';
 
 const index = () => (
   <div className="min-h-screen w-full flex flex-col">
-    <Navbar />
+    <Header />
     <div className="flex-grow flex flex-col  justify-center">
       <ProblemList />
     </div>
