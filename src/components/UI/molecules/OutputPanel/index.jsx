@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../atoms/Input/Button';
 
-const index = ({ testcases, handleClickRunButton }) => {
+const index = ({
+  testcases,
+  handleClickRunButton,
+  handleClickSubmitButton,
+}) => {
   const [hasRun, setHasRun] = useState(false);
   useEffect(() => {
     setHasRun('isAnswer' in testcases[0]);
@@ -38,7 +42,10 @@ const index = ({ testcases, handleClickRunButton }) => {
           >
             실행
           </Button>
-          <Button className="rounded-xl px-4 py-2 bg-green-500 hover:bg-green-600">
+          <Button
+            className="rounded-xl px-4 py-2 bg-green-500 hover:bg-green-600"
+            onClick={handleClickSubmitButton}
+          >
             제출
           </Button>
         </div>

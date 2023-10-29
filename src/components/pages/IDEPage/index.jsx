@@ -6,6 +6,7 @@ import constantProblem from './constant';
 // API
 import runTestCode from '../../../utils/runTestCodeApi';
 import getProblem from '../../../utils/problemApi';
+import postSubmit from '../../../utils/submitCodeApi';
 
 // problem loading
 function ProblemPage() {
@@ -25,9 +26,14 @@ function ProblemPage() {
   const handleClickRunButton = () => {
     runTestCode(`/api/v1/problems/${problem.number}/code/test`, runRequest)
       .then((response) => response.data)
-      .then((data) =>
-        setProblem((prev) => ({ ...prev, testcases: data})),
-      );
+      .then((data) => setProblem((prev) => ({ ...prev, testcases: data })));
+  };
+
+  // submit code button
+  const handleClickSubmitButton = () => {
+    postSubmit(`/api/v1/problems/${problem.number}/code/submit`, runRequest)
+      .then((response) => response.data)
+      .then((data) => alert(`정답인가요? ${data.isAnswer}`));
   };
 
   return (
@@ -35,6 +41,7 @@ function ProblemPage() {
       problem={problem}
       setRunRequest={setRunRequest}
       handleClickRunButton={handleClickRunButton}
+      handleClickSubmitButton={handleClickSubmitButton}
     />
   );
 }
