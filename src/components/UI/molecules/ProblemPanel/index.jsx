@@ -30,6 +30,14 @@ const index = ({
       <h3>출력</h3>
       <p>placeholder</p>
     </div>
+    <div className="flex flex-col gap-4 m-4">
+      <h3>태그</h3>
+      <div className="flex flex-row gap-4">
+        {tags.map((tag) => (
+          <p className="m-1 py-1 px-2 bg-slate-600 text-white rounded-xl">{tag}</p>
+        ))}
+      </div>
+    </div>
   </div>
 );
 
