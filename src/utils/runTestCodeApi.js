@@ -79,8 +79,8 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function getProblem(apiUrl) {
-    return call(apiUrl, 'GET');
-  }
+async function postTest(apiUrl, data) {
+  return call(apiUrl, 'POST', { data });
+}
 
-export default getProblem;
+export default postTest;

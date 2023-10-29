@@ -3,7 +3,7 @@ import ProblemPanel from '../molecules/ProblemPanel';
 import Editor from '../molecules/Editor';
 import OutputPanel from '../molecules/OutputPanel';
 
-const index = ({ problem }) => (
+const index = ({ problem, handleClickRunButton, setRunRequest }) => (
   <main className="flex flex-row bg-[#E7E7E7] h-screen">
     <ProblemPanel
       number={problem.number}
@@ -15,8 +15,15 @@ const index = ({ problem }) => (
       tags={problem.tags}
     />
     <div className="grow">
-      <Editor defaultCodes={problem.defaultCodes} problemId={problem.number} />
-      <OutputPanel testcases={problem.testcases} />
+      <Editor
+        defaultCodes={problem.defaultCodes}
+        problemNumber={problem.number}
+        setRunRequest={setRunRequest}
+      />
+      <OutputPanel
+        testcases={problem.testcases}
+        handleClickRunButton={handleClickRunButton}
+      />
     </div>
   </main>
 );

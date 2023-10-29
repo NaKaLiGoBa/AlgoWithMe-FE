@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Button({ children, type = 'button', className = '' }) {
+function Button({ children, type = 'button', className = '', onClick }) {
   const defaultClasses = 'flex items-center justify-center w-full h-8 rounded-2xl cursor-pointer shadow-lg hover:shadow-xl';
 
   const colorClasses = className.includes('bg-white') ? '' : 'bg-blue-400 hover:bg-blue-600 text-white';
@@ -8,7 +8,7 @@ function Button({ children, type = 'button', className = '' }) {
   const combinedClasses = `${defaultClasses} ${colorClasses} ${className}`;
   
   return (
-    <button className={combinedClasses} type={type}>
+    <button className={combinedClasses} type={type} onClick={onClick}>
       {children}
     </button>
   );
