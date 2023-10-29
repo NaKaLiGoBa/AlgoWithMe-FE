@@ -1,32 +1,49 @@
-import React, { useState } from 'react';
-import ProblemPanel from '../../UI/molecules/ProblemPanel';
-import Editor from '../../UI/molecules/Editor';
-import OutputPanel from '../../UI/molecules/OutputPanel';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import IDETemplate from '../../UI/templates/IDETemplate';
 import constantProblem from './constant';
 
-const index = () => {
+// API
+import runTestCode from '../../../utils/runTestCodeApi';
+import getProblem from '../../../utils/problemApi';
+import postSubmit from '../../../utils/submitCodeApi';
+
+// problem loading
+function ProblemPage() {
+  const { problemId } = useParams();
   const [problem, setProblem] = useState(constantProblem);
+  if (!problem) {
+    return <div>Loading...</div>;
+  }
+  useEffect(() => {
+    getProblem(`/api/v1/problems/${problemId}`)
+      .then((response) => response.data)
+      .then((data) => setProblem(data));
+  }, [problemId]);
+
+  // run test button
+  const [runRequest, setRunRequest] = useState('');
+  const handleClickRunButton = () => {
+    runTestCode(`/api/v1/problems/${problem.number}/code/test`, runRequest)
+      .then((response) => response.data)
+      .then((data) => setProblem((prev) => ({ ...prev, testcases: data })));
+  };
+
+  // submit code button
+  const handleClickSubmitButton = () => {
+    postSubmit(`/api/v1/problems/${problem.number}/code/submit`, runRequest)
+      .then((response) => response.data)
+      .then((data) => alert(`정답인가요? ${data.isAnswer}`));
+  };
 
   return (
-    <main className="flex flex-row bg-[#E7E7E7] h-screen">
-      <ProblemPanel
-        number={problem.number}
-        title={problem.title}
-        difficulty={problem.difficulty}
-        status={problem.status}
-        acceptance={problem.acceptance}
-        description={problem.description}
-        tags={problem.tags}
-      />
-      <div className="grow">
-        <Editor
-          templates={problem.templates}
-          availableLanguage={problem.availableLanguage}
-        />
-        <OutputPanel testcases={problem.testcases} />
-      </div>
-    </main>
+    <IDETemplate
+      problem={problem}
+      setRunRequest={setRunRequest}
+      handleClickRunButton={handleClickRunButton}
+      handleClickSubmitButton={handleClickSubmitButton}
+    />
   );
-};
+}
 
-export default index;
+export default ProblemPage;
