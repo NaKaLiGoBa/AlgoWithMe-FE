@@ -1,7 +1,5 @@
-import React from 'react'
+import React from 'react';
 
-export default function index({children, className}) {
-  return (
-    <div className={className}>{children}</div>
-  )
+export default function index({ children, className }) {
+  return <p className={className}>{children}</p>;
 }

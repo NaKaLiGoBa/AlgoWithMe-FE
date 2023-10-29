@@ -7,7 +7,7 @@ function Alert({ type = 'info', message, className = '' }) {
     error: 'bg-red-100 border-red-500 text-red-700'
   };
 
-  const defaultClasses = `${baseClasses[type]} border p-4 rounded`;
+  const defaultClasses = `${baseClasses[type]} border p-1 rounded`;
 
   const combinedClasses = `${defaultClasses} ${className}`;
 
