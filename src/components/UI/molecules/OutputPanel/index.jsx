@@ -5,7 +5,7 @@ const index = ({ testcases }) => (
   <div className="p-2 m-2 bg-white rounded-xl h-[200px] overflow-y-auto">
     <div>
       {testcases.map((testcase) => (
-        <div className="bg-gray-200 p-1 m-1">
+        <div className="bg-gray-200 p-1 m-1 border-2">
           <h2>case {testcase.number + 1}</h2>
           <h3>Inputs</h3>
           {testcase.inputs.map((caseInput) => (

@@ -2,19 +2,26 @@ import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import DropdownMenu from '../../atoms/Input/Dropdown';
 
-function Index({ defaultCodes }) {
+function Index({ defaultCodes, problemId }) {
   const availableLanguages = Object.keys(defaultCodes);
-  const [editorState, setEditorState] = useState({
+
+  // 컴포넌트가 마운트될 때 로컬 스토리지 값을 체크하고, 없으면 defaultCodes로 초기화
+  const storedState = JSON.parse(
+    localStorage.getItem(`editorState_${problemId}`),
+  );
+  const initialEditorState = storedState || {
     ...defaultCodes,
     currentLanguage: availableLanguages[0],
-  });
+  };
+
+  const [editorState, setEditorState] = useState(initialEditorState);
 
   useEffect(() => {
-    setEditorState((prev) => ({
-      ...prev,
-      ...defaultCodes,
-    }));
-  }, [defaultCodes]);
+    localStorage.setItem(
+      `editorState_${problemId}`,
+      JSON.stringify(editorState),
+    );
+  }, [editorState, problemId]);
 
   const handleSelectLanguage = (selectedLanguage) => {
     setEditorState((prev) => ({ ...prev, currentLanguage: selectedLanguage }));
