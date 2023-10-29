@@ -42,7 +42,7 @@ function Signin() {
           </Link>
         </div>
         <Link to="/homepage">
-          <Button type="submit" className='mb-8'>로그인</Button>
+          <Button type="submit" className='w-full mb-8'>로그인</Button>
         </Link>
         <div className='text-center'>
         <Text>
@@ -52,7 +52,7 @@ function Signin() {
         <Link to="/signup">
           <Button
             type="submit"
-            className="bg-white border border-blue-600 hover:bg-blue-200 text-blue-500 mt-20"
+            className="w-full bg-white border border-blue-600 hover:bg-blue-200 text-blue-500 mt-20"
           >
             계정 만들기
           </Button>
