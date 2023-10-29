@@ -1,28 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
 import Text from '../../../atoms/Text/Text';
 import Input from '../../../atoms/Input/Input';
-import Alert from "../../Feedback/Alert";
+import Alert from '../../Feedback/Alert';
 
 function Signup() {
-  const [loginValues, setLoginValues] = useState({
-    email: '',
-    password: '',
-    checkpassword: '',
-    name: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [checkpassword, setCheckPassword] = useState('');
+  const [nickname, setNickname] = useState('');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setLoginValues((prevValues) => ({ ...prevValues, [name]: value }));
-  };
+  // 프론트에서 테스트 해보기위한 코드
+  const mock = new MockAdapter(axios);
+  mock.onPost('http://50.19.246.89:8080/api/v1/auth/email').reply(200, {
+    message: '인증번호가 전송되었습니다.',
+  });
+  mock.onPost('http://50.19.246.89:8080/api/v1/auth/email/check').reply(200, {
+    message: '인증 코드 확인 성공!',
+  });
+  mock.onPost('http://50.19.246.89:8080/api/v1/auth/signup').reply(200, {
+    message: '회원가입 성공!',
+  });
+  mock.onPost('http://50.19.246.89:8080/api/v1/auth/nickname').reply((config) => {
+    const requestData = JSON.parse(config.data);
+    if (requestData.nickname === 'asd') {
+      return [200, { message: '닉네임 중복' }];
+    }
+    return [200, { message: '회원가입 성공!' }];
+  });
+  
 
   const navigate = useNavigate();
-  const [alertMessage, setAlertMessage] = useState(null);
-  const [alertType, setAlertType] = useState('info');
+
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [verificationFeedback, setVerificationFeedback] = useState('');
+  const [passwordValidityMessage, setPasswordValidityMessage] = useState('');
+  const [passwordCheckMessage, setPasswordCheckMessage] = useState('');
+  const [nicknameFeedback, setNicknameFeedback] = useState('');
 
   // 이메일 인증
   const [verificationCode, setVerificationCode] = useState('');
@@ -37,7 +55,7 @@ function Signup() {
       // 이메일 인증번호 발송 API 호출
       const response = await axios.post(
         'http://50.19.246.89:8080/api/v1/auth/email',
-        { email: loginValues.email },
+        { email: email },
       );
       if (response.data && response.data.message) {
         // 인증번호가 성공적으로 발송된 경우
@@ -49,16 +67,13 @@ function Signup() {
         setSeconds(0); // 초 리셋
       } else {
         // API 호출은 성공했지만 인증번호 발송에 실패한 경우
-        setAlertType('error');
-        setAlertMessage(
+        setVerificationFeedback(
           '인증번호를 전송하는 데 실패했습니다. 다시 시도해주세요.',
         );
       }
     } catch (error) {
       // API 호출 자체가 실패한 경우
       console.error('Email verification error!', error);
-      setAlertType('error');
-      setAlertMessage('이메일 인증 중 오류가 발생하였습니다.');
     }
   };
 
@@ -68,7 +83,7 @@ function Signup() {
       const response = await axios.post(
         'http://50.19.246.89:8080/api/v1/auth/email/check',
         {
-          email: loginValues.email,
+          email: email,
           authNumber: verificationCode,
         },
       );
@@ -82,8 +97,7 @@ function Signup() {
       }
     } catch (error) {
       console.error('Code verification error!', error);
-      setAlertType('error');
-      setAlertMessage('인증 코드 확인 중 오류가 발생하였습니다.');
+      setVerificationFeedback('인증 코드 확인 중 오류가 발생하였습니다.');
     }
   };
 
@@ -93,44 +107,65 @@ function Signup() {
 
   // 전체 필드 확인
   const checkSignup = async () => {
+    // 닉네임 중복 확인
+    try {
+      const nicknameResponse = await axios.post(
+        'http://50.19.246.89:8080/api/v1/auth/nickname',
+        {
+          nickname: nickname,
+        },
+      );
+      if (
+        nicknameResponse.data &&
+        nicknameResponse.data.message === '닉네임 중복'
+      ) {
+        setNicknameFeedback('이미 사용 중인 닉네임입니다.');
+        return; // 중복 닉네임이므로 회원가입 진행 중단
+      }
+    } catch (error) {
+      console.error('Nickname verification error!', error);
+      setNicknameFeedback('닉네임 확인 중 오류가 발생했습니다.');
+      return; // 오류가 발생했으므로 회원가입 진행 중단
+    }
+    // 비밀번호 유효성 검사
+    if (password.length < 6 || password.length > 16) {
+      setPasswordValidityMessage('비밀번호는 6~16자리로 입력해주세요.');
+    } else {
+      setPasswordValidityMessage(''); // 유효하면 메세지 초기화
+    }
     // 비밀번호 일치 확인
-    if (loginValues.password !== loginValues.checkpassword) {
-      setAlertType('error');
-      setAlertMessage('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-      return;
+    if (password !== checkpassword) {
+      setPasswordCheckMessage('비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordCheckMessage(''); // 일치하면 메세지 초기화
     }
     // 모든 필드가 채워져 있는지 확인
-    if (!loginValues.email || !loginValues.password || !loginValues.name) {
-      setAlertType('error');
-      setAlertMessage('입력하지 않은 사항이 있습니다.');
+    if (!email || !password || !nickname) {
+      setFeedbackMessage('입력하지 않은 사항이 있습니다.');
       return;
     }
     // 이메일, 인증번호 확인
     if (!successEmail || !successCode) {
-      setAlertType('error');
-      setAlertMessage('이메일 및 코드를 인증해주세요');
+      setFeedbackMessage('이메일 및 코드를 인증해주세요');
       return;
     }
     try {
       const response = await axios.post(
         'http://50.19.246.89:8080/api/v1/auth/signup',
         {
-          email: loginValues.email,
-          password: loginValues.password,
-          name: loginValues.name,
+          email: email,
+          password: password,
+          name: nickname,
         },
       );
       if (response.data && response.data.message) {
         alert(response.data.message);
         navigate('/signin');
       } else {
-        setAlertType('error');
-        setAlertMessage('회원가입에 실패하였습니다.');
+        setFeedbackMessage('회원가입에 실패하였습니다.');
       }
     } catch (error) {
-      console.error('Signup error!', error);
-      setAlertType('error');
-      setAlertMessage('회원가입 중 오류가 발생하였습니다.');
+      setFeedbackMessage('회원가입 중 오류가 발생하였습니다.');
     }
     // 서버 요청 추가 할 사항 있으면 할 것
   };
@@ -163,7 +198,6 @@ function Signup() {
 
   return (
     <div className="p-8 w-96 h-full">
-      {alertMessage && <Alert type={alertType} message={alertMessage} />}
       <Heading
         level={1}
         className="p-8 bg-white shadow-md rounded
@@ -176,9 +210,9 @@ function Signup() {
           type="email"
           name="email"
           placeholder="이메일"
-          value={loginValues.email}
-          onChange={handleInputChange}
-          className="mb-2 flex-grow"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mb-2"
         />
         <Button
           onClick={handleVerificationClick}
@@ -204,49 +238,64 @@ function Signup() {
               확인
             </Button>
           </div>
-          <Text color="blue-600" className="mt-4">
+          <Text className="text-blue-600 mb-1">
             남은 인증 시간: {minutes}:{seconds}
           </Text>
         </>
       )}
 
       {isTimeOut && (
-        <Text color="red-600" className="mt-4">
-          인증 시간이 초과했습니다.
-        </Text>
+        <Text className="text-red-600 mt-4">인증 시간이 초과했습니다.</Text>
       )}
 
       <Input
         type="password"
         name="password"
         placeholder="비밀번호"
-        value={loginValues.password}
-        onChange={handleInputChange}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         className="mb-4"
       />
+      {passwordValidityMessage && (
+        <Text className="text-red-600 mb-4">{passwordValidityMessage}</Text>
+      )}
 
       <Input
         type="password"
         name="checkpassword"
         placeholder="비밀번호 확인"
-        value={loginValues.checkpassword}
-        onChange={handleInputChange}
+        value={checkpassword}
+        onChange={(e) => setCheckPassword(e.target.value)}
         className="mb-4"
       />
+      {passwordCheckMessage && (
+        <Text className="text-red-600 mb-4">{passwordCheckMessage}</Text>
+      )}
 
       <Input
         type="text"
         name="name"
         placeholder="닉네임"
-        value={loginValues.name}
-        onChange={handleInputChange}
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
         className="mb-12"
       />
+      {nicknameFeedback && (
+        <Text className="text-red-600 mb-4">{nicknameFeedback}</Text>
+      )}
 
-      <Button onClick={checkSignup}>가입하기</Button>
+      <div className="mt-6 text-center">
+        {feedbackMessage && <Alert type="error" message={feedbackMessage} />}
+        {verificationFeedback && (
+          <Alert type="error" message={verificationFeedback} />
+        )}
+      </div>
 
+      <Button onClick={checkSignup} className="mt-6 w-full">
+        가입하기
+      </Button>
       <div className="flex justify-between items-center my-5">
-        <div className="mt-12 h-px w-full bg-gray-400" />
+        <div className="mt-6 h-px w-full bg-gray-400" />
       </div>
       <div className="mt-8 text-center">
         이미 계정이 있습니까?{' '}
