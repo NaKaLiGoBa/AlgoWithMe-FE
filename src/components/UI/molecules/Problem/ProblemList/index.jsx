@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Link from '../../../atoms/Text/Link';
 import testData from '../../../../../../public/api/v1/TestProblemData.json';
 import ProblemListFooter from '../ProblemListFooter';
-import PaginationRange from '../../../../../hooks/paginationRange';
+import PaginationRange from '../../../../../hooks/usePaginationRange';
 
 export default function index() {
   const [problems, setProblems] = useState(testData.problems);

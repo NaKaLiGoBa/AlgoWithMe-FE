@@ -20,7 +20,6 @@ export default function index() {
           </button>
         </Link>
       ) : (
-        // 렌더링 필요
         <div>
           <Link to="/signup">회원가입</Link>
           <Link to="/signin" className="px-7">

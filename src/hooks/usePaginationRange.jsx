@@ -12,7 +12,7 @@ const calculateRange = (data, rowsPerPage) => {
 const sliceData = (data, page, rowsPerPage) =>
   data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-const PaginationRange = (data, page, rowsPerPage) => {
+const usePaginationRange = (data, page, rowsPerPage) => {
   const [tableRange, setTableRange] = useState([]);
   const [slice, setSlice] = useState([]);
 
@@ -27,4 +27,4 @@ const PaginationRange = (data, page, rowsPerPage) => {
   return { slice, range: tableRange };
 };
 
-export default PaginationRange;
+export default usePaginationRange;
