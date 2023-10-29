@@ -20,6 +20,7 @@ function Signup() {
     message: '인증번호가 전송되었습니다.',
   });
   mock.onPost('http://50.19.246.89:8080/api/v1/auth/email/check').reply(200, {
+    code: '200',
     message: '인증 코드 확인 성공!',
   });
   mock.onPost('http://50.19.246.89:8080/api/v1/auth/signup').reply(200, {
