@@ -4,6 +4,7 @@ import axios from 'axios';
 import Heading from '../../../UI/atoms/Text/Heading';
 import Input from '../../../UI/atoms/Input/Input';
 import Button from '../../../UI/atoms/Input/Button';
+import {localHostURL} from '../../../../utils/apiConfig'
 
 const index = () => {
   const location = useLocation();
@@ -25,7 +26,7 @@ const index = () => {
     }
     try {
       const response = await axios.post(
-        'http://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/password/reset/check',
+        `${localHostURL}/api/v1/auth/password/reset/check`,
         {
           token, // 서버로 URL에서 추출한 토큰 전달
           newPassword, // 새로운 비밀번호 전달

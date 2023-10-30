@@ -1,39 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
 import Text from '../../../atoms/Text/Text';
 import Input from '../../../atoms/Input/Input';
 import Alert from '../../Feedback/Alert';
+import {localHostURL} from '../../../../../utils/apiConfig'
 
 function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkpassword, setCheckPassword] = useState('');
   const [nickname, setNickname] = useState('');
-
-  // // 프론트에서 테스트 해보기위한 코드
-  // const mock = new MockAdapter(axios);
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email').reply(200, {
-  //   message: '인증번호가 전송되었습니다.',
-  // });
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email/check').reply(200, {
-  //   code: '200',
-  //   message: '인증 코드 확인 성공!',
-  // });
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/signup').reply(200, {
-  //   message: '회원가입 성공!',
-  // });
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/nickname').reply((config) => {
-  //   const requestData = JSON.parse(config.data);
-  //   if (requestData.nickname === 'asd') {
-  //     return [200, { message: '닉네임 중복' }];
-  //   }
-  //   return [200, { message: '회원가입 성공!' }];
-  // });
-  
 
   const navigate = useNavigate();
 
@@ -55,7 +34,7 @@ function Signup() {
     try {
       // 이메일 인증번호 발송 API 호출
       const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email',
+        `${localHostURL}/api/v1/auth/email`,
         { email: email },
       );
       if (response.data && response.data.message) {
@@ -82,7 +61,7 @@ function Signup() {
     try {
       // 인증 코드 확인 API 호출
       const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email/check',
+        `${localHostURL}/api/v1/auth/email/check`,
         {
           email: email,
           authNumber: verificationCode,
@@ -111,7 +90,7 @@ function Signup() {
     // 닉네임 중복 확인
     try {
       const nicknameResponse = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/nickname',
+        `${localHostURL}/api/v1/auth/nickname`,
         {
           nickname: nickname,
         },
@@ -152,7 +131,7 @@ function Signup() {
     }
     try {
       const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/signup',
+        `${localHostURL}/api/v1/auth/signup`,
         {
           email: email,
           password: password,

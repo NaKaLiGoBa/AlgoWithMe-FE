@@ -4,6 +4,7 @@ import axios from 'axios';
 import Heading from '../../../UI/atoms/Text/Heading';
 import Input from '../../../UI/atoms/Input/Input';
 import Button from '../../../UI/atoms/Input/Button';
+import {localHostURL} from '../../../../utils/apiConfig'
 
 const index = () => {
   const [email, setEmail] = useState(''); // 이메일 상태 관리
@@ -17,7 +18,7 @@ const index = () => {
   const handlePasswordResetRequest = async () => {
     try {
       const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/password/reset/email',
+        `${localHostURL}/api/v1/auth/password/reset/email`,
         {
           email,
         },

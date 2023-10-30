@@ -1,26 +1,16 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import {localHostURL} from '../../../../utils/apiConfig'
 
 function index() {
   const code = window.location.search;
   const navigate = useNavigate();
 
-  // // 프론트에서 테스트 해보기위한 코드
-  const mock = new MockAdapter(axios);
-  // mock.onPost('http://50.19.246.89:8080/api/v1/auth/signin/kakao').reply(401, {
-  //   message: '회원가입이 필요합니다',
-  // });
-  mock.onPost('http://50.19.246.89:8080/api/v1/auth/signin/kakao').reply(200, {
-    accessToken: 'jwt_token_for_testing',
-    message: '로그인 완료',
-  });
-
   const sendCodeToBackend = async (authCode) => {
     try {
       const response = await axios.post(
-        'http://50.19.246.89:8080/api/v1/auth/signin/kakao',
+        `${localHostURL}/api/v1/auth/signin/kakao`,
         { authCode },
       );
       // 로그인 처리

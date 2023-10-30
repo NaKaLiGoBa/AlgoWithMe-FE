@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-// import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
 import Text from '../../../atoms/Text/Text';
 import Input from '../../../atoms/Input/Input';
 import KakaoImage from '../../../../../../public/assets/img/kakao.png';
+import {localHostURL} from '../../../../../utils/apiConfig'
 
 function Signin() {
   const navigate = useNavigate();
@@ -15,14 +15,6 @@ function Signin() {
   const [password, setPassword] = useState('');
   // 로그인 에러 상태 관리
   const [errorMessage, setErrorMessage] = useState('');
-
-  // // 프론트에서 테스트 해보기위한 코드
-  // const mock = new MockAdapter(axios);
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/signin').reply(200, {
-  //   accessToken: '23112231',
-  //   message: '로그인 되었습니다!',
-  //   nickname: 'asd',
-  // });
 
   const checkLogin = async () => {
     if (!email && !password) {
@@ -39,7 +31,7 @@ function Signin() {
     }
     try {
       const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/signin',
+        `${localHostURL}/api/v1/auth/signin`,
         {
           email: email,
           password: password,
@@ -86,7 +78,7 @@ function Signin() {
 
   // 카카오 로그인 로직 추가하기
   const REST_API_KEY = import.meta.env.VITE_REACT_APP_REST_API_KEY;
-  const REDIRECT_URI = 'https://k08e0a348244ea.user-app.krampoline.com/auth/signin/kakao';
+  const REDIRECT_URI = `${localHostURL}/auth/signin/kakao`;
   const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
   const handleKakaoLogin = () => {
