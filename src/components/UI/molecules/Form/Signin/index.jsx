@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import MockAdapter from 'axios-mock-adapter';
+// import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
@@ -16,13 +16,13 @@ function Signin() {
   // 로그인 에러 상태 관리
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 프론트에서 테스트 해보기위한 코드
-  const mock = new MockAdapter(axios);
-  mock.onPost('http://50.19.246.89:8080/api/v1/auth/signin').reply(200, {
-    accessToken: '23112231',
-    message: '로그인 되었습니다!',
-    nickname: 'asd',
-  });
+  // // 프론트에서 테스트 해보기위한 코드
+  // const mock = new MockAdapter(axios);
+  // mock.onPost('http://127.0.0.1:8080/api/v1/auth/signin').reply(200, {
+  //   accessToken: '23112231',
+  //   message: '로그인 되었습니다!',
+  //   nickname: 'asd',
+  // });
 
   const checkLogin = async () => {
     if (!email && !password) {
@@ -39,7 +39,7 @@ function Signin() {
     }
     try {
       const response = await axios.post(
-        'http://50.19.246.89:8080/api/v1/auth/signin',
+        'http://127.0.0.1:8080/api/v1/auth/signin',
         {
           email: email,
           password: password,
