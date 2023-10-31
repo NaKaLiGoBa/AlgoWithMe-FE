@@ -5,6 +5,7 @@ import OutputPanel from '../molecules/OutputPanel';
 import Header from '../molecules/Navigation/Header';
 import ProblemTab from '../molecules/ProblemTab';
 import Soulutions from '../molecules/Solutions';
+import SolutionTest from '../molecules/SolutionTest';
 
 const index = ({
   problem,
@@ -31,6 +32,7 @@ const index = ({
           />
         )}
         {activeTab.type === 'Solutions' && <Soulutions />}
+        {activeTab.type === 'Post' && <SolutionTest />}
       </div>
       <div className="grow">
         <Editor

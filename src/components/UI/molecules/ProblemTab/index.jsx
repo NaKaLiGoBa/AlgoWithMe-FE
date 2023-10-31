@@ -9,10 +9,26 @@ export default function index() {
   };
   const tabs = useSelector((state) => state.tabs.tabs);
   const activeTab = useSelector((state) => state.tabs.activeTab);
-
+  console.log('e', tabs);
   return (
-    <div className="flex space-x-4">
-      {tabs.map((tab) => (
+    <div>
+      <ul className="flex">
+        {tabs.map((tab) => (
+          <li
+            key={tab.id}
+            className={`py-2 px-4 ${
+              activeTab.id === tab.id
+                ? 'bg-blue-500 text-white'
+                : 'bg-white text-black'
+            }`}
+            onClick={() => handleTabClick(tab)}
+          >
+            {tab.name}
+          </li>
+        ))}
+      </ul>
+
+      {/* {tabs.map((tab) => (
         <button
           type="button"
           key={tab.id}
@@ -25,7 +41,7 @@ export default function index() {
         >
           {tab.type}
         </button>
-      ))}
+      ))} */}
     </div>
   );
 }
