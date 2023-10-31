@@ -16,6 +16,7 @@ function Signin() {
   // 로그인 에러 상태 관리
   const [errorMessage, setErrorMessage] = useState('');
 
+
   const checkLogin = async () => {
     if (!email && !password) {
       setErrorMessage('이메일을 입력해주세요');
