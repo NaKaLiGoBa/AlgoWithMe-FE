@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import IDETemplate from '../../UI/templates/IDETemplate';
 import constantProblem from './constant';
 
@@ -11,7 +12,9 @@ import postSubmit from '../../../utils/submitCodeApi';
 // problem loading
 function ProblemPage() {
   const { problemId } = useParams();
+  const activeTab = useSelector((state) => state.tabs.activeTab);
   const [problem, setProblem] = useState(constantProblem);
+
   if (!problem) {
     return <div>Loading...</div>;
   }
@@ -42,6 +45,7 @@ function ProblemPage() {
       setRunRequest={setRunRequest}
       handleClickRunButton={handleClickRunButton}
       handleClickSubmitButton={handleClickSubmitButton}
+      activeTab={activeTab}
     />
   );
 }
