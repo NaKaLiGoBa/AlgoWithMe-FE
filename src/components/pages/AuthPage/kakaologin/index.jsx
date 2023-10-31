@@ -10,7 +10,7 @@ function index() {
   const sendCodeToBackend = async (authCode) => {
     try {
       const response = await axios.post(
-        `${localHostURL}/api/v1/auth/signin/kakao`,
+        `${localHostURL}/auth/signin/kakao`,
         { authCode },
       );
       // 로그인 처리

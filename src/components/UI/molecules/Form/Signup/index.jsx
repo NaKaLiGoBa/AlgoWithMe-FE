@@ -87,26 +87,6 @@ function Signup() {
 
   // 전체 필드 확인
   const checkSignup = async () => {
-    // 닉네임 중복 확인
-    try {
-      const nicknameResponse = await axios.post(
-        `${localHostURL}/api/v1/auth/nickname`,
-        {
-          nickname: nickname,
-        },
-      );
-      if (
-        nicknameResponse.data &&
-        nicknameResponse.data.message === '닉네임 중복'
-      ) {
-        setNicknameFeedback('이미 사용 중인 닉네임입니다.');
-        return; // 중복 닉네임이므로 회원가입 진행 중단
-      }
-    } catch (error) {
-      console.error('Nickname verification error!', error);
-      setNicknameFeedback('닉네임 확인 중 오류가 발생했습니다.');
-      return; // 오류가 발생했으므로 회원가입 진행 중단
-    }
     // 비밀번호 유효성 검사
     if (password.length < 6 || password.length > 16) {
       setPasswordValidityMessage('비밀번호는 6~16자리로 입력해주세요.');
@@ -129,6 +109,7 @@ function Signup() {
       setFeedbackMessage('이메일 및 코드를 인증해주세요');
       return;
     }
+    // 회원가입 요청
     try {
       const response = await axios.post(
         `${localHostURL}/api/v1/auth/signup`,
@@ -139,6 +120,10 @@ function Signup() {
         },
       );
       if (response.data && response.data.message) {
+        if (response.data.message === '닉네임 중복') {
+          setNicknameFeedback('이미 사용 중인 닉네임입니다.');
+          return;
+        }
         alert(response.data.message);
         navigate('/signin');
       } else {

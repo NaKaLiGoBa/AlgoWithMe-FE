@@ -70,7 +70,7 @@ const index = () => {
               인증
             </Button>
             {message && (
-              <div className="mt-12 text-center text-red-600">
+              <div className="mt-12 text-center">
                 <p>{message}</p>
               </div>
             )}
