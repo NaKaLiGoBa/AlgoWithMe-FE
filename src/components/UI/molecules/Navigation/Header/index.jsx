@@ -21,7 +21,7 @@ export default function index() {
         </Link>
       ) : (
         <div>
-          <Link to="/signup">회원가입</Link>
+          <Link to={{ pathname: "/signup", state: { statusCode: 1 } }}>회원가입</Link>
           <Link to="/signin" className="px-7">
             로그인
           </Link>

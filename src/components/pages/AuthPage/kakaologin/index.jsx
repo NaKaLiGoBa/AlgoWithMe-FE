@@ -33,7 +33,7 @@ function index() {
           alert(error.response.data.message);
         }
         if (error.response.status === 401) {
-          navigate('/signup'); // 회원가입 페이지로 이동
+          navigate('/signup', { state: { statusCode: 0 } }); // 회원가입 페이지로 이동
         }
       } else {
         // 기타 에러 로직

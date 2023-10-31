@@ -138,7 +138,7 @@ function Signin() {
           </button>
         </div>
 
-        <Link to="/signup">
+        <Link to={{ pathname: "/signup", state: { statusCode: 1 } }}>
           <Button
             type="submit"
             className="w-full bg-white border border-blue-600 hover:bg-blue-200 text-blue-500 mt-10"
