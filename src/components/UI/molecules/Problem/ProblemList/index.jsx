@@ -1,21 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from '../../../atoms/Text/Link';
-import testData from '../../../../../../public/api/v1/TestProblemData.json';
 import ProblemListFooter from '../ProblemListFooter';
 import PaginationRange from '../../../../../hooks/usePaginationRange';
+// import getProblemList from '../../../../../service/problemListService';
+import testData from '../../../../../../public/api/TestProblemData.json';
 
 export default function index() {
+  // const [problems, setProblems] = useState([]);
   const [problems, setProblems] = useState(testData.problems);
   const [page, setPage] = useState(1);
   const rowsPerPage = 20;
   const { slice, range } = PaginationRange(problems, page, rowsPerPage);
-  // fetch('http://localhost:3000/api/v1/TestProvlemData.json', {
-  //   method: 'GET',
-  // })
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log(data.result);
-  //   });
+
+  // useEffect(() => {
+  //   const fetchProblems = async () => {
+  //     try {
+  //       const problemData = await getProblemList(page);
+  //       setProblems(problemData);
+  //     } catch (error) {
+  //       console.error(
+  //         'An error occurred while fetching the problem list:',
+  //         error,
+  //       );
+  //     }
+  //   };
+  //   console.log('o', page);
+
+  //   fetchProblems();
+  // }, [page]);
 
   return (
     <div>

@@ -15,7 +15,7 @@ function App() {
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/problems/:problemId" element={<IDEPage />} />
-        <Route path="/api/v1/auth/signin/kakao" element={<KakaoLogin />} />
+        <Route path="/auth/signin/kakao" element={<KakaoLogin />} />
       </Routes>
     </BrowserRouter>
   );
