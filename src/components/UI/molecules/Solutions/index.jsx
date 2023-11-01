@@ -12,7 +12,7 @@ const tests = {
       },
       solution: {
         id: 4,
-        title: 'Solution 1 for Problem X',
+        title: 'Solution 1',
       },
     },
     {
@@ -22,7 +22,7 @@ const tests = {
       },
       solution: {
         id: 5,
-        title: 'Solution 2 for Problem X',
+        title: 'Solution 2',
       },
     },
     {
@@ -32,7 +32,7 @@ const tests = {
       },
       solution: {
         id: 6,
-        title: 'Solution 3 for Problem X',
+        title: 'Solution3',
       },
     },
   ],
@@ -48,8 +48,10 @@ export default function index() {
   };
   return (
     <div className="h-screen">
+      <div className="w-full border ">+풀이 공유</div>
       {tests.solutions.map((test) => (
         <div key={test.solution.id}>
+          <div>{test.author.avatar} </div>
           <button
             type="button"
             onClick={() => handleSolutionClick(test.solution)}
