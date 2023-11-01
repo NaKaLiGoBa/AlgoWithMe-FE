@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addTab } from '../../../../store/tabState';
 
 const tests = {
@@ -12,7 +12,7 @@ const tests = {
       },
       solution: {
         id: 4,
-        title: 'Solution 1',
+        title: 'Solution 1 for Problem ',
       },
     },
     {
@@ -42,12 +42,17 @@ const tests = {
 };
 export default function index() {
   const dispatch = useDispatch();
+  const tabs = useSelector((state) => state.tabs.tabs);
 
   const handleSolutionClick = (solution) => {
-    dispatch(addTab({ id: solution.id, type: 'Post', name: solution.title }));
+    const TabExisting = tabs.some((tab) => tab.id === solution.id);
+    console.log('TabExisiting', TabExisting);
+    if (!TabExisting) {
+      dispatch(addTab({ id: solution.id, type: 'Post', name: solution.title }));
+    }
   };
   return (
-    <div className="h-screen">
+    <div className="h-screen px-4 py-4">
       <div className="w-full border ">+풀이 공유</div>
       {tests.solutions.map((test) => (
         <div key={test.solution.id}>

@@ -22,14 +22,14 @@ export default function index() {
         {tabs.map((tab, i) => (
           <li
             key={tab.id}
-            className={`py-1 border border-solid border-gray-200 ${
+            className={`flex justify-between py-1 border border-solid border-gray-200  ${
               activeTab.id === tab.id
                 ? 'bg-blue-500 text-white'
                 : 'bg-white text-black'
-            } flex ${tab.type === 'Post' ? 'pl-4 pr-2' : 'px-4'}`}
+            } ${tab.type === 'Post' ? 'pl-4 pr-2  w-[150px]' : 'px-4'}`}
             onClick={() => handleTabClick(tab)}
           >
-            {tab.name}
+            <span className="truncate"> {tab.name} </span>
             {tab.type === 'Post' && (
               <div
                 className="ml-2  "
