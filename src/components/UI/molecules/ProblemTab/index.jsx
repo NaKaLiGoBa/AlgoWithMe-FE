@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeTab, setActiveTab } from '../../../../store/tabState';
+import '../../atoms/Tab/styles.css';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -18,11 +19,11 @@ export default function index() {
   };
   return (
     <div>
-      <ul className="flex">
+      <ul className="flex overflow-auto customTab-scrollbar">
         {tabs.map((tab, i) => (
           <li
             key={tab.id}
-            className={`flex justify-between py-1 border border-solid border-gray-200  ${
+            className={`flex justify-between py-1  border border-solid border-gray-200  ${
               activeTab.id === tab.id
                 ? 'bg-blue-500 text-white'
                 : 'bg-white text-black'

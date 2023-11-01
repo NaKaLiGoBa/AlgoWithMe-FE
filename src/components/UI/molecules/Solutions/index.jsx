@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addTab } from '../../../../store/tabState';
 
 const tests = {
-  totalCount: 3,
+  totalCount: 5,
   solutions: [
     {
       author: {
@@ -22,7 +22,7 @@ const tests = {
       },
       solution: {
         id: 5,
-        title: 'Solution 2',
+        title: 'Solution 2 for Problem',
       },
     },
     {
@@ -32,12 +32,32 @@ const tests = {
       },
       solution: {
         id: 6,
-        title: 'Solution3',
+        title: 'Solution3 for Problem',
+      },
+    },
+    {
+      author: {
+        avatar: 'h',
+        nickname: 'user4',
+      },
+      solution: {
+        id: 7,
+        title: 'Solution4 for Problem',
+      },
+    },
+    {
+      author: {
+        avatar: 'h',
+        nickname: 'user4',
+      },
+      solution: {
+        id: 8,
+        title: 'Solution5 for Problem',
       },
     },
   ],
   _link: {
-    nextCursor: 3,
+    nextCursor: 5,
   },
 };
 export default function index() {
@@ -53,20 +73,16 @@ export default function index() {
   };
   return (
     <div className="h-screen px-4 py-4">
-      <div className="w-full border ">+풀이 공유</div>
+      <div className="w-full border flex ">+풀이 공유</div>
       {tests.solutions.map((test) => (
         <div key={test.solution.id}>
           <div>{test.author.avatar} </div>
+          <span>{test.author.nickname}</span>
           <button
             type="button"
             onClick={() => handleSolutionClick(test.solution)}
           >
             <h2>{test.solution.title}</h2>
-            <p>Author: {test.author.nickname}</p>
-            <img
-              src={test.author.avatar}
-              alt={`${test.author.nickname}'s avatar`}
-            />
           </button>
         </div>
       ))}
