@@ -1,39 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-// import MockAdapter from 'axios-mock-adapter';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
 import Text from '../../../atoms/Text/Text';
 import Input from '../../../atoms/Input/Input';
 import Alert from '../../Feedback/Alert';
+import { localHostURL } from '../../../../../utils/apiConfig';
 
 function Signup() {
-  const [email, setEmail] = useState('');
+  // 상태 코드 초기화
+  const location = useLocation();
+  const signupStateCode = location.state ? location.state.signupStateCode : 1;
+
+  // 이메일 상태 초기화 (상태 코드가 0인 경우 서버에서 받은 이메일로 초기화)
+  const initialEmail =
+    signupStateCode === 0 && location.state.email ? location.state.email : '';
+  const isEmailEditable = signupStateCode === 1;
+
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [checkpassword, setCheckPassword] = useState('');
   const [nickname, setNickname] = useState('');
-
-  // // 프론트에서 테스트 해보기위한 코드
-  // const mock = new MockAdapter(axios);
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email').reply(200, {
-  //   message: '인증번호가 전송되었습니다.',
-  // });
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email/check').reply(200, {
-  //   code: '200',
-  //   message: '인증 코드 확인 성공!',
-  // });
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/signup').reply(200, {
-  //   message: '회원가입 성공!',
-  // });
-  // mock.onPost('https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/nickname').reply((config) => {
-  //   const requestData = JSON.parse(config.data);
-  //   if (requestData.nickname === 'asd') {
-  //     return [200, { message: '닉네임 중복' }];
-  //   }
-  //   return [200, { message: '회원가입 성공!' }];
-  // });
-  
 
   const navigate = useNavigate();
 
@@ -54,10 +42,9 @@ function Signup() {
   const handleVerificationClick = async () => {
     try {
       // 이메일 인증번호 발송 API 호출
-      const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email',
-        { email: email },
-      );
+      const response = await axios.post(`${localHostURL}/api/v1/auth/email`, {
+        email: email,
+      });
       if (response.data && response.data.message) {
         // 인증번호가 성공적으로 발송된 경우
         alert(response.data.message);
@@ -82,7 +69,7 @@ function Signup() {
     try {
       // 인증 코드 확인 API 호출
       const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/email/check',
+        `${localHostURL}/api/v1/auth/email/check`,
         {
           email: email,
           authNumber: verificationCode,
@@ -108,26 +95,6 @@ function Signup() {
 
   // 전체 필드 확인
   const checkSignup = async () => {
-    // 닉네임 중복 확인
-    try {
-      const nicknameResponse = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/nickname',
-        {
-          nickname: nickname,
-        },
-      );
-      if (
-        nicknameResponse.data &&
-        nicknameResponse.data.message === '닉네임 중복'
-      ) {
-        setNicknameFeedback('이미 사용 중인 닉네임입니다.');
-        return; // 중복 닉네임이므로 회원가입 진행 중단
-      }
-    } catch (error) {
-      console.error('Nickname verification error!', error);
-      setNicknameFeedback('닉네임 확인 중 오류가 발생했습니다.');
-      return; // 오류가 발생했으므로 회원가입 진행 중단
-    }
     // 비밀번호 유효성 검사
     if (password.length < 6 || password.length > 16) {
       setPasswordValidityMessage('비밀번호는 6~16자리로 입력해주세요.');
@@ -150,20 +117,29 @@ function Signup() {
       setFeedbackMessage('이메일 및 코드를 인증해주세요');
       return;
     }
+    // 회원가입 요청
     try {
-      const response = await axios.post(
-        'https://k08e0a348244ea.user-app.krampoline.com/api/v1/auth/signup',
-        {
-          email: email,
-          password: password,
-          name: nickname,
-        },
-      );
-      if (response.data && response.data.message) {
+      const response = await axios.post(`${localHostURL}/api/v1/auth/signup`, {
+        email: email,
+        password: password,
+        name: nickname,
+      });
+      if (response.status === 201) {
+        // 회원가입 성공
         alert(response.data.message);
         navigate('/signin');
+      } else if (response.status === 422) {
+        // 중복 오류
+        if (
+          response.data.message ===
+          '이미 사용 중입니다. 다른 이메일을 입력해주세요.'
+        ) {
+          setVerificationFeedback(response.data.message); // 이메일 중복 오류
+        } else if (response.data.message === '닉네임 중복') {
+          setNicknameFeedback('이미 사용 중인 닉네임입니다.'); // 닉네임 중복 오류
+        }
       } else {
-        setFeedbackMessage('회원가입에 실패하였습니다.');
+        setFeedbackMessage('회원가입에 실패하였습니다.'); // 그 외의 오류
       }
     } catch (error) {
       setFeedbackMessage('회원가입 중 오류가 발생하였습니다.');
@@ -206,22 +182,28 @@ function Signup() {
       >
         Algo 있니?
       </Heading>
-      <div className="flex mb-2">
-        <Input
-          type="email"
-          name="email"
-          placeholder="이메일"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mb-2"
-        />
-        <Button
-          onClick={handleVerificationClick}
-          className="w-auto bg-white border border-blue-600 rounded-2xl hover:bg-blue-200 text-blue-600 flex-shrink-0 px-4 ml-2 h-auto my-2"
-        >
-          인증
-        </Button>
-      </div>
+      {isEmailEditable ? (
+        <div className="flex mb-2">
+          <Input
+            type="email"
+            name="email"
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mb-2"
+          />
+          <Button
+            onClick={handleVerificationClick}
+            className="w-auto bg-white border border-blue-600 rounded-2xl hover:bg-blue-200 text-blue-600 flex-shrink-0 px-4 ml-2 h-auto my-2"
+          >
+            인증
+          </Button>
+        </div>
+      ) : (
+        <div className="mb-2">
+          <Input type="email" name="email" value={email} readOnly />
+        </div>
+      )}
       {isEmailVerified && (
         <>
           <div className="flex mb-2">
@@ -249,28 +231,33 @@ function Signup() {
         <Text className="text-red-600 mt-4">인증 시간이 초과했습니다.</Text>
       )}
 
-      <Input
-        type="password"
-        name="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="mb-4"
-      />
-      {passwordValidityMessage && (
-        <Text className="text-red-600 mb-4">{passwordValidityMessage}</Text>
-      )}
+      {/* 상태 코드가 1인 경우에만 비밀번호 입력 표시 */}
+      {isEmailEditable && (
+        <>
+          <Input
+            type="password"
+            name="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mb-4"
+          />
+          {passwordValidityMessage && (
+            <Text className="text-red-600 mb-4">{passwordValidityMessage}</Text>
+          )}
 
-      <Input
-        type="password"
-        name="checkpassword"
-        placeholder="비밀번호 확인"
-        value={checkpassword}
-        onChange={(e) => setCheckPassword(e.target.value)}
-        className="mb-4"
-      />
-      {passwordCheckMessage && (
-        <Text className="text-red-600 mb-4">{passwordCheckMessage}</Text>
+          <Input
+            type="password"
+            name="checkpassword"
+            placeholder="비밀번호 확인"
+            value={checkpassword}
+            onChange={(e) => setCheckPassword(e.target.value)}
+            className="mb-4"
+          />
+          {passwordCheckMessage && (
+            <Text className="text-red-600 mb-4">{passwordCheckMessage}</Text>
+          )}
+        </>
       )}
 
       <Input
