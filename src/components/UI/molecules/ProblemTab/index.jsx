@@ -5,18 +5,24 @@ import '../../atoms/Tab/styles.css';
 
 export default function index() {
   const dispatch = useDispatch();
+  const SolutionsTabName = (tab, totalCount) => {
+    if (tab.type !== 'Solutions') {
+      return tab.name;
+    }
+    return totalCount == null ? tab.name : `${tab.name} (${totalCount})`;
+  };
+  const totalCount = useSelector((state) => state.solutions.totalCount);
   const handleTabClick = (tab) => {
     dispatch(setActiveTab(tab));
   };
   const tabs = useSelector((state) => state.tabs.tabs);
   const activeTab = useSelector((state) => state.tabs.activeTab);
-  console.log('e', tabs);
 
   const handleRemoveClick = (event, tab, i) => {
     event.stopPropagation();
     dispatch(removeTab(i));
-    console.log('a', tab);
   };
+
   return (
     <div>
       <ul className="flex overflow-auto customTab-scrollbar">
@@ -30,7 +36,9 @@ export default function index() {
             } ${tab.type === 'Post' ? 'pl-4 pr-2  w-[150px]' : 'px-4'}`}
             onClick={() => handleTabClick(tab)}
           >
-            <span className="truncate"> {tab.name} </span>
+            <span className="truncate">
+              {SolutionsTabName(tab, totalCount)}
+            </span>
             {tab.type === 'Post' && (
               <div
                 className="ml-2  "

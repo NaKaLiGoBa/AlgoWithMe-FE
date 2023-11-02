@@ -1,0 +1,58 @@
+{
+  "totalCount": 5,
+  "solutions": [
+    {
+      "author": {
+        "avatar": "h",
+        "nickname": "user1"
+      },
+      "solution": {
+        "id": 4,
+        "title": "Solution 1 for Problem"
+      }
+    },
+    {
+      "author": {
+        "avatar": "h",
+        "nickname": "user2"
+      },
+      "solution": {
+        "id": 5,
+        "title": "Solution 2 for Problem"
+      }
+    },
+    {
+      "author": {
+        "avatar": "h",
+        "nickname": "user3"
+      },
+      "solution": {
+        "id": 6,
+        "title": "Solution3 for Problem"
+      }
+    },
+    {
+      "author": {
+        "avatar": "h",
+        "nickname": "user4"
+      },
+      "solution": {
+        "id": 7,
+        "title": "Solution4 for Problem"
+      }
+    },
+    {
+      "author": {
+        "avatar": "h",
+        "nickname": "user4"
+      },
+      "solution": {
+        "id": 8,
+        "title": "Solution5 for Problem"
+      }
+    }
+  ],
+  "_link": {
+    "nextCursor": 5
+  }
+}
