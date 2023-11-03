@@ -21,11 +21,11 @@ export default function index() {
     }
   };
   return (
-    <div className="h-screen px-4 py-4">
+    <div className=" px-4 py-4">
       <div className="w-full border flex ">+풀이 공유</div>
       {tests.map((test) => (
         <ListItem
-          id={test.solution.id}
+          key={test.solution.id}
           avatar={test.author.avatar}
           nickname={test.author.nickname}
           title={test.solution.title}
