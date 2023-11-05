@@ -5,6 +5,7 @@ import { addTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import SolutionsData from '../../../../../public/api/SolutionsData.json';
 import ListItem from '../ListItem';
+import Link from '../../atoms/Text/Link';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -23,10 +24,16 @@ export default function index() {
     }
   };
   const fetchMoreData = () => {};
+  const SolutionsUrl = `${window.location.href}/solutions`;
 
   return (
     <div className=" px-4 py-4">
-      <div className="w-full border flex ">+풀이 공유</div>
+      <Link
+        to={SolutionsUrl}
+        className="w-full border flex justify-center bg-[#63B758] text-white py-2 mb-5"
+      >
+        +풀이 공유
+      </Link>
       <InfiniteScroll
         dataLength={solutions.length}
         next={fetchMoreData}
