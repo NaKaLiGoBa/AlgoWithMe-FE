@@ -4,8 +4,8 @@ export const tabsSlice = createSlice({
   name: 'tabs',
   initialState: {
     tabs: [
-      { id: 1, type: 'Description', name: 'Description' },
-      { id: 2, type: 'Solutions', name: 'Solutions' },
+      { id: 1000, type: 'Description', name: 'Description' },
+      { id: 1001, type: 'Solutions', name: 'Solutions' },
     ],
     activeTab: { id: 1, type: 'Description', name: 'Description' },
   },

@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { addTab } from '../../../../store/tabState';
+import { useParams } from 'react-router-dom';
+import { addTab, setActiveTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
-// import SolutionsData from '../../../../../public/api/SolutionsData.json';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
-import page1Data from '../../../../../public/api/page1.json';
-import page2Data from '../../../../../public/api/page2.json';
-import page3Data from '../../../../../public/api/page3.json';
+import getSolutions from '../../../../service/SolutionsService';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -16,48 +14,47 @@ export default function index() {
   const [nextCursor, setNextCursor] = useState(-100);
   const tabs = useSelector((state) => state.tabs.tabs);
   const [hasMore, setHasMore] = useState(true);
+  const { problemId } = useParams();
 
   useEffect(() => {
-    dispatch(setSolutionsData(page1Data));
-    setNextCursor(page1Data['_link'].nextCursor);
+    const initialData = async () => {
+      const { data, success } = await getSolutions(problemId, nextCursor, 3);
+      if (success) {
+        dispatch(setSolutionsData(data));
+        setNextCursor(data['_link'].nextCursor);
+      }
+    };
+
+    initialData();
   }, [dispatch]);
 
   const handleSolutionClick = (solution) => {
     const TabExisting = tabs.some((tab) => tab.id === solution.id);
     if (!TabExisting) {
-      dispatch(addTab({ id: solution.id, type: 'Post', name: solution.title }));
+      const newTab = { id: solution.id, type: 'Post', name: solution.title };
+      dispatch(addTab(newTab));
+      dispatch(setActiveTab(newTab));
     }
   };
-
-  const fetchMoreData = () => {
-    if (nextCursor === -1) {
-      setHasMore(false);
-      return;
-    }
-
-    setTimeout(() => {
-      let newData;
-      switch (nextCursor) {
-        case 3:
-          newData = page2Data;
-          break;
-        case 1:
-          newData = page3Data;
-          break;
-        default:
+  const fetchMoreData = async () => {
+    if (!hasMore) return;
+    setTimeout(async () => {
+      try {
+        const { data, success } = await getSolutions(problemId, nextCursor, 2);
+        if (success) {
+          dispatch(
+            setSolutionsData({
+              totalCount: data.totalCount,
+              solutions: [...solutions, ...data.solutions],
+            }),
+          );
+          setNextCursor(data['_link'].nextCursor);
+          setHasMore(data['_link'].nextCursor !== -1);
+        } else {
           setHasMore(false);
-          return;
-      }
-
-      if (newData && newData.solutions.length > 0) {
-        dispatch(
-          setSolutionsData({
-            totalCount: newData.totalCount,
-            solutions: [...solutions, ...newData.solutions],
-          }),
-        );
-        setNextCursor(newData['_link'] ? newData['_link'].nextCursor : -1);
-      } else {
+        }
+      } catch (error) {
+        console.error('Error fetching more data:', error);
         setHasMore(false);
       }
     }, 1000);
@@ -77,7 +74,6 @@ export default function index() {
         next={fetchMoreData}
         hasMore={hasMore}
         loader={
-          // <div>Loading...</div>
           <div className="flex space-x-7 justify-center">
             <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
             <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
