@@ -7,6 +7,8 @@ import {
   reorderTabs,
   updateTabContent,
 } from '../../../../store/tabState';
+import fetchSolution from '../../../../utils/fetchSolution';
+
 
 export default function index() {
   const dispatch = useDispatch();
@@ -17,14 +19,29 @@ export default function index() {
   const activeTab = useSelector((state) => state.tabs.activeTab);
   console.log('e', tabs);
 
-  const handleSolutionClick = (solution) => {
-    const existingTab = tabs.find((tab) => tab.id === solution.id);
-    if (existingTab) {
-      dispatch(setActiveTab(existingTab));
-    } else {
-      const newTab = { id: solution.id, type: 'Post', name: solution.title };
-      dispatch(addTab(newTab));
-      dispatch(setActiveTab(newTab));
+  const handleSolutionClick = async (problemId, solutionId) => { 
+    try {
+      const solutionData = await fetchSolution(problemId, solutionId);
+      const existingTab = tabs.find((tab) => tab.id === solutionId);
+      
+      if (existingTab) {
+        dispatch(setActiveTab(existingTab));
+      } else {
+        const newTab = { 
+          id: solutionId,
+          type: 'Post',
+          name: solutionData.solution.title,
+          content: solutionData.solution.content
+        };
+        dispatch(addTab(newTab));
+        dispatch(setActiveTab(newTab));
+        dispatch(updateTabContent({
+          id: solutionId,
+          content: solutionData.solution.content
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching solution:', error);
     }
   };
 
