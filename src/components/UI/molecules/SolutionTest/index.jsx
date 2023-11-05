@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
-import axios from 'axios';
-import { setActiveTab, removeTab, updateTabContent } from '../../../../store/tabState';
+import {
+  setActiveTab,
+  removeTab,
+  updateTabContent,
+} from '../../../../store/tabState';
 import {
   fetchSolution,
   updateSolution,
@@ -19,7 +22,7 @@ export default function SolutionTest() {
   const dispatch = useDispatch();
   const [activeSolution, setActiveSolution] = useState(null);
   const navigate = useNavigate();
-  const authToken = localStorage.getItem('authToken'); // 실제 토큰 검색 로직으로 이 부분을 대체합니다.
+  const authToken = localStorage.getItem('authToken');
 
   useEffect(() => {
     const fetchSolutionData = async () => {
