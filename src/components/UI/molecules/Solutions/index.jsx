@@ -3,18 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { addTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
-import SolutionsData from '../../../../../public/api/SolutionsData.json';
+// import SolutionsData from '../../../../../public/api/SolutionsData.json';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
+import page1Data from '../../../../../public/api/page1.json';
+import page2Data from '../../../../../public/api/page2.json';
+import page3Data from '../../../../../public/api/page3.json';
 
 export default function index() {
   const dispatch = useDispatch();
   const solutions = useSelector((state) => state.solutions.solutions);
+  const [nextCursor, setNextCursor] = useState(-100);
   const tabs = useSelector((state) => state.tabs.tabs);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    dispatch(setSolutionsData(SolutionsData));
+    dispatch(setSolutionsData(page1Data));
+    setNextCursor(page1Data['_link'].nextCursor);
   }, [dispatch]);
 
   const handleSolutionClick = (solution) => {
@@ -23,7 +28,40 @@ export default function index() {
       dispatch(addTab({ id: solution.id, type: 'Post', name: solution.title }));
     }
   };
-  const fetchMoreData = () => {};
+
+  const fetchMoreData = () => {
+    if (nextCursor === -1) {
+      setHasMore(false);
+      return;
+    }
+
+    setTimeout(() => {
+      let newData;
+      switch (nextCursor) {
+        case 3:
+          newData = page2Data;
+          break;
+        case 1:
+          newData = page3Data;
+          break;
+        default:
+          setHasMore(false);
+          return;
+      }
+
+      if (newData && newData.solutions.length > 0) {
+        dispatch(
+          setSolutionsData({
+            totalCount: newData.totalCount,
+            solutions: [...solutions, ...newData.solutions],
+          }),
+        );
+        setNextCursor(newData['_link'] ? newData['_link'].nextCursor : -1);
+      } else {
+        setHasMore(false);
+      }
+    }, 1000);
+  };
   const SolutionsUrl = `${window.location.href}/solutions`;
 
   return (
@@ -39,6 +77,7 @@ export default function index() {
         next={fetchMoreData}
         hasMore={hasMore}
         loader={
+          // <div>Loading...</div>
           <div className="flex space-x-7 justify-center">
             <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
             <div className="w-5 h-5 bg-gray-300 rounded-full"></div>

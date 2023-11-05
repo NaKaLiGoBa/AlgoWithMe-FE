@@ -5,6 +5,8 @@ import '../../atoms/Tab/styles.css';
 
 export default function index() {
   const dispatch = useDispatch();
+  const tabs = useSelector((state) => state.tabs.tabs);
+  const activeTab = useSelector((state) => state.tabs.activeTab);
   const SolutionsTabName = (tab, totalCount) => {
     if (tab.type !== 'Solutions') {
       return tab.name;
@@ -15,8 +17,6 @@ export default function index() {
   const handleTabClick = (tab) => {
     dispatch(setActiveTab(tab));
   };
-  const tabs = useSelector((state) => state.tabs.tabs);
-  const activeTab = useSelector((state) => state.tabs.activeTab);
 
   const handleRemoveClick = (event, tab, i) => {
     event.stopPropagation();
