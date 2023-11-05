@@ -1,46 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { setActiveTab, updateTabContent } from '../../../../store/tabState';
-import fetchSolution from '../../../../utils/fetchSolution';
+import { setActiveTab, removeTab, updateTabContent } from '../../../../store/tabState';
+import {
+  fetchSolution,
+  updateSolution,
+  deleteSolution,
+} from '../../../../utils/fetchSolution';
+import Button from '../../atoms/Input/Button';
 
 export default function SolutionTest() {
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const tabs = useSelector((state) => state.tabs.tabs);
   const dispatch = useDispatch();
   const [activeSolution, setActiveSolution] = useState(null);
-
-  // 테스트
-  // axios 인스턴스 생성
-  const axiosInstance = axios.create();
-  // Mock Adapter 인스턴스 생성
-  const mock = new MockAdapter(axiosInstance);
-  // 가짜 응답 데이터 정의
-  const mockSolutionData = {
-    solution: {
-      title: '제목 테스트',
-      content: '**테스트** 입니다!',
-      createdAt: new Date().toISOString(),
-      languages: ['JavaScript', 'Python'],
-    },
-    author: {
-      nickname: '닉네임테스트',
-      avatar: '123',
-    },
-  };
-  // Mock 설정: problemId와 solutionId와 관계없이 모든 GET 요청을 가로채서 가짜 데이터로 응답
-  mock.onGet(/\/problems\/.*\/solutions\/.*/).reply(200, mockSolutionData);
-  // `fetchSolution` 함수를 Mock Adapter를 사용하는 axios 인스턴스로 업데이트
-  const fetchSolution = async (problemId, solutionId) => {
-    const response = await axiosInstance.get(
-      `/problems/${problemId}/solutions/${solutionId}`,
-    );
-    return response.data;
-  };
+  const navigate = useNavigate();
+  const authToken = localStorage.getItem('authToken'); // 실제 토큰 검색 로직으로 이 부분을 대체합니다.
 
   useEffect(() => {
     const fetchSolutionData = async () => {
@@ -63,6 +42,33 @@ export default function SolutionTest() {
     dispatch(setActiveTab(tab));
   };
 
+  const handleUpdate = async () => {
+    if (window.confirm('정말로 수정하시겠습니까?')) {
+      navigate(
+        `/edit/${activeTab.problemId}/solution/${activeTab.solutionId}/edit`,
+      ); // 그냥 이동?
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      try {
+        const response = await deleteSolution(
+          activeTab.problemId,
+          activeTab.solutionId,
+          authToken,
+        );
+        alert('풀이 글 삭제 완료');
+        console.log('Delete successful', response);
+        // 삭제 후 행동
+        dispatch(removeTab({ id: activeTab.id }));
+        navigate('/problems/:problemId');
+      } catch (error) {
+        console.error('Error deleting solution:', error);
+      }
+    }
+  };
+
   return (
     <div className="SolutionTest">
       <ul className="tabs">
@@ -77,6 +83,18 @@ export default function SolutionTest() {
       {/* 게시글 데이터가 로드되었을 때만 내용을 표시 */}
       {activeSolution && (
         <div className="bg-gray-200 shadow rounded-b-lg p-6">
+          <div className="flex justify-end">
+            <Button className="rounded-lg p-2 mr-2.5" onClick={handleUpdate}>
+              수정
+            </Button>
+            <Button
+              className="bg-red-600 hover:bg-red-400 rounded-lg p-2"
+              onClick={handleDelete}
+            >
+              삭제
+            </Button>
+          </div>
+
           <div className="flex items-start space-x-4">
             <img
               className="w-16 h-16 rounded-full object-cover"
@@ -102,12 +120,12 @@ export default function SolutionTest() {
                   ).toLocaleDateString()}
                 </p>
               </div>
-              <p className="mt-2 mb-1 text-sm text-gray-500">
+              <p className="mt-2.5 text-sm text-gray-500">
                 <span className="mr-2">언어:</span>
                 {activeSolution.solution.languages.map((language) => (
                   <span
                     key={language}
-                    className="inline-block bg-slate-300 rounded-full px-3 py-1 font-semibold text-gray-700 mr-2 mb-2"
+                    className="inline-block bg-slate-300 rounded-full px-2.5 py-1 font-semibold text-gray-700 mr-2 mb-1"
                   >
                     {language}
                   </span>
@@ -115,8 +133,6 @@ export default function SolutionTest() {
               </p>
             </div>
           </div>
-          {/* Editor 넣으면 되는 공간, 임시로 넣어둠 */}
-          <MDEditor value={activeSolution.solution.content} />
         </div>
       )}
       <div className="flex justify-between items-center my-2">
