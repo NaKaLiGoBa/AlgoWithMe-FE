@@ -18,7 +18,7 @@ function App() {
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/problems/:problemId" element={<IDEPage />} />
-        <Route path="/problems/solutions/edit" element={<SolutionEditPage />} />
+        <Route path="/problems/:problemId/solutions/edit" element={<SolutionEditPage />} />
         <Route path="/auth/signin/kakao" element={<KakaoLogin />} />
         <Route path="/password" element={<PasswordEmailPage />} />
         <Route path="/password/reset" element={<PasswordResetPage />} />

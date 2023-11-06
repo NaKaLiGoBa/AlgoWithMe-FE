@@ -59,7 +59,7 @@ export default function index() {
       }
     }, 1000);
   };
-  const SolutionsUrl = `${window.location.href}/solutions`;
+  const SolutionsUrl = `${window.location.href}/solutions/edit`;
 
   return (
     <div className=" px-4 py-4">
