@@ -54,8 +54,11 @@ export const tabsSlice = createSlice({
       state.tabs.push(newTab);
     },
     removeTab: (state, action) => {
-      const index = action.payload;
-      state.tabs.splice(index, 1);
+      const idToRemove = action.payload.id; // payload should be the id of the tab to remove
+      const index = state.tabs.findIndex(tab => tab.id === idToRemove);
+      if (index !== -1) {
+        state.tabs.splice(index, 1);
+      }
     },
     setActiveTab: (state, action) => {
       state.activeTab = action.payload;
