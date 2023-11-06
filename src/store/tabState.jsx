@@ -5,8 +5,8 @@ export const tabsSlice = createSlice({
   name: 'tabs',
   initialState: {
     tabs: [
-      { id: 1, type: 'Description', name: 'Description', content: '' },
-      { id: 2, type: 'Solutions', name: 'Solutions', content: '' },
+      { id: 1000, type: 'Description', name: 'Description' , content: '' },
+      { id: 1001, type: 'Solutions', name: 'Solutions', content: ''  },
     ],
     activeTab: { id: 1, type: 'Description', name: 'Description', content: '' },
   },
@@ -19,7 +19,8 @@ export const tabsSlice = createSlice({
       state.tabs.push(newTab);
     },
     removeTab: (state, action) => {
-      state.tabs = state.tabs.filter((tab) => tab.id !== action.payload.id);
+      const index = action.payload;
+      state.tabs.splice(index, 1);
     },
     setActiveTab: (state, action) => {
       state.activeTab = action.payload;
