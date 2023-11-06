@@ -6,7 +6,7 @@ import SignupPage from './components/pages/AuthPage/SignupPage';
 import HomePage from './components/pages/HomePage';
 import IDEPage from './components/pages/IDEPage';
 import SolutionEditPage from './components/pages/SolutionEditPage';
-import KakaoLogin from './components/pages/AuthPage/KakaoLogin';
+import KakaoLogin from './components/pages/AuthPage/kakaologin';
 import PasswordEmailPage from './components/pages/AuthPage/PasswordEmail';
 import PasswordResetPage from './components/pages/AuthPage/PasswordReset';
 
