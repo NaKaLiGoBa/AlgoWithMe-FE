@@ -6,7 +6,7 @@ import { addTab, setActiveTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
-import getSolutions from '../../../../service/SolutionsService';
+import getSolutions from '../../../../utils/getSolutions';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -19,12 +19,12 @@ export default function index() {
   useEffect(() => {
     const initialData = async () => {
       const { data, success } = await getSolutions(problemId, nextCursor, 3);
+
       if (success) {
         dispatch(setSolutionsData(data));
-        setNextCursor(data['_link'].nextCursor);
+        setNextCursor(data._link.nextCursor);
       }
     };
-
     initialData();
   }, [dispatch]);
 
@@ -48,8 +48,8 @@ export default function index() {
               solutions: [...solutions, ...data.solutions],
             }),
           );
-          setNextCursor(data['_link'].nextCursor);
-          setHasMore(data['_link'].nextCursor !== -1);
+          setNextCursor(data._link.nextCursor);
+          setHasMore(data._link.nextCursor !== -1);
         } else {
           setHasMore(false);
         }
@@ -75,9 +75,9 @@ export default function index() {
         hasMore={hasMore}
         loader={
           <div className="flex space-x-7 justify-center">
-            <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
-            <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
-            <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+            <div className="w-5 h-5 bg-gray-300 rounded-full" />
+            <div className="w-5 h-5 bg-gray-300 rounded-full" />
+            <div className="w-5 h-5 bg-gray-300 rounded-full" />
           </div>
         }
       >
