@@ -29,9 +29,9 @@ export default function index() {
   }, [dispatch]);
 
   const handleSolutionClick = (solution) => {
-    const TabExisting = tabs.some((tab) => tab.id === solution.id);
+    const TabExisting = tabs.some((tab) => tab.data.solution.id === solution.id);
     if (!TabExisting) {
-      const newTab = { id: solution.id, type: 'Post', name: solution.title };
+      const newTab = {type: 'Post', name: solution.title, data: {solution} };
       dispatch(addTab(newTab));
       dispatch(setActiveTab(newTab));
     }

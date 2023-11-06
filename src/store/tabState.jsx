@@ -1,21 +1,56 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-let nextTabId = 3; // 이미 1과 2는 사용되었다고 가정
+let nextTabId = 2; // 이미 1과 2는 사용되었다고 가정
 export const tabsSlice = createSlice({
   name: 'tabs',
   initialState: {
     tabs: [
-      { id: 1000, type: 'Description', name: 'Description' , content: '' },
-      { id: 1001, type: 'Solutions', name: 'Solutions', content: ''  },
+      {
+        id: 0,
+        type: 'Description',
+        name: 'Description',
+        content: '',
+        data: {
+          solution: {
+            id: '',
+            title: '',
+          },
+        },
+      },
+      {
+        id: 1,
+        type: 'Solutions',
+        name: 'Solutions',
+        content: '',
+        data: {
+          solution: {
+            id: '',
+            title: '',
+          },
+        },
+      },
     ],
-    activeTab: { id: 1, type: 'Description', name: 'Description', content: '' },
+    activeTab: {
+      id: 0,
+      type: 'Description',
+      name: 'Description',
+      content: '',
+      data: {
+        solution: {
+          id: '',
+          title: '',
+        },
+      },
+    },
   },
   reducers: {
     addTab: (state, action) => {
+      console.log(action.payload);
       const newTab = {
         ...action.payload,
         id: nextTabId++, // 새 탭에 고유한 ID 할당
       };
+      console.log(newTab);
       state.tabs.push(newTab);
     },
     removeTab: (state, action) => {
