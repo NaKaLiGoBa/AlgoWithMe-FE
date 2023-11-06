@@ -1,68 +1,96 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { addTab } from '../../../../store/tabState';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useParams } from 'react-router-dom';
+import { addTab, setActiveTab } from '../../../../store/tabState';
+import { setSolutionsData } from '../../../../store/SolutionsSlice';
+import ListItem from '../ListItem';
+import Link from '../../atoms/Text/Link';
+import getSolutions from '../../../../service/SolutionsService';
 
-const tests = {
-  totalCount: 3,
-  solutions: [
-    {
-      author: {
-        avatar: 'h',
-        nickname: 'user1',
-      },
-      solution: {
-        id: 4,
-        title: 'Solution 1 for Problem X',
-      },
-    },
-    {
-      author: {
-        avatar: 'h',
-        nickname: 'user2',
-      },
-      solution: {
-        id: 5,
-        title: 'Solution 2 for Problem X',
-      },
-    },
-    {
-      author: {
-        avatar: 'h',
-        nickname: 'user3',
-      },
-      solution: {
-        id: 6,
-        title: 'Solution 3 for Problem X',
-      },
-    },
-  ],
-  _link: {
-    nextCursor: 3,
-  },
-};
 export default function index() {
   const dispatch = useDispatch();
+  const solutions = useSelector((state) => state.solutions.solutions);
+  const [nextCursor, setNextCursor] = useState(-100);
+  const tabs = useSelector((state) => state.tabs.tabs);
+  const [hasMore, setHasMore] = useState(true);
+  const { problemId } = useParams();
+
+  useEffect(() => {
+    const initialData = async () => {
+      const { data, success } = await getSolutions(problemId, nextCursor, 3);
+      if (success) {
+        dispatch(setSolutionsData(data));
+        setNextCursor(data['_link'].nextCursor);
+      }
+    };
+
+    initialData();
+  }, [dispatch]);
 
   const handleSolutionClick = (solution) => {
-    dispatch(addTab({ id: solution.id, type: 'Post', name: solution.title }));
+    const TabExisting = tabs.some((tab) => tab.id === solution.id);
+    if (!TabExisting) {
+      const newTab = { id: solution.id, type: 'Post', name: solution.title };
+      dispatch(addTab(newTab));
+      dispatch(setActiveTab(newTab));
+    }
   };
+  const fetchMoreData = async () => {
+    if (!hasMore) return;
+    setTimeout(async () => {
+      try {
+        const { data, success } = await getSolutions(problemId, nextCursor, 2);
+        if (success) {
+          dispatch(
+            setSolutionsData({
+              totalCount: data.totalCount,
+              solutions: [...solutions, ...data.solutions],
+            }),
+          );
+          setNextCursor(data['_link'].nextCursor);
+          setHasMore(data['_link'].nextCursor !== -1);
+        } else {
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error('Error fetching more data:', error);
+        setHasMore(false);
+      }
+    }, 1000);
+  };
+  const SolutionsUrl = `${window.location.href}/solutions`;
+
   return (
-    <div className="h-screen">
-      {tests.solutions.map((test) => (
-        <div key={test.solution.id}>
-          <button
-            type="button"
-            onClick={() => handleSolutionClick(test.solution)}
-          >
-            <h2>{test.solution.title}</h2>
-            <p>Author: {test.author.nickname}</p>
-            <img
-              src={test.author.avatar}
-              alt={`${test.author.nickname}'s avatar`}
-            />
-          </button>
-        </div>
-      ))}
+    <div className=" px-4 py-4">
+      <Link
+        to={SolutionsUrl}
+        className="w-full border flex justify-center bg-[#63B758] text-white py-2 mb-5"
+      >
+        +풀이 공유
+      </Link>
+      <InfiniteScroll
+        dataLength={solutions.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={
+          <div className="flex space-x-7 justify-center">
+            <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+            <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+            <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+          </div>
+        }
+      >
+        {solutions.map((solution) => (
+          <ListItem
+            key={solution.solution.id}
+            avatar={solution.author.avatar}
+            nickname={solution.author.nickname}
+            title={solution.solution.title}
+            onClick={() => handleSolutionClick(solution.solution)}
+          />
+        ))}
+      </InfiniteScroll>
     </div>
   );
 }

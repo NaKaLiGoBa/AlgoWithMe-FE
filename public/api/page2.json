@@ -1,0 +1,28 @@
+{
+  "totalCount": 5,
+  "solutions": [
+    {
+      "author": {
+        "avatar": "",
+        "nickname": "thnh3113"
+      },
+      "solution": {
+        "id": 8,
+        "title": "문제 제목 예시3"
+      }
+    },
+    {
+      "author": {
+        "avatar": "",
+        "nickname": "thnh3113"
+      },
+      "solution": {
+        "id": 7,
+        "title": "문제 제목 예시2"
+      }
+    }
+  ],
+  "_link": {
+    "nextCursor": 1
+  }
+}
