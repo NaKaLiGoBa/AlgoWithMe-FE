@@ -28,8 +28,8 @@ export default function SolutionTest() {
     const fetchSolutionData = async () => {
       try {
         const solutionData = await fetchSolution(
-          activeTab.problemId,
-          activeTab.solutionId,
+          0,
+          0,
         );
         setActiveSolution(solutionData);
       } catch (error) {
