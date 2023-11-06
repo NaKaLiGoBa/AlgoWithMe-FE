@@ -32,7 +32,7 @@ const index = ({
           />
         )}
         {activeTab.type === 'Solutions' && <Solutions />}
-        {activeTab.type === 'Post' && <SolutionTest />}
+        {activeTab.type === 'Post' && <SolutionTest problemId={problem.number}/>}
       </div>
       <div className="grow">
         <Editor

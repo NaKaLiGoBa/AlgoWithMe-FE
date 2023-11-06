@@ -16,7 +16,7 @@ import {
 } from '../../../../utils/fetchSolution';
 import Button from '../../atoms/Input/Button';
 
-export default function SolutionTest() {
+export default function SolutionTest({ problemId }) {
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const tabs = useSelector((state) => state.tabs.tabs);
   const dispatch = useDispatch();
@@ -28,8 +28,8 @@ export default function SolutionTest() {
     const fetchSolutionData = async () => {
       try {
         const solutionData = await fetchSolution(
-          0,
-          0,
+          problemId,
+          activeTab.data.solution.id,
         );
         setActiveSolution(solutionData);
       } catch (error) {
@@ -48,7 +48,7 @@ export default function SolutionTest() {
   const handleUpdate = async () => {
     if (window.confirm('정말로 수정하시겠습니까?')) {
       navigate(
-        `/edit/${activeTab.problemId}/solution/${activeTab.solutionId}/edit`,
+        `/edit/${problemId}/solution/${activeTab.data.solution.id}/edit`,
       ); // 그냥 이동?
     }
   };
@@ -56,16 +56,18 @@ export default function SolutionTest() {
   const handleDelete = async () => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
       try {
+        console.log(activeTab);
         const response = await deleteSolution(
-          activeTab.problemId,
-          activeTab.solutionId,
+          problemId,
+          activeTab.data.solution.id,
           authToken,
         );
         alert('풀이 글 삭제 완료');
         console.log('Delete successful', response);
+
         // 삭제 후 행동
         dispatch(removeTab({ id: activeTab.id }));
-        navigate('/problems/:problemId');
+        navigate(`/problems/${problemId}`);
       } catch (error) {
         console.error('Error deleting solution:', error);
       }
@@ -80,7 +82,7 @@ export default function SolutionTest() {
             key={tab.id}
             className={tab.id === activeTab.id ? 'active' : ''}
             onClick={() => handleTabClick(tab)}
-          ></li>
+          />
         ))}
       </ul>
       {/* 게시글 데이터가 로드되었을 때만 내용을 표시 */}
