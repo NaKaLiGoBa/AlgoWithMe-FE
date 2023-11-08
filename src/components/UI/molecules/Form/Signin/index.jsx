@@ -41,7 +41,7 @@ function Signin() {
       if (response.status === 200) {
         // 성공 로직
         if (response.data && response.data.accessToken) {
-          localStorage.setItem('token', response.data.accessToken);
+          localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
           setErrorMessage(''); // 에러 상태 초기화
           alert(response.data.message);
           navigate('/');

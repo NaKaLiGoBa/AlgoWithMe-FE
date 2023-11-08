@@ -13,6 +13,7 @@ const index = () => {
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
+
   return (
     <div>
       <Header />

@@ -22,7 +22,7 @@ export default function SolutionTest({ problemId }) {
   const dispatch = useDispatch();
   const [activeSolution, setActiveSolution] = useState(null);
   const navigate = useNavigate();
-  const authToken = localStorage.getItem('authToken');
+  const authToken = localStorage.getItem('ACCESS_TOKEN');
 
   useEffect(() => {
     const fetchSolutionData = async () => {

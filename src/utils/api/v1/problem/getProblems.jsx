@@ -1,5 +1,9 @@
+// 문제 목록 리스트 가져오기
+
 import axios from 'axios';
-import API_BASE_URL from '../config/api-config';
+import { localHostURL } from './apiConfig';
+
+const hostURL = localHostURL;
 
 function handleResponse(response) {
   const { status, data } = response;
@@ -19,8 +23,12 @@ function handleResponse(response) {
 
 function handleError(error) {
   if (error.response) {
+    // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
     switch (status) {
+      case 304:
+        // 잘못된 요청
+        return { success: false, error: 'Bad Request', details: data };
       case 400:
         // 잘못된 요청
         return { success: false, error: 'Bad Request', details: data };
@@ -59,12 +67,12 @@ function handleError(error) {
     return { success: false, error: error.message };
   }
 }
+
 async function call(apiUrl, method, requestData = {}) {
   try {
     const response = await axios({
-      url: API_BASE_URL + apiUrl,
+      url: hostURL + apiUrl,
       method,
-      headers: { Authorization: localStorage.getItem('ACCESS_TOKEN') },
       ...requestData,
     });
     return handleResponse(response);
@@ -73,20 +81,8 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function create(apiUrl, data) {
-  return call(apiUrl, 'POST', { data });
-}
+async function getProblem(apiUrl) {
+    return call(apiUrl, 'GET');
+  }
 
-async function read(apiUrl, queryParams = {}) {
-  return call(apiUrl, 'GET', { params: queryParams });
-}
-
-async function update(apiUrl, data) {
-  return call(apiUrl, 'PUT', { data });
-}
-
-async function del(apiUrl) {
-  return call(apiUrl, 'DELETE');
-}
-
-export default { call, handleResponse, handleError, create, read, update, del };
+export default getProblem;
