@@ -4,8 +4,10 @@ import Close from '../../atoms/Icon/Close';
 import QuestionBox from '../../molecules/Quiz/QuestionBox';
 import Multiplechoice from '../../molecules/Quiz/MultipleChoice';
 import QuizNavigationButton from '../../molecules/Quiz/QuizNavigaionButton';
+import TrueOrFalse from '../../molecules/Quiz/TrueOrFalse';
+import Initial from '../../molecules/Quiz/Initials';
 
-export default function index() {
+export default function index({ currentQuiz }) {
   return (
     <div className="bg-[#D9D9D9] h-screen realative ">
       <Header />
@@ -15,7 +17,10 @@ export default function index() {
       >
         <Close className="absolute right-0 mr-5 " />
         <QuestionBox />
-        <Multiplechoice />
+        {currentQuiz.type === 'choice' && <Multiplechoice />}
+        {currentQuiz.type === 'ox' && <TrueOrFalse />}
+        {currentQuiz.type === 'initial' && <Initial />}
+
         <QuizNavigationButton />
       </div>
     </div>

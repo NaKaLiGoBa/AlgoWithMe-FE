@@ -1,6 +1,15 @@
-import React from 'react';
+import { useEffect, React } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import MiniQuiz from '../../../../public/api/miniQuiz.json';
+import { setQuizzes } from '../../../store/quizSlice';
 import ProblemQuizzesTemplate from '../../UI/templates/ProblemQuizzesTemplate';
 
 export default function index() {
-  return <ProblemQuizzesTemplate />;
+  const dispatch = useDispatch();
+  const currentQuiz = useSelector((state) => state.quiz.currentQuiz);
+
+  useEffect(() => {
+    dispatch(setQuizzes(MiniQuiz));
+  }, [dispatch]);
+  return <ProblemQuizzesTemplate currentQuiz={currentQuiz} />;
 }
