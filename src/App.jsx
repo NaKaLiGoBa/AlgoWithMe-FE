@@ -3,7 +3,7 @@ import React from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SigninPage from './components/pages/AuthPage/SigninPage';
 import SignupPage from './components/pages/AuthPage/SignupPage';
-import HomePage from './components/pages/HomePage';
+import HomePage from './components/UI/templates/HomeTemplate/index.jsx';
 import IDEPage from './components/pages/IDEPage';
 import SolutionEditPage from './components/pages/SolutionEditPage';
 import KakaoLogin from './components/pages/AuthPage/kakaologin';

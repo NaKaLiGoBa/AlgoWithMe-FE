@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Text from '../../../atoms/Text/Text';
 import Link from '../../../atoms/Text/Link';
+import Logo from '../../../atoms/Logo';
 
 export default function index() {
   const [token, setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
@@ -11,8 +11,8 @@ export default function index() {
   };
 
   return (
-    <div className="bg-[#D9D9D9] top-0 left-0 right-0 flex items-center px-9 justify-between">
-      <Text className="text-[30px] font-bold my-2 ml-11">Algo 있니?</Text>
+    <div className="fixed h-[50px] top-0 left-0 right-0 flex items-center px-9 justify-between border-b-[1px] bg-white">
+      <Logo />
       {token ? (
         <Link to="/">
           <button type="button" onClick={handleLogout}>
@@ -21,7 +21,9 @@ export default function index() {
         </Link>
       ) : (
         <div>
-          <Link to={{ pathname: "/signup", state: { statusCode: 1 } }}>회원가입</Link>
+          <Link to={{ pathname: '/signup', state: { statusCode: 1 } }}>
+            회원가입
+          </Link>
           <Link to="/signin" className="px-7">
             로그인
           </Link>
