@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../../molecules/Navigation/Header';
 import Close from '../../atoms/Icon/Close';
 import QuestionBox from '../../molecules/Quiz/QuestionBox';
+import Multiplechoice from '../../molecules/Quiz/MultipleChoice';
 import QuizNavigationButton from '../../molecules/Quiz/QuizNavigaionButton';
 
 export default function index() {
@@ -14,6 +15,7 @@ export default function index() {
       >
         <Close className="absolute right-0 mr-5 " />
         <QuestionBox />
+        <Multiplechoice />
         <QuizNavigationButton />
       </div>
     </div>
