@@ -8,6 +8,8 @@ export default function index() {
   const dispatch = useDispatch();
   const currentQuiz = useSelector((state) => state.quiz.currentQuiz);
 
+  console.log(currentQuiz);
+
   useEffect(() => {
     dispatch(setQuizzes(MiniQuiz));
   }, [dispatch]);
