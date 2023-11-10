@@ -3,10 +3,10 @@ import Text from '../../../atoms/Text/Text';
 import Link from '../../../atoms/Text/Link';
 
 export default function index() {
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('ACCESS_TOKEN');
     setToken(null);
   };
 

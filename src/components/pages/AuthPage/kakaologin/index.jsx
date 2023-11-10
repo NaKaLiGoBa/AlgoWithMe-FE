@@ -17,7 +17,7 @@ function index() {
       if (response.status === 200) {
         // "완료"로 받은 상태 코드
         if (response.data && response.data.accessToken) {
-          localStorage.setItem('token', response.data.accessToken);
+          localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
           // 로그인 후 처리 로직
           if (response.data.message) {
             alert(response.data.message);
