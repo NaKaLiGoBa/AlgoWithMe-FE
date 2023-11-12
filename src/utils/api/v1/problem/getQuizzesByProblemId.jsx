@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { localHostURL } from '../../../apiConfig';
-import getAuthHeader from '../../../getAuthHeader';
+// import getAuthHeader from '../../../getAuthHeader';
 
 const hostURL = localHostURL;
 
@@ -54,7 +54,7 @@ async function call(apiUrl, method) {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
-      headers: getAuthHeader(),
+      // headers: getAuthHeader(),
     });
     return handleResponse(response);
   } catch (error) {
@@ -62,8 +62,9 @@ async function call(apiUrl, method) {
   }
 }
 
-async function getQuizzesByProblemId(problemId) {
-  const apiUrl = `/api/v1/solutions/${problemId}/quizzes`;
+async function getQuizzesByProblemId(id) {
+  const apiUrl = `/api/v1/problems/${id}/quizzes`;
+  console.log('api', apiUrl);
 
   return call(apiUrl, 'GET');
 }

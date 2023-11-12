@@ -1,11 +1,11 @@
 import { React } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { True, False } from '../../../atoms/Icon/TrueOrFalse';
 import { setSelectedOption } from '../../../../../store/quizSlice';
 
 export default function index({ selectedOption }) {
   const dispatch = useDispatch();
-
+  const isAnswered = useSelector((state) => state.quiz.isAnswered);
   const handleOptionClick = (option) => {
     dispatch(setSelectedOption(option));
   };
@@ -14,6 +14,7 @@ export default function index({ selectedOption }) {
       <button
         type="button"
         onClick={() => handleOptionClick('O')}
+        disabled={isAnswered}
         className={`p-[30px] border-[#385FE7] border shadow-lg  ${
           selectedOption === 'O' ? 'bg-[#385FE7]' : 'bg-white'
         }`}
@@ -26,6 +27,7 @@ export default function index({ selectedOption }) {
       <button
         type="button"
         onClick={() => handleOptionClick('X')}
+        disabled={isAnswered}
         className={`p-[30px] border border-[#CB3131] shadow-lg ${
           selectedOption === 'X' ? 'bg-[#CB3131]' : 'bg-white'
         }`}

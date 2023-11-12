@@ -4,7 +4,7 @@ import Radio from '../../../atoms/Input/Radio';
 import { setSelectedOption } from '../../../../../store/quizSlice';
 
 export default function index() {
-  const currentQuiz = useSelector((state) => state.quiz.currentQuiz);
+  const { currentQuiz, isAnswered } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
 
   const handleOptionChange = (e) => {
@@ -20,6 +20,7 @@ export default function index() {
             name="option"
             value={option}
             onChange={handleOptionChange}
+            disabled={isAnswered}
           />
         </div>
       ))}

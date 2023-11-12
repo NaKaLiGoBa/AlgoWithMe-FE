@@ -7,6 +7,7 @@ export default function index() {
   const initials = useSelector(
     (state) => state.quiz.currentQuiz.choiceOrInitials,
   );
+  const { isAnswered, correctAnswer } = useSelector((state) => state.quiz);
   const [answers, setAnswers] = useState(new Array(initials.length).fill(''));
 
   useEffect(() => {
@@ -20,6 +21,15 @@ export default function index() {
     newAnswers[idx] = text;
     setAnswers(newAnswers);
   };
+  const getInputStyle = () => {
+    if (isAnswered) {
+      return correctAnswer
+        ? 'bg-[#63B758] text-[#FFFFFF]'
+        : 'bg-[#CB3131] text-[#FFFFFF]';
+    }
+    return 'bg-[#D9D9D9] text-[#000]';
+  };
+
   return (
     <div className="flex justify-center">
       {initials.map((initial, idx) => (
@@ -31,7 +41,8 @@ export default function index() {
           onChange={(e) => handleChange(idx, e.target.value)}
           placeholder={initial}
           size={1}
-          className=" bg-[#D9D9D9] w-[100px] h-[100px] text-black text-[25px] p-0 border-0 text-center m-2 focus:outline-none"
+          disabled={isAnswered}
+          className={`${getInputStyle()}  w-[100px] h-[100px] text-[25px] p-0 border-0 text-center m-2 focus:outline-none `}
         />
       ))}
     </div>

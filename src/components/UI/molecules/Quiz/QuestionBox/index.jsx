@@ -19,16 +19,18 @@ export default function index() {
       <div className="mt-7">
         <div className="h-[100px]">
           {correctAnswer === true && (
-            <True color="green" animated number={number} questionAnswer />
+            <True color="#63B758" animated number={number} questionNumber />
           )}
           {correctAnswer === false && (
-            <False color="red" animated number={number} questionAnswer />
+            <False color="#CB3131" animated number={number} questionNumber />
           )}
           {correctAnswer === null && (
-            <True color="black" number={number} questionAnswer />
+            <True color="#D9D9D9" number={number} questionNumber />
           )}
         </div>
-        <div className="ml-[100px]">{currentQuiz.description}</div>
+        <div className="ml-[100px] text-[20px] font-semibold">
+          {currentQuiz.description}
+        </div>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ export function True({
   color,
   className,
   animated = false,
-  questionAnswer = false,
+  questionNumber = false,
   number,
 }) {
   const circleClassName = animated ? 'drawCircle' : '';
@@ -27,12 +27,12 @@ export function True({
         className={circleClassName}
         fill="none"
       />
-      {questionAnswer && (
+      {questionNumber && (
         <text
           x="50%"
           y="50%"
           textAnchor="middle"
-          stroke={color}
+          stroke={animated ? 'green' : 'black'}
           strokeWidth="1px"
           dy=".3em"
         >
@@ -43,7 +43,7 @@ export function True({
   );
 }
 
-export function False({ color, animated = false, number, questionAnswer }) {
+export function False({ color, animated = false, number, questionNumber }) {
   const line1ClassName = animated ? 'drawLine1' : '';
   const line2ClassName = animated ? 'drawLine2' : '';
   return (
@@ -70,7 +70,7 @@ export function False({ color, animated = false, number, questionAnswer }) {
         strokeDashoffset={animated ? '85' : ''}
         className={line2ClassName}
       />
-      {questionAnswer && (
+      {questionNumber && (
         <text
           x="50%"
           y="50%"

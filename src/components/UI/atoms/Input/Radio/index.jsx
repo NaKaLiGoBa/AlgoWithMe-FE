@@ -1,6 +1,13 @@
 import React from 'react';
 
-export default function index({ label, name, value, checked, onChange }) {
+export default function index({
+  label,
+  name,
+  value,
+  checked,
+  onChange,
+  disabled,
+}) {
   return (
     <div>
       <input
@@ -9,6 +16,7 @@ export default function index({ label, name, value, checked, onChange }) {
         value={value}
         checked={checked}
         onChange={onChange}
+        disabled={disabled}
       />
       <label htmlFor={value}>{label}</label>
     </div>
