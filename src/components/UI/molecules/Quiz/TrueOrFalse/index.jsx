@@ -10,7 +10,7 @@ export default function index({ selectedOption }) {
     dispatch(setSelectedOption(option));
   };
   return (
-    <div>
+    <div className="flex justify-center gap-[250px] ">
       <button
         type="button"
         onClick={() => handleOptionClick('O')}

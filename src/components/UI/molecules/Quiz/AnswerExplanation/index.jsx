@@ -9,7 +9,10 @@ export default function index() {
     <div className="flex flex-col items-end mb-7">
       {isAnswered && (
         <>
-          <div style={{ color: correctAnswer ? 'black' : 'red' }}>
+          <div
+            style={{ color: correctAnswer ? 'black' : 'red' }}
+            className="text-[20px] font-bold "
+          >
             {currentQuiz.answer}
           </div>
           <div style={{ color: 'black' }}>{currentQuiz.explain}</div>

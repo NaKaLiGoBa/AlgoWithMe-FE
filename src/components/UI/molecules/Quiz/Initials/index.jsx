@@ -7,13 +7,11 @@ export default function index() {
   const initials = useSelector(
     (state) => state.quiz.currentQuiz.choiceOrInitials,
   );
-  const initialAnswer = useSelector((state) => state.quiz.initialAnswer);
   const [answers, setAnswers] = useState(new Array(initials.length).fill(''));
 
   useEffect(() => {
     const userAnswer = answers.join('');
     dispatch(setInitialAnswer(userAnswer));
-    console.log('c', initialAnswer);
   }, [answers, dispatch]);
 
   const handleChange = (idx, value) => {
@@ -23,7 +21,7 @@ export default function index() {
     setAnswers(newAnswers);
   };
   return (
-    <div className="flex">
+    <div className="flex justify-center">
       {initials.map((initial, idx) => (
         <input
           key={idx}

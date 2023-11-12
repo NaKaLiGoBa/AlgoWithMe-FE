@@ -12,9 +12,9 @@ export default function index() {
   };
 
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap ml-[120px] ">
       {currentQuiz.choiceOrInitials.map((option) => (
-        <div key={option} className="w-1/2 p-2 text-[20px]">
+        <div key={option} className="w-1/2 p-2 text-[20px] mb-[35px]">
           <Radio
             label={option}
             name="option"

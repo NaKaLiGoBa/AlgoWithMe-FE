@@ -1,9 +1,11 @@
 import { React } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../atoms/Input/Button';
 import {
   nextQuizNumber,
   prevQuizNumber,
+  resetQuiz,
   setCorrectAnswer,
   setIsAnswered,
   setSelectedOption,
@@ -15,6 +17,8 @@ export default function index({ totalCount, selectedOption, currentQuiz }) {
     (state) => state.quiz,
   );
   const lastQuestion = totalCount === number + 1;
+  const { problemId } = useParams();
+  const navigate = useNavigate();
 
   const handlePrevClick = () => {
     dispatch(prevQuizNumber(false));
@@ -24,7 +28,7 @@ export default function index({ totalCount, selectedOption, currentQuiz }) {
   };
   const ValidateAnswer = () => {
     let isCorrect = false;
-    if (currentQuiz.type === 'initial') {
+    if (currentQuiz.type === 'initial' && initialAnswer !== '') {
       isCorrect = initialAnswer === currentQuiz.answer;
       dispatch(setCorrectAnswer(isCorrect));
       dispatch(setIsAnswered(true));
@@ -43,8 +47,14 @@ export default function index({ totalCount, selectedOption, currentQuiz }) {
     dispatch(setIsAnswered(false));
     dispatch(setCorrectAnswer(null));
   };
+
+  const handleGoToProblem = () => {
+    dispatch(resetQuiz());
+    navigate(`/problems/${problemId}`);
+  };
+
   return (
-    <div className="flex justify-end gap-4">
+    <div className="flex justify-end gap-4 mb-2">
       <Button
         className="p-3 rounded-md !bg-[#D9D9D9]"
         onClick={handlePrevClick}
@@ -65,7 +75,12 @@ export default function index({ totalCount, selectedOption, currentQuiz }) {
         </Button>
       )}
       {isAnswered && lastQuestion && (
-        <Button className="p-3 rounded-md  !bg-[#63B758]"> 문제풀기</Button>
+        <Button
+          className="p-3 rounded-md  !bg-[#63B758]"
+          onClick={handleGoToProblem}
+        >
+          문제풀기
+        </Button>
       )}
     </div>
   );
