@@ -1,13 +1,14 @@
-import { useState, React } from 'react';
-import { useSelector } from 'react-redux';
+import { React } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Radio from '../../../atoms/Input/Radio';
+import { setSelectedOption } from '../../../../../store/quizSlice';
 
 export default function index() {
   const currentQuiz = useSelector((state) => state.quiz.currentQuiz);
-  const [selectedOption, SetSelectedOption] = useState('');
+  const dispatch = useDispatch();
 
   const handleOptionChange = (e) => {
-    SetSelectedOption(e.target.value);
+    dispatch(setSelectedOption(e.target.value));
   };
 
   return (

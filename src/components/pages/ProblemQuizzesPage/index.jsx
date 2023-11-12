@@ -7,11 +7,19 @@ import ProblemQuizzesTemplate from '../../UI/templates/ProblemQuizzesTemplate';
 export default function index() {
   const dispatch = useDispatch();
   const currentQuiz = useSelector((state) => state.quiz.currentQuiz);
+  const totalCount = useSelector((state) => state.quiz.totalCount);
+  const selectedOption = useSelector((state) => state.quiz.selectedOption);
 
-  console.log(currentQuiz);
+  console.log('tt', totalCount);
 
   useEffect(() => {
     dispatch(setQuizzes(MiniQuiz));
   }, [dispatch]);
-  return <ProblemQuizzesTemplate currentQuiz={currentQuiz} />;
+  return (
+    <ProblemQuizzesTemplate
+      currentQuiz={currentQuiz}
+      totalCount={totalCount}
+      selectedOption={selectedOption}
+    />
+  );
 }

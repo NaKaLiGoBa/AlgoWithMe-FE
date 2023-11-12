@@ -1,11 +1,13 @@
-import { React, useState } from 'react';
+import { React } from 'react';
+import { useDispatch } from 'react-redux';
 import { True, False } from '../../../atoms/Icon/TrueOrFalse';
+import { setSelectedOption } from '../../../../../store/quizSlice';
 
-export default function index() {
-  const [selectedOption, setSelectedOption] = useState(null);
+export default function index({ selectedOption }) {
+  const dispatch = useDispatch();
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
+    dispatch(setSelectedOption(option));
   };
   return (
     <div>
