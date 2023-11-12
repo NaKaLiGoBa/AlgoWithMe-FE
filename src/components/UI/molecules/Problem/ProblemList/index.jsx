@@ -5,7 +5,11 @@ import PaginationRange from '../../../../../hooks/usePaginationRange';
 import testData from '../../../../../../public/api/TestProblemData.json';
 
 function Th({ children }) {
-  return <th className="py-2 text-sm border-black border-b-1">{children}</th>;
+  return (
+    <th className="py-2 text-sm text-[#9f9f9f] border-black border-b-1">
+      {children}
+    </th>
+  );
 }
 
 function Td({ children, className = '' }) {
