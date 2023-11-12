@@ -1,26 +1,37 @@
-import { React, useState } from 'react';
+import { React } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../../atoms/Input/Button';
 import {
   nextQuizNumber,
   prevQuizNumber,
+  setCorrectAnswer,
+  setIsAnswered,
   setSelectedOption,
 } from '../../../../../store/quizSlice';
 
-export default function index({ totalCount, selectedOption }) {
+export default function index({ totalCount, selectedOption, currentQuiz }) {
   const dispatch = useDispatch();
-  const number = useSelector((state) => state.quiz.number);
-  const [isAnswered, setIsAnswered] = useState(false);
+  const { number, isAnswered, initialAnswer } = useSelector(
+    (state) => state.quiz,
+  );
   const lastQuestion = totalCount === number + 1;
 
   const handlePrevClick = () => {
-    dispatch(prevQuizNumber());
-    setIsAnswered(false);
+    dispatch(prevQuizNumber(false));
+    dispatch(setIsAnswered(false));
     dispatch(setSelectedOption(null));
+    dispatch(setCorrectAnswer(null));
   };
   const ValidateAnswer = () => {
-    if (selectedOption !== null && selectedOption !== '') {
-      setIsAnswered(true);
+    let isCorrect = false;
+    if (currentQuiz.type === 'initial') {
+      isCorrect = initialAnswer === currentQuiz.answer;
+      dispatch(setCorrectAnswer(isCorrect));
+      dispatch(setIsAnswered(true));
+    } else if (selectedOption !== null && selectedOption !== '') {
+      isCorrect = selectedOption === currentQuiz.answer;
+      dispatch(setCorrectAnswer(isCorrect));
+      dispatch(setIsAnswered(true));
     } else {
       alert('문제를 풀어주세요');
     }
@@ -29,10 +40,11 @@ export default function index({ totalCount, selectedOption }) {
   const handleNextClick = () => {
     dispatch(nextQuizNumber());
     dispatch(setSelectedOption(null));
-    setIsAnswered(false);
+    dispatch(setIsAnswered(false));
+    dispatch(setCorrectAnswer(null));
   };
   return (
-    <div>
+    <div className="flex justify-end gap-4">
       <Button
         className="p-3 rounded-md !bg-[#D9D9D9]"
         onClick={handlePrevClick}

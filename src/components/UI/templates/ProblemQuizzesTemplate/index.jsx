@@ -6,6 +6,7 @@ import Multiplechoice from '../../molecules/Quiz/MultipleChoice';
 import QuizNavigationButton from '../../molecules/Quiz/QuizNavigaionButton';
 import TrueOrFalse from '../../molecules/Quiz/TrueOrFalse';
 import Initial from '../../molecules/Quiz/Initials';
+import AnswerExplanation from '../../molecules/Quiz/AnswerExplanation';
 
 export default function index({ currentQuiz, totalCount, selectedOption }) {
   return (
@@ -19,11 +20,15 @@ export default function index({ currentQuiz, totalCount, selectedOption }) {
           {currentQuiz.type === 'ox' && (
             <TrueOrFalse selectedOption={selectedOption} />
           )}
-          {currentQuiz.type === 'initial' && <Initial />}
+          {currentQuiz.type === 'initial' && (
+            <Initial currentQuiz={currentQuiz} />
+          )}
         </div>
+        <AnswerExplanation />
         <QuizNavigationButton
           totalCount={totalCount}
           selectedOption={selectedOption}
+          currentQuiz={currentQuiz}
         />
       </div>
     </div>

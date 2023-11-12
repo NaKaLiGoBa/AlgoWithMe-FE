@@ -10,8 +10,6 @@ export default function index() {
   const totalCount = useSelector((state) => state.quiz.totalCount);
   const selectedOption = useSelector((state) => state.quiz.selectedOption);
 
-  console.log('tt', totalCount);
-
   useEffect(() => {
     dispatch(setQuizzes(MiniQuiz));
   }, [dispatch]);

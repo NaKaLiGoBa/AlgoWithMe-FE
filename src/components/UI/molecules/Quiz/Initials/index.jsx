@@ -1,11 +1,20 @@
-import { React, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { React, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInitialAnswer } from '../../../../../store/quizSlice';
 
 export default function index() {
+  const dispatch = useDispatch();
   const initials = useSelector(
     (state) => state.quiz.currentQuiz.choiceOrInitials,
   );
+  const initialAnswer = useSelector((state) => state.quiz.initialAnswer);
   const [answers, setAnswers] = useState(new Array(initials.length).fill(''));
+
+  useEffect(() => {
+    const userAnswer = answers.join('');
+    dispatch(setInitialAnswer(userAnswer));
+    console.log('c', initialAnswer);
+  }, [answers, dispatch]);
 
   const handleChange = (idx, value) => {
     const text = value.slice(0, 1);

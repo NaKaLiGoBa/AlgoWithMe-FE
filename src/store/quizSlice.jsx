@@ -8,6 +8,9 @@ export const quizSlice = createSlice({
     totalCount: null,
     currentQuiz: {},
     selectedOption: null,
+    initialAnswer: null,
+    isAnswered: false,
+    correctAnswer: null,
   },
   reducers: {
     setQuizzes: (state, action) => {
@@ -30,10 +33,26 @@ export const quizSlice = createSlice({
     setSelectedOption: (state, action) => {
       state.selectedOption = action.payload;
     },
+    setInitialAnswer: (state, action) => {
+      state.initialAnswer = action.payload;
+    },
+    setIsAnswered: (state, action) => {
+      state.isAnswered = action.payload;
+    },
+    setCorrectAnswer: (state, action) => {
+      state.correctAnswer = action.payload;
+    },
   },
 });
 
-export const { setQuizzes, nextQuizNumber, prevQuizNumber, setSelectedOption } =
-  quizSlice.actions;
+export const {
+  setQuizzes,
+  nextQuizNumber,
+  prevQuizNumber,
+  setSelectedOption,
+  setInitialAnswer,
+  setIsAnswered,
+  setCorrectAnswer,
+} = quizSlice.actions;
 
 export default quizSlice.reducer;
