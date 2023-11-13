@@ -15,6 +15,7 @@ import {
   deleteSolution,
 } from '../../../../utils/fetchSolution';
 import Button from '../../atoms/Input/Button';
+import CommentsSection from '../CommentsSection';
 
 export default function SolutionTest({ problemId }) {
   const activeTab = useSelector((state) => state.tabs.activeTab);
@@ -146,6 +147,9 @@ export default function SolutionTest({ problemId }) {
       {/* Viewer */}
       <div className="markdown-viewer bg-white p-6">
         <MDEditor.Markdown source={activeSolution?.solution.content} />
+      </div>
+      <div className="mt-4">
+        <CommentsSection />
       </div>
     </div>
   );

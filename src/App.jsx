@@ -9,6 +9,7 @@ import SolutionEditPage from './components/pages/SolutionEditPage';
 import KakaoLogin from './components/pages/AuthPage/kakaologin';
 import PasswordEmailPage from './components/pages/AuthPage/PasswordEmail';
 import PasswordResetPage from './components/pages/AuthPage/PasswordReset';
+import Test from './components/UI/molecules/CommentsSection'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/auth/signin/kakao" element={<KakaoLogin />} />
         <Route path="/password" element={<PasswordEmailPage />} />
         <Route path="/password/reset" element={<PasswordResetPage />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </BrowserRouter>
   );
