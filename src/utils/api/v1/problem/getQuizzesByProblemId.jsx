@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { localHostURL } from '../../../apiConfig';
-import getAuthHeader from '../../../getAuthHeader';
+// import getAuthHeader from '../../../getAuthHeader';
 
 const hostURL = localHostURL;
 
@@ -9,7 +9,7 @@ function handleResponse(response) {
 
   switch (status) {
     case 200:
-      // 성공
+      // 미니퀴즈 정보
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -22,13 +22,6 @@ function handleError(error) {
     // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
     switch (status) {
-      case 422:
-        // validation error
-        return {
-          success: false,
-          error: 'validation error',
-          details: data,
-        };
       case 500:
         // 서버 내부 오류
         return {
@@ -56,13 +49,12 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, params = {}) {
+async function call(apiUrl, method) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
-      headers: getAuthHeader(),
-      params,
+      // headers: getAuthHeader(),
     });
     return handleResponse(response);
   } catch (error) {
@@ -70,15 +62,11 @@ async function call(apiUrl, method, params = {}) {
   }
 }
 
-export default async function getProblems(problemId, params = {}) {
-  const apiUrl = `/api/v1/problem/${problemId}/comments`;
-  return call(apiUrl, 'GET', params);
+async function getQuizzesByProblemId(id) {
+  const apiUrl = `/api/v1/problems/${id}/quizzes`;
+  console.log('api', apiUrl);
+
+  return call(apiUrl, 'GET');
 }
 
-// ===예시===
-//   const params = {
-//     page: page,
-//     sort: sort,
-//     difficulty: difficulty,
-//     status: status,
-//   };
+export default getQuizzesByProblemId;

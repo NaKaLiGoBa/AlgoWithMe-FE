@@ -29,9 +29,11 @@ export default function index() {
   }, [dispatch]);
 
   const handleSolutionClick = (solution) => {
-    const TabExisting = tabs.some((tab) => tab.data.solution.id === solution.id);
+    const TabExisting = tabs.some(
+      (tab) => tab.data.solution.id === solution.id,
+    );
     if (!TabExisting) {
-      const newTab = {type: 'Post', name: solution.title, data: {solution} };
+      const newTab = { type: 'Post', name: solution.title, data: { solution } };
       dispatch(addTab(newTab));
       dispatch(setActiveTab(newTab));
     }
@@ -62,12 +64,12 @@ export default function index() {
   const SolutionsUrl = `${window.location.href}/solutions/edit`;
 
   return (
-    <div className=" px-4 py-4">
+    <div className="h-[600px] px-4 py-4">
       <Link
         to={SolutionsUrl}
-        className="w-full border flex justify-center bg-[#63B758] text-white py-2 mb-5"
+        className="w-full flex justify-center bg-[#63B758] text-white py-2 mb-5 rounded-sm"
       >
-        +풀이 공유
+        + 풀이 공유
       </Link>
       <InfiniteScroll
         dataLength={solutions.length}
@@ -87,6 +89,9 @@ export default function index() {
             avatar={solution.author.avatar}
             nickname={solution.author.nickname}
             title={solution.solution.title}
+            likeCount={solution.solution.likeCount}
+            viewCount={solution.solution.viewCount}
+            commentCount={solution.solution.commentCount}
             onClick={() => handleSolutionClick(solution.solution)}
           />
         ))}
