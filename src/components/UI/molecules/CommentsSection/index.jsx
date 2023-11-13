@@ -6,167 +6,167 @@ import CommentSection from '../CommentSection';
 import ProblemListFooter from '../Problem/ProblemListFooter';
 import usePaginationRange from '../../../../hooks/usePaginationRange';
 
+const commentsData = [
+  {
+    id: 'c1',
+    username: 'Goorm1',
+    timestamp: 'Nov 10, 2023',
+    content: '훌륭한 풀이.',
+    likes: 456,
+    avatar: '/path/to/goorm1/avatar.jpg',
+    replies: [
+      {
+        id: 'r1',
+        username: '@HM1',
+        timestamp: 'a minute ago',
+        content: 'Good :)',
+      },
+      {
+        id: 'r2',
+        username: '@HM2',
+        timestamp: 'Nov 11, 2023',
+        content: '가나다라마ㅂ',
+      },
+    ],
+  },
+  {
+    id: 'c2',
+    username: 'Goorm2',
+    timestamp: 'Nov 11, 2023',
+    content: '훌륭한 풀이2',
+    likes: 123,
+    avatar: '/path/to/goorm2/avatar.jpg',
+    replies: [
+      {
+        id: 'r3',
+        username: '@HM3',
+        timestamp: '11 minute ago',
+        content: '3333333333',
+      },
+      {
+        id: 'r4',
+        username: '@HM4',
+        timestamp: 'Nov 11, 2023',
+        content: '사아자차카타ㅍ',
+      },
+    ],
+  },
+  {
+    id: 'c3',
+    username: 'Goorm3',
+    timestamp: 'Nov 11, 2023',
+    content: '훌륭한 풀이3',
+    likes: 123,
+    avatar: '/path/to/goorm2/avatar.jpg',
+    replies: [
+      {
+        id: 'r5',
+        username: '@HM3',
+        timestamp: '11 minute ago',
+        content: '3333333333',
+      },
+      {
+        id: 'r6',
+        username: '@HM4',
+        timestamp: 'Nov 11, 2023',
+        content: '사아자차카타ㅍ',
+      },
+    ],
+  },
+  {
+    id: 'c4',
+    username: 'Goorm4',
+    timestamp: 'Nov 11, 2023',
+    content: '훌륭한 풀이4',
+    likes: 123,
+    avatar: '/path/to/goorm2/avatar.jpg',
+    replies: [
+      {
+        id: 'r7',
+        username: '@HM3',
+        timestamp: '11 minute ago',
+        content: '3333333333',
+      },
+      {
+        id: 'r8',
+        username: '@HM4',
+        timestamp: 'Nov 11, 2023',
+        content: '사아자차카타ㅍ',
+      },
+    ],
+  },
+  {
+    id: 'c5',
+    username: 'Goorm5',
+    timestamp: 'Nov 11, 2023',
+    content: '훌륭한 풀이5',
+    likes: 123,
+    avatar: '/path/to/goorm2/avatar.jpg',
+    replies: [
+      {
+        id: 'r9',
+        username: '@HM3',
+        timestamp: '11 minute ago',
+        content: '3333333333',
+      },
+      {
+        id: 'r10',
+        username: '@HM4',
+        timestamp: 'Nov 11, 2023',
+        content: '사아자차카타ㅍ',
+      },
+    ],
+  },
+  {
+    id: 'c6',
+    username: 'Goorm6',
+    timestamp: 'Nov 11, 2023',
+    content: '훌륭한 풀이6',
+    likes: 123,
+    avatar: '/path/to/goorm2/avatar.jpg',
+    replies: [
+      {
+        id: 'r11',
+        username: '@HM3',
+        timestamp: '11 minute ago',
+        content: '3333333333',
+      },
+      {
+        id: 'r12',
+        username: '@HM4',
+        timestamp: 'Nov 11, 2023',
+        content: '사아자차카타ㅍ',
+      },
+    ],
+  },
+  {
+    id: 'c7',
+    username: 'Goorm7',
+    timestamp: 'Nov 11, 2023',
+    content: '훌륭한 풀이7',
+    likes: 123,
+    avatar: '/path/to/goorm2/avatar.jpg',
+    replies: [
+      {
+        id: 'r13',
+        username: '@HM3',
+        timestamp: '11 minute ago',
+        content: '3333333333',
+      },
+      {
+        id: 'r14',
+        username: '@HM4',
+        timestamp: 'Nov 11, 2023',
+        content: '사아자차카타ㅍ',
+      },
+    ],
+  },
+];
+
 function CommentsSection() {
   const [value, setValue] = useState('');
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
-
-  const commentsData = [
-    {
-      id: 'c1',
-      username: 'Goorm1',
-      timestamp: 'Nov 10, 2023',
-      content: '훌륭한 풀이.',
-      likes: 456,
-      avatar: '/path/to/goorm1/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM1',
-          timestamp: 'a minute ago',
-          content: 'Good :)',
-        },
-        {
-          id: 'r2',
-          username: '@HM2',
-          timestamp: 'Nov 11, 2023',
-          content: '가나다라마ㅂ',
-        },
-      ],
-    },
-    {
-      id: 'c2',
-      username: 'Goorm2',
-      timestamp: 'Nov 11, 2023',
-      content: '훌륭한 풀이2',
-      likes: 123,
-      avatar: '/path/to/goorm2/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM3',
-          timestamp: '11 minute ago',
-          content: '3333333333',
-        },
-        {
-          id: 'r2',
-          username: '@HM4',
-          timestamp: 'Nov 11, 2023',
-          content: '사아자차카타ㅍ',
-        },
-      ],
-    },
-    {
-      id: 'c2',
-      username: 'Goorm3',
-      timestamp: 'Nov 11, 2023',
-      content: '훌륭한 풀이3',
-      likes: 123,
-      avatar: '/path/to/goorm2/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM3',
-          timestamp: '11 minute ago',
-          content: '3333333333',
-        },
-        {
-          id: 'r2',
-          username: '@HM4',
-          timestamp: 'Nov 11, 2023',
-          content: '사아자차카타ㅍ',
-        },
-      ],
-    },
-    {
-      id: 'c2',
-      username: 'Goorm4',
-      timestamp: 'Nov 11, 2023',
-      content: '훌륭한 풀이4',
-      likes: 123,
-      avatar: '/path/to/goorm2/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM3',
-          timestamp: '11 minute ago',
-          content: '3333333333',
-        },
-        {
-          id: 'r2',
-          username: '@HM4',
-          timestamp: 'Nov 11, 2023',
-          content: '사아자차카타ㅍ',
-        },
-      ],
-    },
-    {
-      id: 'c2',
-      username: 'Goorm5',
-      timestamp: 'Nov 11, 2023',
-      content: '훌륭한 풀이5',
-      likes: 123,
-      avatar: '/path/to/goorm2/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM3',
-          timestamp: '11 minute ago',
-          content: '3333333333',
-        },
-        {
-          id: 'r2',
-          username: '@HM4',
-          timestamp: 'Nov 11, 2023',
-          content: '사아자차카타ㅍ',
-        },
-      ],
-    },
-    {
-      id: 'c2',
-      username: 'Goorm6',
-      timestamp: 'Nov 11, 2023',
-      content: '훌륭한 풀이6',
-      likes: 123,
-      avatar: '/path/to/goorm2/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM3',
-          timestamp: '11 minute ago',
-          content: '3333333333',
-        },
-        {
-          id: 'r2',
-          username: '@HM4',
-          timestamp: 'Nov 11, 2023',
-          content: '사아자차카타ㅍ',
-        },
-      ],
-    },
-    {
-      id: 'c2',
-      username: 'Goorm7',
-      timestamp: 'Nov 11, 2023',
-      content: '훌륭한 풀이7',
-      likes: 123,
-      avatar: '/path/to/goorm2/avatar.jpg',
-      replies: [
-        {
-          id: 'r1',
-          username: '@HM3',
-          timestamp: '11 minute ago',
-          content: '3333333333',
-        },
-        {
-          id: 'r2',
-          username: '@HM4',
-          timestamp: 'Nov 11, 2023',
-          content: '사아자차카타ㅍ',
-        },
-      ],
-    },
-  ];
 
   const { slice, range } = usePaginationRange(commentsData, page, rowsPerPage);
 
@@ -210,7 +210,7 @@ function CommentsSection() {
 
       <div className="bg-gray-900 ">
         <div className="space-y-4">
-        {slice.map((commentData) => (
+          {slice.map((commentData) => (
             <CommentSection key={commentData.id} commentData={commentData} />
           ))}
         </div>
