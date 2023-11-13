@@ -7,44 +7,20 @@ import ProblemTab from '../molecules/ProblemTab';
 import Solutions from '../molecules/Solutions';
 import SolutionTest from '../molecules/SolutionTest';
 
-const index = ({
-  problem,
-  handleClickRunButton,
-  setRunRequest,
-  handleClickSubmitButton,
-  activeTab,
-}) => (
+const index = ({ activeTab }) => (
   <div>
     <Header />
     <main className="flex flex-row bg-[#E7E7E7] h-full">
       <div className="w-[40%] bg-white rounded-xl m-2">
         <ProblemTab />
         <hr />
-        {activeTab.type === 'Description' && (
-          <ProblemPanel
-            number={problem.number}
-            title={problem.title}
-            difficulty={problem.difficulty}
-            status={problem.status}
-            acceptance={problem.acceptance}
-            description={problem.description}
-            tags={problem.tags}
-          />
-        )}
+        {activeTab.type === 'Description' && <ProblemPanel />}
         {activeTab.type === 'Solutions' && <Solutions />}
-        {activeTab.type === 'Post' && <SolutionTest problemId={problem.number}/>}
+        {activeTab.type === 'Post' && <SolutionTest />}
       </div>
       <div className="grow">
-        <Editor
-          defaultCodes={problem.defaultCodes}
-          problemNumber={problem.number}
-          setRunRequest={setRunRequest}
-        />
-        <OutputPanel
-          testcases={problem.testcases}
-          handleClickRunButton={handleClickRunButton}
-          handleClickSubmitButton={handleClickSubmitButton}
-        />
+        <Editor />
+        <OutputPanel />
       </div>
     </main>
   </div>

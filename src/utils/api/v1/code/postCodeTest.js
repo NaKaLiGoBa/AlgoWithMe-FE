@@ -22,11 +22,11 @@ function handleError(error) {
     // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
     switch (status) {
-      case 422:
+      case 400:
         // validation error
         return {
           success: false,
-          error: 'validation error',
+          error: 'Compile or Runtime Error',
           details: data,
         };
       case 500:
@@ -56,13 +56,13 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, params = {}) {
+async function call(apiUrl, method, requestData) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
       headers: getAuthHeader(),
-      params,
+      data: requestData,
     });
     return handleResponse(response);
   } catch (error) {
@@ -70,15 +70,13 @@ async function call(apiUrl, method, params = {}) {
   }
 }
 
-export default async function getProblemById(problemId, params) {
-  const apiUrl = `/api/v1/problems/${problemId}`;
-  return call(apiUrl, 'GET', params);
+export default async function postCodeTest(problemId, requestData = {}) {
+  const apiUrl = `/api/v1/problems/${problemId}/code/test`;
+  return call(apiUrl, 'POST', requestData);
 }
 
 // ===예시===
-//   const params = {
-//     page: page,
-//     sort: sort,
-//     difficulty: difficulty,
-//     status: status,
-//   };
+// {
+//     "language": "string",
+//     "code": "string"
+//   }

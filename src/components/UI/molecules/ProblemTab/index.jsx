@@ -105,14 +105,20 @@ export default function index() {
             ref={provided.innerRef}
           >
             {tabs.map((tab, index) => (
-              <Draggable key={tab.id} draggableId={String(tab.id)} index={index}>
+              <Draggable
+                key={tab.id}
+                draggableId={String(tab.id)}
+                index={index}
+              >
                 {(provided) => (
                   <li
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     className={`flex justify-between items-center py-1 px-4 border border-solid border-gray-200 ${
-                      activeTab.id === tab.id ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                      activeTab.id === tab.id
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-black'
                     }`}
                     onClick={() => handleTabClick(tab)}
                   >
@@ -136,4 +142,3 @@ export default function index() {
     </DragDropContext>
   );
 }
-
