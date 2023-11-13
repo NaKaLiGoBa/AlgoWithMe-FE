@@ -42,6 +42,7 @@ function CommentSection({ commentData }) {
               username={reply.username}
               timestamp={reply.timestamp}
               content={reply.content}
+              avatar={commentData.avatar}
             />
           ))}
           <CommentInput
