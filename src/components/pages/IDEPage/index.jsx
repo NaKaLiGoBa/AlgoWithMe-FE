@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import IDETemplate from '../../UI/templates/IDETemplate';
 import constantProblem from './constant';
+import { resetTab } from '../../../store/tabState';
 
 // API
 import runTestCode from '../../../utils/runTestCodeApi';
@@ -11,6 +12,7 @@ import postSubmit from '../../../utils/submitCodeApi';
 
 // problem loading
 function ProblemPage() {
+  const dispatch = useDispatch();
   const { problemId } = useParams();
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const [problem, setProblem] = useState(constantProblem);
@@ -19,6 +21,7 @@ function ProblemPage() {
     return <div>Loading...</div>;
   }
   useEffect(() => {
+    dispatch(resetTab());
     getProblem(`/api/v1/problems/${problemId}`)
       .then((response) => response.data)
       .then((data) => setProblem(data));

@@ -11,11 +11,10 @@ import {
   setSelectedOption,
 } from '../../../../../store/quizSlice';
 
-export default function index({ totalCount, selectedOption, currentQuiz }) {
+export default function index({ currentQuiz }) {
   const dispatch = useDispatch();
-  const { number, isAnswered, initialAnswer } = useSelector(
-    (state) => state.quiz,
-  );
+  const { number, isAnswered, initialAnswer, totalCount, selectedOption } =
+    useSelector((state) => state.quiz);
   const lastQuestion = totalCount === number + 1;
   const { problemId } = useParams();
   const navigate = useNavigate();

@@ -1,38 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-let nextTabId = 2; // 이미 1과 2는 사용되었다고 가정
-export const tabsSlice = createSlice({
-  name: 'tabs',
-  initialState: {
-    tabs: [
-      {
-        id: 0,
-        type: 'Description',
-        name: 'Description',
-        content: '',
-        data: {
-          solution: {
-            id: '',
-            title: '',
-          },
-        },
-        fixed: true,
-      },
-      {
-        id: 1,
-        type: 'Solutions',
-        name: 'Solutions',
-        content: '',
-        data: {
-          solution: {
-            id: '',
-            title: '',
-          },
-        },
-        fixed: true,
-      },
-    ],
-    activeTab: {
+const initialState = {
+  tabs: [
+    {
       id: 0,
       type: 'Description',
       name: 'Description',
@@ -43,8 +13,40 @@ export const tabsSlice = createSlice({
           title: '',
         },
       },
+      fixed: true,
+    },
+    {
+      id: 1,
+      type: 'Solutions',
+      name: 'Solutions',
+      content: '',
+      data: {
+        solution: {
+          id: '',
+          title: '',
+        },
+      },
+      fixed: true,
+    },
+  ],
+  activeTab: {
+    id: 0,
+    type: 'Description',
+    name: 'Description',
+    content: '',
+    data: {
+      solution: {
+        id: '',
+        title: '',
+      },
     },
   },
+};
+
+let nextTabId = 2; // 이미 1과 2는 사용되었다고 가정
+export const tabsSlice = createSlice({
+  name: 'tabs',
+  initialState,
   reducers: {
     addTab: (state, action) => {
       console.log(action.payload);
@@ -79,6 +81,7 @@ export const tabsSlice = createSlice({
         state.tabs[index].content = content;
       }
     },
+    resetTab: () => initialState,
   },
 });
 
@@ -88,6 +91,7 @@ export const {
   setActiveTab,
   reorderTabs,
   updateTabContent,
+  resetTab,
 } = tabsSlice.actions;
 
 export default tabsSlice.reducer;
