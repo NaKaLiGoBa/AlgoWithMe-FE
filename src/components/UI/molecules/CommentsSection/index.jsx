@@ -3,9 +3,13 @@ import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import CommentSection from '../CommentSection';
+import ProblemListFooter from '../Problem/ProblemListFooter';
+import usePaginationRange from '../../../../hooks/usePaginationRange';
 
 function CommentsSection() {
   const [value, setValue] = useState('');
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 5;
 
   const commentsData = [
     {
@@ -52,7 +56,119 @@ function CommentsSection() {
         },
       ],
     },
+    {
+      id: 'c2',
+      username: 'Goorm3',
+      timestamp: 'Nov 11, 2023',
+      content: '훌륭한 풀이3',
+      likes: 123,
+      avatar: '/path/to/goorm2/avatar.jpg',
+      replies: [
+        {
+          id: 'r1',
+          username: '@HM3',
+          timestamp: '11 minute ago',
+          content: '3333333333',
+        },
+        {
+          id: 'r2',
+          username: '@HM4',
+          timestamp: 'Nov 11, 2023',
+          content: '사아자차카타ㅍ',
+        },
+      ],
+    },
+    {
+      id: 'c2',
+      username: 'Goorm4',
+      timestamp: 'Nov 11, 2023',
+      content: '훌륭한 풀이4',
+      likes: 123,
+      avatar: '/path/to/goorm2/avatar.jpg',
+      replies: [
+        {
+          id: 'r1',
+          username: '@HM3',
+          timestamp: '11 minute ago',
+          content: '3333333333',
+        },
+        {
+          id: 'r2',
+          username: '@HM4',
+          timestamp: 'Nov 11, 2023',
+          content: '사아자차카타ㅍ',
+        },
+      ],
+    },
+    {
+      id: 'c2',
+      username: 'Goorm5',
+      timestamp: 'Nov 11, 2023',
+      content: '훌륭한 풀이5',
+      likes: 123,
+      avatar: '/path/to/goorm2/avatar.jpg',
+      replies: [
+        {
+          id: 'r1',
+          username: '@HM3',
+          timestamp: '11 minute ago',
+          content: '3333333333',
+        },
+        {
+          id: 'r2',
+          username: '@HM4',
+          timestamp: 'Nov 11, 2023',
+          content: '사아자차카타ㅍ',
+        },
+      ],
+    },
+    {
+      id: 'c2',
+      username: 'Goorm6',
+      timestamp: 'Nov 11, 2023',
+      content: '훌륭한 풀이6',
+      likes: 123,
+      avatar: '/path/to/goorm2/avatar.jpg',
+      replies: [
+        {
+          id: 'r1',
+          username: '@HM3',
+          timestamp: '11 minute ago',
+          content: '3333333333',
+        },
+        {
+          id: 'r2',
+          username: '@HM4',
+          timestamp: 'Nov 11, 2023',
+          content: '사아자차카타ㅍ',
+        },
+      ],
+    },
+    {
+      id: 'c2',
+      username: 'Goorm7',
+      timestamp: 'Nov 11, 2023',
+      content: '훌륭한 풀이7',
+      likes: 123,
+      avatar: '/path/to/goorm2/avatar.jpg',
+      replies: [
+        {
+          id: 'r1',
+          username: '@HM3',
+          timestamp: '11 minute ago',
+          content: '3333333333',
+        },
+        {
+          id: 'r2',
+          username: '@HM4',
+          timestamp: 'Nov 11, 2023',
+          content: '사아자차카타ㅍ',
+        },
+      ],
+    },
   ];
+
+  const { slice, range } = usePaginationRange(commentsData, page, rowsPerPage);
 
   return (
     <div className="bg-gray-900 p-8 font-sans text-white">
@@ -94,11 +210,19 @@ function CommentsSection() {
 
       <div className="bg-gray-900 ">
         <div className="space-y-4">
-          {commentsData.map((commentData) => (
+        {slice.map((commentData) => (
             <CommentSection key={commentData.id} commentData={commentData} />
           ))}
         </div>
       </div>
+
+      {/* 페이지네이션 컴포넌트 */}
+      <ProblemListFooter
+        range={range}
+        setPage={setPage}
+        page={page}
+        slice={slice}
+      />
     </div>
   );
 }
