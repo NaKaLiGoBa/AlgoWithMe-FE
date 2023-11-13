@@ -70,8 +70,8 @@ async function call(apiUrl, method, params = {}) {
   }
 }
 
-export default async function getProblems(problemId, params = {}) {
-  const apiUrl = `/api/v1/problem/${problemId}/comments`;
+export default async function getProblems(params = {}) {
+  const apiUrl = `/api/v1/problems`;
   return call(apiUrl, 'GET', params);
 }
 

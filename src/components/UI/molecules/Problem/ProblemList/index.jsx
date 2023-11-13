@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setProblems } from '../../../../../store/problemsSlice';
 import Link from '../../../atoms/Text/Link';
 import ProblemListFooter from '../ProblemListFooter';
 import PaginationRange from '../../../../../hooks/usePaginationRange';
 import testData from '../../../../../../public/api/TestProblemData.json';
+import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 
 function Th({ children }) {
   return (
@@ -17,9 +20,24 @@ function Td({ children, className = '' }) {
 }
 
 export default function index() {
-  const [problems, setProblems] = useState(testData.problems);
+  const dispatch = useDispatch();
+  const problems = useSelector((state) => state.problems.problems);
   const [page, setPage] = useState(1);
   const rowsPerPage = 20;
+
+  useEffect(() => {
+    const loadProblems = async () => {
+      try {
+        const response = await getProblems();
+        dispatch(setProblems(response.data)); // 데이터를 스토어에 저장
+      } catch (error) {
+        console.error('Error loading problems:', error);
+      }
+    };
+
+    loadProblems();
+  }, [dispatch]);
+
   const { slice, range } = PaginationRange(problems, page, rowsPerPage);
 
   return (
