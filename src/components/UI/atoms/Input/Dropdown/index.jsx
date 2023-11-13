@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from '../../Media/Image';
 
 function DropdownMenu({ title, list = [], handleSelectItem }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,9 +16,16 @@ function DropdownMenu({ title, list = [], handleSelectItem }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative bg-[#e6e6e6] py-1 px-2 rounded-sm">
       <button type="button" onClick={toggleDropdown}>
-        {title} {isOpen ? '▲' : '▼'}
+        <div className="flex items-center gap-4">
+          {title}{' '}
+          {isOpen ? (
+            <Image src="/assets/img/chevron-compact-down.svg" />
+          ) : (
+            <Image src="/assets/img/chevron-compact-up.svg" />
+          )}
+        </div>
       </button>
       {isOpen && (
         <ul className="absolute z-10 top-full bg-white p-1 border">
