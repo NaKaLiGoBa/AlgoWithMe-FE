@@ -13,9 +13,11 @@ import {
   fetchSolution,
   updateSolution,
   deleteSolution,
+  likeSolution,
 } from '../../../../utils/fetchSolution';
 import Button from '../../atoms/Input/Button';
 import CommentsSection from '../CommentsSection';
+import LikeButton from '../../atoms/Input/LikeButton';
 
 export default function SolutionTest({ problemId }) {
   const activeTab = useSelector((state) => state.tabs.activeTab);
@@ -24,6 +26,10 @@ export default function SolutionTest({ problemId }) {
   const [activeSolution, setActiveSolution] = useState(null);
   const navigate = useNavigate();
   const authToken = localStorage.getItem('ACCESS_TOKEN');
+  const [likes, setLikes] = useState(0);
+  const [viewCount, setViewCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     const fetchSolutionData = async () => {
@@ -31,16 +37,22 @@ export default function SolutionTest({ problemId }) {
         const solutionData = await fetchSolution(
           problemId,
           activeTab.data.solution.id,
+          authToken,
         );
         setActiveSolution(solutionData);
+        setLikes(solutionData.likeCount);
+        setViewCount(solutionData.viewCount);
+        setCommentCount(solutionData.commentCount);
+        setIsLiked(solutionData.isLike);
       } catch (error) {
         console.error('Error fetching solution data:', error);
       }
     };
-    if (activeTab) {
+    if (activeTab && activeTab.data && activeTab.data.solution) {
       fetchSolutionData();
-    }
-  }, [activeTab]);
+    } else {
+      console.error('Active tab or solution data is undefined.');    }
+  }, [activeTab, problemId, authToken]);
 
   const handleTabClick = (tab) => {
     dispatch(setActiveTab(tab));
@@ -72,6 +84,20 @@ export default function SolutionTest({ problemId }) {
       } catch (error) {
         console.error('Error deleting solution:', error);
       }
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const response = await likeSolution(
+        problemId,
+        activeSolution.solution.id,
+        authToken,
+      );
+      setLikes(response.likeCount);
+      setIsLiked(response.isLike);
+    } catch (error) {
+      console.error('Error liking the solution:', error);
     }
   };
 
@@ -126,31 +152,35 @@ export default function SolutionTest({ problemId }) {
                   ).toLocaleDateString()}
                 </p>
               </div>
-              <p className="mt-2.5 text-sm text-gray-500">
-                <span className="mr-2">언어:</span>
-                {activeSolution.solution.languages.map((language) => (
-                  <span
-                    key={language}
-                    className="inline-block bg-slate-300 rounded-full px-2.5 py-1 font-semibold text-gray-700 mr-2 mb-1"
-                  >
-                    {language}
-                  </span>
-                ))}
-              </p>
+              <div className="flex items-center mt-2">
+                <LikeButton onClick={handleLike} isLiked={isLiked} />
+                <span className="ml-1 text-red-500 ">{likes}</span>
+                <p className="mt-2.5 text-sm text-gray-500">
+                  <span className="mr-2 ml-5">언어:</span>
+                  {activeSolution.solution.languages.map((language) => (
+                    <span
+                      key={language}
+                      className="inline-block bg-slate-300 rounded-full px-2.5 py-1 font-semibold text-gray-700 mr-2 mb-1"
+                    >
+                      {language}
+                    </span>
+                  ))}
+                </p>
+              </div>
             </div>
+          </div>
+          <div className="flex justify-between items-center my-2">
+            <div className="mt-1 h-px w-full bg-gray-400" />
+          </div>
+          {/* Viewer */}
+          <div className="markdown-viewer bg-white p-6">
+            <MDEditor.Markdown source={activeSolution?.solution.content} />
+          </div>
+          <div className="mt-4">
+            <CommentsSection solutionId={activeSolution.solution.id} />
           </div>
         </div>
       )}
-      <div className="flex justify-between items-center my-2">
-        <div className="mt-1 h-px w-full bg-gray-400" />
-      </div>
-      {/* Viewer */}
-      <div className="markdown-viewer bg-white p-6">
-        <MDEditor.Markdown source={activeSolution?.solution.content} />
-      </div>
-      <div className="mt-4">
-        <CommentsSection />
-      </div>
     </div>
   );
 }
