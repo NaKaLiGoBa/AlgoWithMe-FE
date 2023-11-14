@@ -55,7 +55,7 @@ async function call(apiUrl, method, requestData = {}) {
       url: hostURL + apiUrl,
       method,
       headers: getAuthHeader(),
-      requestData,
+      data: requestData,
     });
     return handleResponse(response);
   } catch (error) {
