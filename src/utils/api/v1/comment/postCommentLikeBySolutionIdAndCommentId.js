@@ -59,7 +59,7 @@ async function call(apiUrl, method, requestData = {}) {
       url: hostURL + apiUrl,
       method,
       headers: getAuthHeader(),
-      requestData,
+      data: requestData,
     });
     return handleResponse(response);
   } catch (error) {
@@ -73,7 +73,9 @@ async function postCommentAndLikeBySolutionIdAndCommentId(
 ) {
   const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
 
-  const requestData = getRequestDateTime();
+  const requestData = {
+    requestDateTime: getRequestDateTime(),
+  };
 
   return call(apiUrl, 'POST', requestData);
 }
