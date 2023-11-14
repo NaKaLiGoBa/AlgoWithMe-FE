@@ -124,27 +124,28 @@ function Signup() {
         password: password,
         name: nickname,
       });
-      if (response.status === 201) {
+      if (response.status === 200) {
         // 회원가입 성공
         alert(response.data.message);
         navigate('/signin');
-      } else if (response.status === 422) {
-        // 중복 오류
-        if (
-          response.data.message ===
-          '이미 사용 중입니다. 다른 이메일을 입력해주세요.'
-        ) {
-          setVerificationFeedback(response.data.message); // 이메일 중복 오류
-        } else if (response.data.message === '닉네임 중복') {
-          setNicknameFeedback('이미 사용 중인 닉네임입니다.'); // 닉네임 중복 오류
+      } else if (response.status === 409) {
+        if (response.data.code === '100') {
+          setVerificationFeedback(response.data.message);
+        } else if (response.data.code === '200') {
+          setNicknameFeedback('이미 존재하는 닉네임입니다.');
         }
-      } else {
-        setFeedbackMessage('회원가입에 실패하였습니다.'); // 그 외의 오류
       }
     } catch (error) {
-      setFeedbackMessage('회원가입 중 오류가 발생하였습니다.');
+      if (error.response && error.response.status === 409) {
+        if (error.response.data.code === '100') {
+          setVerificationFeedback(error.response.data.message);
+        } else if (error.response.data.code === '200') {
+          setNicknameFeedback('이미 존재하는 닉네임입니다.');
+        }
+      } else {
+        setFeedbackMessage('회원가입 중 오류가 발생하였습니다.');
+      }
     }
-    // 서버 요청 추가 할 사항 있으면 할 것
   };
 
   // 타이머 로직
