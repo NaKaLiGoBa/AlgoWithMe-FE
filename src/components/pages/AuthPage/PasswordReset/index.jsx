@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Heading from '../../../UI/atoms/Text/Heading';
 import Input from '../../../UI/atoms/Input/Input';
 import Button from '../../../UI/atoms/Input/Button';
-import {localHostURL} from '../../../../utils/apiConfig'
+import { localHostURL } from '../../../../utils/apiConfig';
 
 const index = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get('token');
@@ -24,6 +25,10 @@ const index = () => {
       setMessage('비밀번호가 일치하지 않습니다.');
       return;
     }
+    if (!token) {
+      setMessage('비밀번호 재설정 토큰이 유효하지 않습니다.');
+      return;
+    }
     try {
       const response = await axios.post(
         `${localHostURL}/api/v1/auth/password/reset/check`,
@@ -33,9 +38,10 @@ const index = () => {
         },
       );
 
-      if (response.data.code === '200') {
+      if (response.status === 200) {
+        // 상태 코드를 확인하는 방식으로 수정
         setMessage('비밀번호 재설정이 완료되었습니다.');
-        <Link to="/signin" />
+        navigate('/signin');
       } else {
         setMessage(response.data.message);
       }
