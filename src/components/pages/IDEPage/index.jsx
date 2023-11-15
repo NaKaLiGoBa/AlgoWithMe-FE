@@ -5,6 +5,7 @@ import { setProblem } from '../../../store/problemSlice';
 import IDETemplate from '../../UI/templates/IDETemplate';
 import constantProblem from './constant';
 import { resetTab } from '../../../store/tabState';
+import { toggleChat } from '../../../store/AIChatSlice';
 
 // API
 import getProblemById from '../../../utils/api/v1/problem/getProblemById';
@@ -14,6 +15,7 @@ function ProblemPage() {
   const dispatch = useDispatch();
   const { problemId } = useParams();
   const activeTab = useSelector((state) => state.tabs.activeTab);
+  const showChat = useSelector((state) => state.chat.isVisible);
 
   useEffect(() => {
     dispatch(resetTab());
@@ -24,7 +26,17 @@ function ProblemPage() {
       });
   }, [problemId, dispatch]);
 
-  return <IDETemplate activeTab={activeTab} />;
+  const handleChatToggle = () => {
+    dispatch(toggleChat());
+  };
+
+  return (
+    <IDETemplate
+      activeTab={activeTab}
+      handleChatToggle={handleChatToggle}
+      showChat={showChat}
+    />
+  );
 }
 
 export default ProblemPage;
