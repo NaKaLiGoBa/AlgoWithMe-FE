@@ -7,7 +7,7 @@ import TrueOrFalse from '../../molecules/Quiz/TrueOrFalse';
 import Initial from '../../molecules/Quiz/Initials';
 import AnswerExplanation from '../../molecules/Quiz/AnswerExplanation';
 
-export default function index({ currentQuiz, totalCount, selectedOption }) {
+export default function index({ currentQuiz }) {
   return (
     <div className="bg-[#D9D9D9] h-screen realative ">
       <Header />
@@ -15,19 +15,13 @@ export default function index({ currentQuiz, totalCount, selectedOption }) {
         <QuestionBox />
         <div className="flex-grow mt-[30px] ">
           {currentQuiz.type === 'choice' && <Multiplechoice />}
-          {currentQuiz.type === 'ox' && (
-            <TrueOrFalse selectedOption={selectedOption} />
-          )}
+          {currentQuiz.type === 'ox' && <TrueOrFalse />}
           {currentQuiz.type === 'initial' && (
             <Initial currentQuiz={currentQuiz} />
           )}
         </div>
         <AnswerExplanation />
-        <QuizNavigationButton
-          totalCount={totalCount}
-          selectedOption={selectedOption}
-          currentQuiz={currentQuiz}
-        />
+        <QuizNavigationButton currentQuiz={currentQuiz} />
       </div>
     </div>
   );

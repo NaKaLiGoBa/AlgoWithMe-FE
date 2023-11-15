@@ -16,7 +16,7 @@ export default function index() {
   const tabs = useSelector((state) => state.tabs.tabs);
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const totalCount = useSelector((state) => state.solutions.totalCount);
-
+  console.log('tabs', tabs);
   // 탭 이름을 결정하는 함수
   const SolutionsTabName = (tab, totalCount) => {
     if (tab.type !== 'Solutions') {
@@ -62,11 +62,13 @@ export default function index() {
   // 탭 닫기 이벤트 핸들러
   const handleCloseTab = (event, tabIdToClose, tabIndex) => {
     event.stopPropagation(); // 이벤트 버블링 방지
-    dispatch(removeTab({ id: tabIdToClose }));
-    if (activeTab.id === tabIdToClose && tabs.length > 1) {
-      const newActiveTabIndex = tabIndex === 0 ? 1 : tabIndex - 1;
-      const newActiveTab = tabs[newActiveTabIndex];
-      dispatch(setActiveTab(newActiveTab));
+    if (!tabs[tabIndex].fixed) {
+      dispatch(removeTab({ id: tabIdToClose }));
+      if (activeTab.id === tabIdToClose && tabs.length > 1) {
+        const newActiveTabIndex = tabIndex === 0 ? 1 : tabIndex - 1;
+        const newActiveTab = tabs[newActiveTabIndex];
+        dispatch(setActiveTab(newActiveTab));
+      }
     }
   };
 
@@ -127,7 +129,7 @@ export default function index() {
                     </span>
                     <button
                       onClick={(event) => handleCloseTab(event, tab.id, index)}
-                      className="ml-2"
+                      className={`ml-2 ${tab.fixed ? 'hidden' : ''}`}
                     >
                       &times;
                     </button>

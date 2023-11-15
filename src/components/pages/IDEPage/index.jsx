@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProblem } from '../../../store/problemSlice';
 import IDETemplate from '../../UI/templates/IDETemplate';
+import constantProblem from './constant';
+import { resetTab } from '../../../store/tabState';
 
 // API
 import getProblemById from '../../../utils/api/v1/problem/getProblemById';
@@ -14,6 +16,7 @@ function ProblemPage() {
   const activeTab = useSelector((state) => state.tabs.activeTab);
 
   useEffect(() => {
+    dispatch(resetTab());
     getProblemById(problemId)
       .then((response) => response.data)
       .then((data) => {
