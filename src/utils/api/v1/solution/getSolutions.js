@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { localHostURL } from './apiConfig';
+import { localHostURL } from '../../../apiConfig';
+import getAuthHeader from '../../../getAuthHeader';
 
 const hostURL = localHostURL;
 
@@ -9,9 +10,6 @@ function handleResponse(response) {
   switch (status) {
     case 200:
       // 성공
-      return { success: true, data };
-    case 201:
-      // 생성됨
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -24,21 +22,13 @@ function handleError(error) {
     // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
     switch (status) {
-      case 304:
-        // 잘못된 요청
-        return { success: false, error: 'Bad Request', details: data };
-      case 400:
-        // 잘못된 요청
-        return { success: false, error: 'Bad Request', details: data };
-      case 401:
-        // 인증 실패
-        return { success: false, error: 'Unauthorized', details: data };
-      case 403:
-        // 접근 금지
-        return { success: false, error: 'Forbidden', details: data };
-      case 404:
-        // 찾을 수 없음
-        return { success: false, error: 'Not Found', details: data };
+      case 422:
+        // validation error
+        return {
+          success: false,
+          error: 'validation error',
+          details: data,
+        };
       case 500:
         // 서버 내부 오류
         return {
@@ -66,12 +56,13 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, requestData = {}) {
+async function call(apiUrl, method, params = {}) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
-      ...requestData,
+      headers: getAuthHeader(),
+      params,
     });
     return handleResponse(response);
   } catch (error) {
@@ -79,8 +70,15 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function postSubmit(apiUrl, data) {
-  return call(apiUrl, 'POST', { data });
+export default async function getSolutions(problemId, params = {}) {
+  const apiUrl = `/api/v1/problems/${problemId}/solutions`;
+  return call(apiUrl, 'GET', params);
 }
 
-export default postSubmit;
+// ===예시===
+//   const params = {
+//     cursor: cursor,
+//     sort: sort,
+//     size: size,
+//     sort: sort,
+//   };

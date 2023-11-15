@@ -6,7 +6,7 @@ import { addTab, setActiveTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
-import getSolutions from '../../../../utils/getSolutions';
+import getSolutions from '../../../../utils/api/v1/solution/getSolutions';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -17,15 +17,12 @@ export default function index() {
   const { problemId } = useParams();
 
   useEffect(() => {
-    const initialData = async () => {
-      const { data, success } = await getSolutions(problemId, nextCursor, 3);
-
-      if (success) {
+    getSolutions(problemId)
+      .then((response) => response.data)
+      .then((data) => {
         dispatch(setSolutionsData(data));
         setNextCursor(data._link.nextCursor);
-      }
-    };
-    initialData();
+      });
   }, [dispatch]);
 
   const handleSolutionClick = (solution) => {
@@ -38,6 +35,7 @@ export default function index() {
       dispatch(setActiveTab(newTab));
     }
   };
+
   const fetchMoreData = async () => {
     if (!hasMore) return;
     setTimeout(async () => {
