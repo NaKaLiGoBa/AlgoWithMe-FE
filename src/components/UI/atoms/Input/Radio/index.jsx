@@ -7,6 +7,7 @@ export default function index({
   checked,
   onChange,
   disabled,
+  id,
 }) {
   return (
     <div>
@@ -17,8 +18,9 @@ export default function index({
         checked={checked}
         onChange={onChange}
         disabled={disabled}
+        id={id}
       />
-      <label htmlFor={value}>{label}</label>
+      <label htmlFor={id}>{label}</label>
     </div>
   );
 }

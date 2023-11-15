@@ -13,7 +13,7 @@ export default function index() {
 
   return (
     <div className="flex flex-wrap ml-[120px] ">
-      {currentQuiz.choiceOrInitials.map((option) => (
+      {currentQuiz.choiceOrInitials.map((option, idx) => (
         <div key={option} className="w-1/2 p-2 text-[20px] mb-[35px]">
           <Radio
             label={option}
@@ -21,6 +21,7 @@ export default function index() {
             value={option}
             onChange={handleOptionChange}
             disabled={isAnswered}
+            id={idx}
           />
         </div>
       ))}
