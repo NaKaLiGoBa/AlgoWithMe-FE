@@ -28,7 +28,7 @@ function DropdownMenu({ title, list = [], handleSelectItem }) {
         </div>
       </button>
       {isOpen && (
-        <ul className="absolute z-10 top-full bg-white p-1 border">
+        <ul className="absolute z-10 top-full bg-white p-1 border cursor-pointer">
           {list.map((item, index) => (
             <li
               key={index}

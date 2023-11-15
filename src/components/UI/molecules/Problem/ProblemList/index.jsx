@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setProblems } from '../../../../../store/problemsSlice';
 import Link from '../../../atoms/Text/Link';
 import ProblemListFooter from '../ProblemListFooter';
 import PaginationRange from '../../../../../hooks/usePaginationRange';
-import testData from '../../../../../../public/api/TestProblemData.json';
+import DropdownMenu from '../../../atoms/Input/Dropdown';
+import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 
 function Th({ children }) {
   return (
@@ -17,13 +20,55 @@ function Td({ children, className = '' }) {
 }
 
 export default function index() {
-  const [problems, setProblems] = useState(testData.problems);
+  const difficulty = ['쉬움', '보통', '어려움'];
+  const status = ['성공', '실패', '미해결'];
+  const tags = ['DFS', 'BFS', 'Sort'];
+  const [selectedDifficulty, setDifficulty] = useState('');
+  const [selectedStatus, setStatus] = useState('');
+  const [selectedTag, setTag] = useState('');
+
+  const dispatch = useDispatch();
+  const problems = useSelector((state) => state.problems.problems);
   const [page, setPage] = useState(1);
   const rowsPerPage = 20;
+
+  useEffect(() => {
+    const loadProblems = async () => {
+      let params = {};
+      if (selectedTag !== '') {
+        params = { ...params, tags: selectedTag };
+      }
+      if (selectedDifficulty !== '') {
+        params = { ...params, difficulty: selectedDifficulty };
+      }
+      if (selectedStatus !== '') {
+        params = { ...params, status: selectedStatus };
+      }
+
+      try {
+        const response = await getProblems(params);
+        dispatch(setProblems(response.data)); // 데이터를 스토어에 저장
+      } catch (error) {
+        console.error('Error loading problems:', error);
+      }
+    };
+
+    loadProblems();
+  }, [dispatch, selectedDifficulty, selectedStatus, selectedTag]);
+
   const { slice, range } = PaginationRange(problems, page, rowsPerPage);
 
   return (
-    <div>
+    <div className="flex flex-col gap-12 items-center">
+      <div className="flex flex-row gap-8">
+        <DropdownMenu
+          title="난이도"
+          list={difficulty}
+          handleSelectItem={setDifficulty}
+        />
+        <DropdownMenu title="상태" list={status} handleSelectItem={setStatus} />
+        <DropdownMenu title="태그" list={tags} handleSelectItem={setTag} />
+      </div>
       <table className="text-sm w-[800px] table-auto ">
         <thead>
           <tr>

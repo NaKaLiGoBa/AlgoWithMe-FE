@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Editor from '@monaco-editor/react';
 import DropdownMenu from '../../atoms/Input/Dropdown';
 
-function Index({ defaultCodes, problemNumber, setRunRequest }) {
+function Index() {
+  const {problemNumber, defaultCodes} = useSelector((state) => state.problem.defaultCodes);
   const availableLanguages = Object.keys(defaultCodes);
 
   const storedState = JSON.parse(
@@ -20,13 +22,6 @@ function Index({ defaultCodes, problemNumber, setRunRequest }) {
       `editorState_${problemNumber}`,
       JSON.stringify(editorState),
     );
-
-    const request = {
-      language: editorState.currentLanguage,
-      code: editorState[editorState.currentLanguage],
-    };
-    setRunRequest(request);
-
   }, [editorState, problemNumber]);
 
   const handleSelectLanguage = (selectedLanguage) => {
