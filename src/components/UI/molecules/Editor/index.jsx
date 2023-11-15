@@ -4,7 +4,7 @@ import Editor from '@monaco-editor/react';
 import DropdownMenu from '../../atoms/Input/Dropdown';
 
 function Index() {
-  const {problemNumber, defaultCodes} = useSelector((state) => state.problem.defaultCodes);
+  const {problemNumber, defaultCodes} = useSelector((state) => state.problem);
   const availableLanguages = Object.keys(defaultCodes);
 
   const storedState = JSON.parse(
