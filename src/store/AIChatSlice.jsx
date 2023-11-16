@@ -2,20 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const AIchatSlice = createSlice({
   name: 'chat',
-  initialState: { isVisible: false, selectedOptions: [], currentScreen: 2 },
+  initialState: {
+    isVisible: false,
+    selectedHintOption: null,
+    currentScreen: 2,
+  },
   reducers: {
     toggleChat: (state) => {
       state.isVisible = !state.isVisible;
     },
-    setSelectedOptions: (state, action) => {
-      const { option, checked } = action.payload;
-      if (checked) {
-        state.selectedOptions.push(option);
-      } else {
-        state.selectedOptions = state.selectedOptions.filter(
-          (opt) => opt !== option,
-        );
-      }
+    setSelectedHintOption: (state, action) => {
+      state.selectedHintOption = action.payload;
     },
     prevScreen: (state) => {
       if (state.currentScreen > 0) {
@@ -30,7 +27,7 @@ export const AIchatSlice = createSlice({
   },
 });
 
-export const { toggleChat, setSelectedOptions, prevScreen, nextScreen } =
+export const { toggleChat, setSelectedHintOption, prevScreen, nextScreen } =
   AIchatSlice.actions;
 
 export default AIchatSlice.reducer;

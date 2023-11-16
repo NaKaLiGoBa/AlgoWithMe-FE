@@ -1,15 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Checkbox from '../../../atoms/Input/Checkbox';
+import Radio from '../../../atoms/Input/Radio';
 import {
   prevScreen,
-  setSelectedOptions,
+  setSelectedHintOption,
 } from '../../../../../store/AIChatSlice';
 import Button from '../../../atoms/Input/Button';
 import postCoachesByProblemId from '../../../../../utils/api/v1/coach/postCoachesByProblemId';
 
 export default function index() {
-  const selectedOptions = useSelector((state) => state.chat.selectedOptions);
+  const selectedOptions = useSelector((state) => state.chat.selectedHintOption);
   const dispatch = useDispatch();
   const problemNumber = useSelector((state) => state.problem.number);
 
@@ -21,16 +21,15 @@ export default function index() {
     '반례',
   ];
 
-  const handleCheckbox = (option, checked) => {
-    dispatch(setSelectedOptions({ option, checked }));
+  const handleOptionClick = (e) => {
+    dispatch(setSelectedHintOption(e.target.value));
   };
 
   const handleCoachingClick = async () => {
     const storedEditor = localStorage.getItem(`editorState_${problemNumber}`);
-    const userCheckClick = selectedOptions.join('');
     const response = await postCoachesByProblemId(
       problemNumber,
-      userCheckClick,
+      selectedOptions,
       storedEditor,
     );
     if (response.success) {
@@ -43,11 +42,12 @@ export default function index() {
   return (
     <div>
       {options.map((option, idx) => (
-        <Checkbox
+        <Radio
           id={idx}
           label={option}
-          checked={selectedOptions.includes(option)}
-          onChange={(e) => handleCheckbox(option, e.target.checked)}
+          value={option}
+          onChange={handleOptionClick}
+          name="option"
         />
       ))}
       <Button className="p-2" onClick={handleCoachingClick}>
