@@ -9,7 +9,9 @@ import Button from '../../../atoms/Input/Button';
 import postCoachesByProblemId from '../../../../../utils/api/v1/coach/postCoachesByProblemId';
 
 export default function index() {
-  const selectedOptions = useSelector((state) => state.chat.selectedHintOption);
+  const selectedHintOption = useSelector(
+    (state) => state.chat.selectedHintOption,
+  );
   const dispatch = useDispatch();
   const problemNumber = useSelector((state) => state.problem.number);
 
@@ -29,7 +31,7 @@ export default function index() {
     const storedEditor = localStorage.getItem(`editorState_${problemNumber}`);
     const response = await postCoachesByProblemId(
       problemNumber,
-      selectedOptions,
+      selectedHintOption,
       storedEditor,
     );
     if (response.success) {
@@ -40,17 +42,19 @@ export default function index() {
   };
 
   return (
-    <div>
-      {options.map((option, idx) => (
-        <Radio
-          id={idx}
-          label={option}
-          value={option}
-          onChange={handleOptionClick}
-          name="option"
-        />
-      ))}
-      <Button className="p-2" onClick={handleCoachingClick}>
+    <div className="flex flex-col justify-center items-center h-full ">
+      <div className="mb-[40px] text-lg">
+        {options.map((option, idx) => (
+          <Radio
+            id={idx}
+            label={option}
+            value={option}
+            onChange={handleOptionClick}
+            name="option"
+          />
+        ))}
+      </div>
+      <Button className="p-2 w-[100px]" onClick={handleCoachingClick}>
         코칭받기
       </Button>
     </div>

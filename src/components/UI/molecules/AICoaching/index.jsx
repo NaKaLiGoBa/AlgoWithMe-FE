@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Close from '../../atoms/Icon/Close';
-import QuestionCheckbox from './QuestionCheckbox';
+import FixedQuestion from './FixedQuestion';
 import Chevron from '../../atoms/Icon/Chevron';
 import ProblemCoachingList from './ProblemCoachingList';
 import Message from './Message';
@@ -19,17 +19,17 @@ export default function index({ handleChatToggle }) {
     dispatch(nextScreen());
   };
   const screenTexts = [
-    { prev: '목록', next: '답변' },
+    { middle: '목록', next: '답변' },
     { prev: '목록', middle: '답변', next: '힌트' },
     { prev: '답변', middle: '힌트' },
   ];
   const currentText = screenTexts[currentScreen];
-  const screens = [<ProblemCoachingList />, <Message />, <QuestionCheckbox />];
+  const screens = [<ProblemCoachingList />, <Message />, <FixedQuestion />];
   return (
-    <div className="w-[500px] h-[450px] bg-white shadow-2xl rounded-xl ">
-      <div className="bg-[#7F84F8] text-white text-base">
-        <Close onClick={handleChatToggle} />
-        <div className="flex justify-between p-2 ">
+    <div className="w-[600px] h-[450px]  bg-gray-100 shadow-2xl rounded-md ">
+      <div className="bg-[#5a5ed4ca] text-white text-base rounded-t-md p-1 w-full ">
+        <Close onClick={handleChatToggle} className="p-0 ml-auto pr-1" />
+        <div className="flex justify-between p-1 ">
           <div className="flex items-center ">
             <Chevron onClick={handlePrevClick} />
             {currentText.prev && <span>{currentText.prev}</span>}
