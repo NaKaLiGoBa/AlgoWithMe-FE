@@ -15,7 +15,7 @@ const index = () => {
   };
 
   return (
-    <div>
+    <>
       <Header />
       <div className="h-[calc(100vh-70px)] flex flex-col items-center justify-center">
         <div className="flex flex-row justify-between items-baseline w-[800px] mb-4">
@@ -34,7 +34,7 @@ const index = () => {
         </div>
         <MdEditor content={content} setContent={setContent} />
       </div>
-    </div>
+    </>
   );
 };
 
