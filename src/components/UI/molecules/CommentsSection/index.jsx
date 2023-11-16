@@ -1,174 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import CommentSection from '../CommentSection';
 import ProblemListFooter from '../Problem/ProblemListFooter';
 import usePaginationRange from '../../../../hooks/usePaginationRange';
+import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getCommentsBySolutionId';
+import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
+import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
 
-const commentsData = [
-  {
-    id: 'c1',
-    username: 'Goorm1',
-    timestamp: 'Nov 10, 2023',
-    content: '훌륭한 풀이.',
-    likes: 456,
-    avatar: '/path/to/goorm1/avatar.jpg',
-    replies: [
-      {
-        id: 'r1',
-        username: '@HM1',
-        timestamp: 'a minute ago',
-        content: 'Good :)',
-      },
-      {
-        id: 'r2',
-        username: '@HM2',
-        timestamp: 'Nov 11, 2023',
-        content: '가나다라마ㅂ',
-      },
-    ],
-  },
-  {
-    id: 'c2',
-    username: 'Goorm2',
-    timestamp: 'Nov 11, 2023',
-    content: '훌륭한 풀이2',
-    likes: 123,
-    avatar: '/path/to/goorm2/avatar.jpg',
-    replies: [
-      {
-        id: 'r3',
-        username: '@HM3',
-        timestamp: '11 minute ago',
-        content: '3333333333',
-      },
-      {
-        id: 'r4',
-        username: '@HM4',
-        timestamp: 'Nov 11, 2023',
-        content: '사아자차카타ㅍ',
-      },
-    ],
-  },
-  {
-    id: 'c3',
-    username: 'Goorm3',
-    timestamp: 'Nov 11, 2023',
-    content: '훌륭한 풀이3',
-    likes: 123,
-    avatar: '/path/to/goorm2/avatar.jpg',
-    replies: [
-      {
-        id: 'r5',
-        username: '@HM3',
-        timestamp: '11 minute ago',
-        content: '3333333333',
-      },
-      {
-        id: 'r6',
-        username: '@HM4',
-        timestamp: 'Nov 11, 2023',
-        content: '사아자차카타ㅍ',
-      },
-    ],
-  },
-  {
-    id: 'c4',
-    username: 'Goorm4',
-    timestamp: 'Nov 11, 2023',
-    content: '훌륭한 풀이4',
-    likes: 123,
-    avatar: '/path/to/goorm2/avatar.jpg',
-    replies: [
-      {
-        id: 'r7',
-        username: '@HM3',
-        timestamp: '11 minute ago',
-        content: '3333333333',
-      },
-      {
-        id: 'r8',
-        username: '@HM4',
-        timestamp: 'Nov 11, 2023',
-        content: '사아자차카타ㅍ',
-      },
-    ],
-  },
-  {
-    id: 'c5',
-    username: 'Goorm5',
-    timestamp: 'Nov 11, 2023',
-    content: '훌륭한 풀이5',
-    likes: 123,
-    avatar: '/path/to/goorm2/avatar.jpg',
-    replies: [
-      {
-        id: 'r9',
-        username: '@HM3',
-        timestamp: '11 minute ago',
-        content: '3333333333',
-      },
-      {
-        id: 'r10',
-        username: '@HM4',
-        timestamp: 'Nov 11, 2023',
-        content: '사아자차카타ㅍ',
-      },
-    ],
-  },
-  {
-    id: 'c6',
-    username: 'Goorm6',
-    timestamp: 'Nov 11, 2023',
-    content: '훌륭한 풀이6',
-    likes: 123,
-    avatar: '/path/to/goorm2/avatar.jpg',
-    replies: [
-      {
-        id: 'r11',
-        username: '@HM3',
-        timestamp: '11 minute ago',
-        content: '3333333333',
-      },
-      {
-        id: 'r12',
-        username: '@HM4',
-        timestamp: 'Nov 11, 2023',
-        content: '사아자차카타ㅍ',
-      },
-    ],
-  },
-  {
-    id: 'c7',
-    username: 'Goorm7',
-    timestamp: 'Nov 11, 2023',
-    content: '훌륭한 풀이7',
-    likes: 123,
-    avatar: '/path/to/goorm2/avatar.jpg',
-    replies: [
-      {
-        id: 'r13',
-        username: '@HM3',
-        timestamp: '11 minute ago',
-        content: '3333333333',
-      },
-      {
-        id: 'r14',
-        username: '@HM4',
-        timestamp: 'Nov 11, 2023',
-        content: '사아자차카타ㅍ',
-      },
-    ],
-  },
-];
-
-function CommentsSection() {
-  const [value, setValue] = useState('');
+function CommentsSection({ solutionId }) {
+  const [comments, setComments] = useState([]);
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
+  const [sort, setSort] = useState('recent');
+  const [newComment, setNewComment] = useState('');
 
-  const { slice, range } = usePaginationRange(commentsData, page, rowsPerPage);
+  const { slice, range } = usePaginationRange(comments, page, rowsPerPage);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const params = {
+        page,
+        size: rowsPerPage,
+        sort,
+      };
+      const response = await getCommentsBySolutionId(solutionId, params);
+      if (response.success) {
+        setComments(response.data.comments);
+      } else {
+        console.error('Failed to fetch comments:', response.error);
+      }
+    };
+    if (solutionId) {
+      fetchComments();
+    }
+  }, [page, rowsPerPage, sort, solutionId]);
+
+  const handleSubmitComment = async (commentText = newComment) => {
+    const content = commentText.trim();
+    if (!content) return;
+
+    try {
+      const response = await postCommentBySolutionId(solutionId, { content });
+      if (response.success) {
+        setComments([...comments, response.data]);
+        setNewComment('');
+      } else {
+        console.error(response.error);
+      }
+    } catch (error) {
+      console.error('Failed to submit comment:', error);
+    }
+  };
+
+  const handleLikeComment = async (commentId) => {
+    const response = await postCommentLikeBySolutionIdAndCommentId(
+      solutionId,
+      commentId,
+    );
+
+    if (response.success) {
+      setComments(
+        comments.map((comment) => {
+          if (comment.id === commentId) {
+            return { ...comment, isLiked: response.data.isLike };
+          }
+          return comment;
+        }),
+      );
+    } else {
+      console.error(response.error);
+    }
+  };
+
+  const handleReplySubmit = async (commentId, replyText) => {
+    const trimmedReplyText = replyText.trim();
+    if (!trimmedReplyText) return;
+
+    try {
+      const response = await postReplyByCommentId(commentId, {
+        content: trimmedReplyText,
+      });
+      if (response.success) {
+        setComments((currentComments) =>
+          currentComments.map((comment) => {
+            if (comment.id === commentId) {
+              return {
+                ...comment,
+                replies: [...comment.replies, response.data],
+              };
+            }
+            return comment;
+          }),
+        );
+      } else {
+        console.error(response.error);
+      }
+    } catch (error) {
+      console.error('Failed to submit reply:', error);
+    }
+  };
 
   return (
     <div className="bg-gray-900 p-8 font-sans text-white">
@@ -192,16 +125,14 @@ function CommentsSection() {
 
       <div className="bg-gray-800 p-4 rounded-lg mb-9">
         <MDEditor
-          value={value}
-          onChange={(val) => setValue(val)}
+          value={newComment}
+          onChange={(val) => setNewComment(val)}
           preview="live"
         />
         <div className="mt-4 flex justify-end">
           <button
             className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg"
-            onClick={() => {
-              /* 댓글 제출 로직 */
-            }}
+            onClick={() => handleSubmitComment()}
           >
             Comment
           </button>
@@ -211,7 +142,12 @@ function CommentsSection() {
       <div className="bg-gray-900 ">
         <div className="space-y-4">
           {slice.map((commentData) => (
-            <CommentSection key={commentData.id} commentData={commentData} />
+            <CommentSection
+              key={commentData.id}
+              commentData={commentData}
+              handleLikeComment={() => handleLikeComment(commentData.id)}
+              handleReplySubmit={handleReplySubmit}
+            />
           ))}
         </div>
       </div>
