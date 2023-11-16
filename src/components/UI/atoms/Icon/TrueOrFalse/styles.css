@@ -8,7 +8,7 @@
 }
 
 .drawCircle {
-  animation: drawCircle 2s ease-out forwards;
+  animation: drawCircle 1s ease-out forwards;
 }
 
 @keyframes drawLine1 {
@@ -30,9 +30,9 @@
 }
 
 .drawLine1 {
-  animation: drawLine1 1s ease-out forwards;
+  animation: drawLine1 0.4s ease-out forwards;
 }
 
 .drawLine2 {
-  animation: drawLine2 1s ease-out 1s forwards;
+  animation: drawLine2 0.4s ease-out 0.4s forwards;
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
@@ -19,7 +19,7 @@ import Button from '../../atoms/Input/Button';
 import CommentsSection from '../CommentsSection';
 import LikeButton from '../../atoms/Input/LikeButton';
 
-export default function SolutionTest({ problemId }) {
+export default function SolutionTest() {
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const tabs = useSelector((state) => state.tabs.tabs);
   const dispatch = useDispatch();
@@ -30,6 +30,7 @@ export default function SolutionTest({ problemId }) {
   const [viewCount, setViewCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const { problemId } = useParams();
 
   useEffect(() => {
     const fetchSolutionData = async () => {
