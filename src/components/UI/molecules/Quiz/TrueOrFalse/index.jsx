@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { True, False } from '../../../atoms/Icon/TrueOrFalse';
 import { setSelectedOption } from '../../../../../store/quizSlice';
 
-export default function index({ selectedOption }) {
+export default function index() {
   const dispatch = useDispatch();
-  const isAnswered = useSelector((state) => state.quiz.isAnswered);
+  const { isAnswered, selectedOption } = useSelector((state) => state.quiz);
   const handleOptionClick = (option) => {
     dispatch(setSelectedOption(option));
   };

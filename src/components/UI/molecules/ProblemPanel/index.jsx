@@ -1,17 +1,17 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
 
-const index = ({
-  number,
-  title,
-  difficulty,
-  status,
-  acceptance,
-  description,
-  tags,
-}) => {
+const index = () => {
+  const number = useSelector((state) => state.problem.number);
+  const title = useSelector((state) => state.problem.title);
+  const difficulty = useSelector((state) => state.problem.difficulty);
+  const status = useSelector((state) => state.problem.status);
+  const acceptance = useSelector((state) => state.problem.acceptance);
+  const description = useSelector((state) => state.problem.description);
+  const tags = useSelector((state) => state.problem.tags);
   const { problemId } = useParams();
 
   return (

@@ -1,11 +1,39 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Button from '../../atoms/Input/Button';
+import postCodeTest from '../../../../utils/api/v1/code/postCodeTest';
+import postCodeSubmit from '../../../../utils/api/v1/code/postCodeSubmit';
 
-const index = ({
-  testcases,
-  handleClickRunButton,
-  handleClickSubmitButton,
-}) => {
+const index = () => {
+  const problemNumber = useSelector((state) => state.problem.number);
+  const { problemId } = useParams();
+
+  const handleClickRunButton = () => {
+    const editorState = JSON.parse(
+      localStorage.getItem(`editorState_${problemNumber}`),
+    );
+    const request = {
+      language: editorState.currentLanguage,
+      code: editorState[editorState.currentLanguage],
+    };
+    postCodeTest(problemId, request);
+  };
+
+  const handleClickSubmitButton = () => {
+    const editorState = JSON.parse(
+      localStorage.getItem(`editorState_${problemNumber}`),
+    );
+    const request = {
+      language: editorState.currentLanguage,
+      code: editorState[editorState.currentLanguage],
+    };
+    postCodeSubmit(problemId, request).then((response) => {
+      alert(`정답인가요? ${response.data.isAnswer}`);
+    });
+  };
+
+  const testcases = useSelector((state) => state.problem.testcases);
   const [hasRun, setHasRun] = useState(false);
   useEffect(() => {
     setHasRun('isAnswer' in testcases[0]);

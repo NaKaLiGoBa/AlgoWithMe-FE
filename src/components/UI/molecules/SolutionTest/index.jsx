@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
@@ -17,13 +17,14 @@ import {
 import Button from '../../atoms/Input/Button';
 import CommentsSection from '../CommentsSection';
 
-export default function SolutionTest({ problemId }) {
+export default function SolutionTest() {
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const tabs = useSelector((state) => state.tabs.tabs);
   const dispatch = useDispatch();
   const [activeSolution, setActiveSolution] = useState(null);
   const navigate = useNavigate();
   const authToken = localStorage.getItem('ACCESS_TOKEN');
+  const { problemId } = useParams();
 
   useEffect(() => {
     const fetchSolutionData = async () => {
