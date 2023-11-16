@@ -8,7 +8,14 @@ export const AIchatSlice = createSlice({
       state.isVisible = !state.isVisible;
     },
     setSelectedOptions: (state, action) => {
-      state.selectedOptions = action.payload;
+      const { option, checked } = action.payload;
+      if (checked) {
+        state.selectedOptions.push(option);
+      } else {
+        state.selectedOptions = state.selectedOptions.filter(
+          (opt) => opt !== option,
+        );
+      }
     },
     prevScreen: (state) => {
       if (state.currentScreen > 0) {

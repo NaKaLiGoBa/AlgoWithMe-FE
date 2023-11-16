@@ -1,10 +1,17 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from '../../../atoms/Input/Checkbox';
-import { setSelectedOptions } from '../../../../../store/AIChatSlice';
+import {
+  prevScreen,
+  setSelectedOptions,
+} from '../../../../../store/AIChatSlice';
+import Button from '../../../atoms/Input/Button';
+import postCoachesByProblemId from '../../../../../utils/api/v1/coach/postCoachesByProblemId';
 
 export default function index() {
+  const selectedOptions = useSelector((state) => state.chat.selectedOptions);
   const dispatch = useDispatch();
+  const problemNumber = useSelector((state) => state.problem.number);
 
   const options = [
     '엣지케이스',
@@ -14,15 +21,38 @@ export default function index() {
     '반례',
   ];
 
-  const handleCheckbox = () => {
-    dispatch(setSelectedOptions((prev) => [prev.option]));
+  const handleCheckbox = (option, checked) => {
+    dispatch(setSelectedOptions({ option, checked }));
+  };
+
+  const handleCoachingClick = async () => {
+    const storedEditor = localStorage.getItem(`editorState_${problemNumber}`);
+    const userCheckClick = selectedOptions.join('');
+    const response = await postCoachesByProblemId(
+      problemNumber,
+      userCheckClick,
+      storedEditor,
+    );
+    if (response.success) {
+      dispatch(prevScreen());
+    } else {
+      console.log(response.error);
+    }
   };
 
   return (
     <div>
       {options.map((option, idx) => (
-        <Checkbox id={idx} label={option} onChange={handleCheckbox} />
+        <Checkbox
+          id={idx}
+          label={option}
+          checked={selectedOptions.includes(option)}
+          onChange={(e) => handleCheckbox(option, e.target.checked)}
+        />
       ))}
+      <Button className="p-2" onClick={handleCoachingClick}>
+        코칭받기
+      </Button>
     </div>
   );
 }
