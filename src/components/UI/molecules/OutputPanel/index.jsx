@@ -7,58 +7,81 @@ import postCodeSubmit from '../../../../utils/api/v1/code/postCodeSubmit';
 import { setTestcases } from '../../../../store/problemSlice';
 
 function TestCasesForm({ testcases, hasRun = false }) {
+  // 첫 번째 테스트 케이스를 기본적으로 활성화합니다.
+  const [activeCaseNumber, setActiveCaseNumber] = useState(
+    testcases[0]?.number,
+  );
+
   return (
-    <div>
-      {testcases.map((testcase, index) => (
-        <div key={testcase.number} className="bg-gray-100 flex flex-col gap-2 p-4">
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-2">
+        {testcases.map((testcase) => (
           <div>
             {hasRun && (
               <div>
                 <h2>
                   {testcase.isAnswer ? (
                     <span className="text-green-600 text-lg">
-                      ✅ 정답입니다{' '}
+                      ✅ 정답입니다
                     </span>
                   ) : (
-                    <span className="text-rose-600 text-lg">
-                      ❌ 오답입니다{' '}
-                    </span>
+                    <span className="text-rose-600 text-lg">❌ 오답입니다</span>
                   )}
                 </h2>
               </div>
             )}
-            <h2>테스트 케이스 {testcase.number}</h2>
+            <button
+              type="button"
+              key={testcase.number}
+              className={`py-1 px-2 text-sm rounded-md ${
+                activeCaseNumber === testcase.number
+                  ? 'bg-slate-300'
+                  : 'bg-slate-200'
+              }`}
+              onClick={() => setActiveCaseNumber(testcase.number)}
+            >
+              Case {testcase.number}
+            </button>
           </div>
-          <div>
-            <h3>입력값</h3>
-            {testcase.inputs.map((input) => (
-              <div className="p-4">
-                {input.name}: {input.value}
-              </div>
-            ))}
-            <h3>예상값</h3>
-            <div className="p-4">{testcase.expected}</div>
-            {hasRun && (
-              <div>
-                <h3
-                  className={`${
-                    testcase.isAnswer ? 'text-green-600' : 'text-rose-600'
-                  }`}
-                >
-                  출력값
-                </h3>
-                <div
-                  className={`p-4 ${
-                    testcase.isAnswer ? 'text-green-600' : 'text-rose-600'
-                  }`}
-                >
-                  {testcase.output}
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-2 p-2">
+        {testcases
+          .filter((testcase) => testcase.number === activeCaseNumber)
+          .map((testcase) => (
+            <div key={testcase.number}>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <h3 className="text-sm text-gray-400">입력값</h3>
+                  {testcase.inputs.map((input) => (
+                    <div className="p-2 m-2 bg-slate-100 rounded-md text-gray-500">
+                      {input.name}= {input.value}
+                    </div>
+                  ))}
                 </div>
+                <div>
+                  <h3 className="text-sm text-gray-400">예상값</h3>
+                  <div className="p-2 m-2 bg-slate-100 rounded-md text-gray-500">
+                    {testcase.expected}
+                  </div>
+                </div>
+                {hasRun && (
+                  <divc>
+                    <h3 className="text-sm text-gray-400">출력값</h3>
+                    <div
+                      className={`p-2 m-2 bg-slate-100 rounded-md ${
+                        testcase.isAnswer ? 'text-green-600' : 'text-rose-600'
+                      }`}
+                    >
+                      {testcase.output}
+                    </div>
+                  </divc>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-      ))}
+            </div>
+          ))}
+      </div>
     </div>
   );
 }

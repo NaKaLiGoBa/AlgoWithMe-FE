@@ -4,11 +4,11 @@ import Editor from '@monaco-editor/react';
 import DropdownMenu from '../../atoms/Input/Dropdown';
 
 function Index() {
-  const {problemNumber, defaultCodes} = useSelector((state) => state.problem);
+  const {number, defaultCodes} = useSelector((state) => state.problem);
   const availableLanguages = Object.keys(defaultCodes);
 
   const storedState = JSON.parse(
-    localStorage.getItem(`editorState_${problemNumber}`),
+    localStorage.getItem(`editorState_${number}`),
   );
   const initialEditorState = storedState || {
     ...defaultCodes,
@@ -19,10 +19,10 @@ function Index() {
 
   useEffect(() => {
     localStorage.setItem(
-      `editorState_${problemNumber}`,
+      `editorState_${number}`,
       JSON.stringify(editorState),
     );
-  }, [editorState, problemNumber]);
+  }, [editorState, number]);
 
   const handleSelectLanguage = (selectedLanguage) => {
     setEditorState((prev) => ({ ...prev, currentLanguage: selectedLanguage }));
