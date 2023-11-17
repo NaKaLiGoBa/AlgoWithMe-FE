@@ -63,7 +63,7 @@ async function call(apiUrl, method) {
 }
 
 async function getCoachesByProblemId(id) {
-  const apiUrl = `/api/v1/problems/${id}/coaches`;
+  const apiUrl = `/api/v1/problems/${id}/answers`;
 
   return call(apiUrl, 'GET');
 }

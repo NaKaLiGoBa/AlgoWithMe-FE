@@ -64,7 +64,7 @@ async function call(apiUrl, method, requestData = {}) {
 }
 
 async function postCoachesByProblemId(id, question, code) {
-  const apiUrl = `/api/v1/problems/${id}/coaches`;
+  const apiUrl = `/api/v1/problems/${id}/answers`;
 
   const requestData = { question, code };
 
