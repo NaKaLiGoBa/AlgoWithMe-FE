@@ -6,6 +6,7 @@ export const AIchatSlice = createSlice({
     isVisible: false,
     selectedHintOption: null,
     currentScreen: 2,
+    selectedProblemId: null,
   },
   reducers: {
     toggleChat: (state) => {
@@ -24,10 +25,18 @@ export const AIchatSlice = createSlice({
         state.currentScreen += 1;
       }
     },
+    setSeletedProblemId: (state, action) => {
+      state.selectedProblemId = action.payload;
+    },
   },
 });
 
-export const { toggleChat, setSelectedHintOption, prevScreen, nextScreen } =
-  AIchatSlice.actions;
+export const {
+  toggleChat,
+  setSelectedHintOption,
+  prevScreen,
+  nextScreen,
+  setSeletedProblemId,
+} = AIchatSlice.actions;
 
 export default AIchatSlice.reducer;
