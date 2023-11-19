@@ -4,22 +4,26 @@ import getCoachesByProblemId from '../../../../../utils/api/v1/coach/getCoachesB
 
 export default function index() {
   const problemId = useSelector((state) => state.problem.number);
-  const [message, setMessage] = useState({ answers: [] });
+  const [answers, setAnswers] = useState({ answers: [] });
+  const selectedProblemId = useSelector(
+    (state) => state.chat.selectedProblemId,
+  );
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getCoachesByProblemId(problemId);
+      const problemChatId = selectedProblemId || problemId;
+      const response = await getCoachesByProblemId(problemChatId);
       if (response.success) {
-        setMessage(response.data);
+        setAnswers(response.data);
       } else {
         console.log(response.error);
       }
     }
     fetchData();
-  }, [problemId]);
+  }, [problemId, selectedProblemId]);
   return (
     <div className="p-4">
-      {message.answers.map((answer, idx) => (
+      {answers.answers.map((answer, idx) => (
         <div key={idx} className="flex flex-col">
           <div className="ml-4 mr-auto   bg-blue-100 rounded-xl p-3 shadow-lg">
             <p className="text-sm text-blue-800">{answer.question}</p>

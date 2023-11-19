@@ -4,7 +4,7 @@ import Close from '../../atoms/Icon/Close';
 import FixedQuestion from './FixedQuestion';
 import Chevron from '../../atoms/Icon/Chevron';
 import ProblemCoachingList from './ProblemCoachingList';
-import Message from './Message';
+import AIResponseViewer from './AIResponseViewer';
 import { nextScreen, prevScreen } from '../../../../store/AIChatSlice';
 import '../../atoms/Tab/styles.css';
 
@@ -25,7 +25,11 @@ export default function index({ handleChatToggle }) {
     { prev: '답변', middle: '힌트' },
   ];
   const currentText = screenTexts[currentScreen];
-  const screens = [<ProblemCoachingList />, <Message />, <FixedQuestion />];
+  const screens = [
+    <ProblemCoachingList />,
+    <AIResponseViewer />,
+    <FixedQuestion />,
+  ];
   return (
     <div className="w-[600px] h-[450px]  bg-gray-100 shadow-2xl rounded-md overflow-auto customTab-scrollbar">
       <div className="bg-[#5a5ed4ca] text-white text-base rounded-t-md p-1 w-full ">
