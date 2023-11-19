@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
@@ -10,6 +10,8 @@ import {localHostURL} from '../../../../../utils/apiConfig'
 
 function Signin() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,7 +46,7 @@ function Signin() {
           localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
           setErrorMessage(''); // 에러 상태 초기화
           alert(response.data.message);
-          navigate('/');
+          navigate(from);
         } else {
           setErrorMessage('로그인에 실패했습니다. 다시 시도해 주세요.');
         }
