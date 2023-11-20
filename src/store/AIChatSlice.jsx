@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  isVisible: false,
+  selectedHintOption: null,
+  currentScreen: 2,
+  selectedProblemId: null,
+};
 export const AIchatSlice = createSlice({
   name: 'chat',
-  initialState: {
-    isVisible: false,
-    selectedHintOption: null,
-    currentScreen: 2,
-    selectedProblemId: null,
-  },
+  initialState,
   reducers: {
     toggleChat: (state) => {
       state.isVisible = !state.isVisible;
@@ -28,6 +29,7 @@ export const AIchatSlice = createSlice({
     setSeletedProblemId: (state, action) => {
       state.selectedProblemId = action.payload;
     },
+    resetAIChat: () => initialState,
   },
 });
 
@@ -37,6 +39,7 @@ export const {
   prevScreen,
   nextScreen,
   setSeletedProblemId,
+  resetAIChat,
 } = AIchatSlice.actions;
 
 export default AIchatSlice.reducer;
