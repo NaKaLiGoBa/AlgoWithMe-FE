@@ -62,7 +62,7 @@ export default function index() {
   const SolutionsUrl = `${window.location.href}/solutions/edit`;
 
   return (
-    <div className="h-[100%] px-4 py-4">
+    <div className="h-[95%] px-4 py-4">
       <Link
         to={SolutionsUrl}
         className="w-full flex justify-center bg-[#63B758] text-white py-2 mb-5 rounded-sm"
