@@ -21,9 +21,7 @@ const getButtonBorder = (hasRun, testcase) => {
     return ``;
   }
 
-  return testcase.answer
-    ? `ring ring-green-600`
-    : `ring ring-rose-600`;
+  return testcase.answer ? `ring ring-green-600` : `ring ring-rose-600`;
 };
 
 function TestCasesForm({ testcases, hasRun = false }) {
@@ -113,7 +111,8 @@ export default function Index() {
       .then((data) => {
         dispatch(setTestcases(data));
         setHasRun(true);
-      });
+      })
+      .catch((response) => alert(response.error));
   };
 
   const handleClickSubmitButton = () => {
