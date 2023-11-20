@@ -14,8 +14,6 @@ export default function index() {
   // );
   const problems = useSelector((state) => state.problems.problems);
 
-  // const problemstest = problemsData.problems;
-
   const problemChatClick = (id) => {
     dispatch(setSeletedProblemId(id));
     dispatch(nextScreen());
