@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProblems } from '../../../../../store/problemsSlice';
 import Link from '../../../atoms/Text/Link';
 import ProblemListFooter from '../ProblemListFooter';
-import PaginationRange from '../../../../../hooks/usePaginationRange';
+import PaginationRange, {
+  sliceData,
+  calculateRange,
+} from '../../../../../hooks/usePaginationRange';
 import DropdownMenu from '../../../atoms/Input/Dropdown';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 
@@ -20,9 +23,9 @@ function Td({ children, className = '' }) {
 }
 
 export default function index() {
-  const difficulty = ['쉬움', '보통', '어려움'];
-  const status = ['성공', '실패', '미해결'];
-  const tags = ['DFS', 'BFS', 'Sort'];
+  const difficulty = useSelector((state) => state.problems.difficulties);
+  const status = useSelector((state) => state.problems.status);
+  const tags = useSelector((state) => state.problems.tags);
   const [selectedDifficulty, setDifficulty] = useState('');
   const [selectedStatus, setStatus] = useState('');
   const [selectedTag, setTag] = useState('');
@@ -33,9 +36,10 @@ export default function index() {
   const rowsPerPage = 20;
 
   function getDifficulty(d) {
-    if (d === '어려움') return (<p className='text-rose-600 '>어려움</p>);
-    if (d === '보통') return (<p className='text-yellow-600'>보통</p>);
-    if (d === '쉬움') return (<p className='text-green-600'>쉬움</p>);
+    if (d === '어려움') return <p className="text-rose-600 ">어려움</p>;
+    if (d === '보통') return <p className="text-yellow-600">보통</p>;
+    if (d === '쉬움') return <p className="text-green-600">쉬움</p>;
+    return null;
   }
 
   useEffect(() => {
@@ -51,18 +55,22 @@ export default function index() {
         params = { ...params, status: selectedStatus };
       }
 
-      try {
-        const response = await getProblems(params);
-        dispatch(setProblems(response.data)); // 데이터를 스토어에 저장
-      } catch (error) {
-        console.error('Error loading problems:', error);
-      }
+      getProblems(params)
+        .then((response) => response.data)
+        .then((data) => {
+          dispatch(setProblems(data));
+        })
+        .catch((error) => console.error('Error loading problems:', error));
     };
 
     loadProblems();
   }, [dispatch, selectedDifficulty, selectedStatus, selectedTag]);
 
-  const { slice, range } = PaginationRange(problems, page, rowsPerPage);
+  const { slice, range } = useMemo(() => {
+    const tableRange = calculateRange(problems, rowsPerPage);
+    const slicedData = sliceData(problems, page, rowsPerPage);
+    return { slice: slicedData, range: tableRange };
+  }, [problems, page, rowsPerPage]);
 
   return (
     <div className="flex flex-col gap-12 items-center bg-white py-5 px-5 rounded-xl shadow-lg">

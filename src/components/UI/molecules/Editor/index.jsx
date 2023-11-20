@@ -9,8 +9,9 @@ function Index() {
   const { problemId } = useParams();
   const availableLanguages = Object.keys(defaultCodes);
 
-  const storedState = JSON.parse(localStorage.getItem(`editorState_${problemId}`));
-  console.log(storedState);
+  const storedState = JSON.parse(
+    localStorage.getItem(`editorState_${problemId}`),
+  );
   const initialEditorState = storedState || {
     ...defaultCodes,
     currentLanguage: availableLanguages[0],
@@ -19,7 +20,10 @@ function Index() {
   const [editorState, setEditorState] = useState(initialEditorState);
 
   useEffect(() => {
-    localStorage.setItem(`editorState_${problemId}`, JSON.stringify(editorState));
+    localStorage.setItem(
+      `editorState_${problemId}`,
+      JSON.stringify(editorState),
+    );
   }, [editorState, problemId]);
 
   const handleSelectLanguage = (selectedLanguage) => {

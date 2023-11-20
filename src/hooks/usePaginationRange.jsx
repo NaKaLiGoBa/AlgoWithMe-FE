@@ -28,3 +28,4 @@ const usePaginationRange = (data, page, rowsPerPage) => {
 };
 
 export default usePaginationRange;
+export {sliceData, calculateRange};
