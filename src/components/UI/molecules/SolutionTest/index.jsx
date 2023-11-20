@@ -14,7 +14,6 @@ import {
   updateSolution,
   deleteSolution,
   likeSolution,
-  likeSolution,
 } from '../../../../utils/fetchSolution';
 import Button from '../../atoms/Input/Button';
 import CommentsSection from '../CommentsSection';
@@ -37,10 +36,7 @@ export default function SolutionTest() {
   const { problemId } = useParams();
   const activeSolutionId = useSelector(selectActiveSolutionId);
   const [solutionData, setSolutionData] = useState(null);
-  const [likes, setLikes] = useState(0);
-  const [viewCount, setViewCount] = useState(0);
-  const [commentCount, setCommentCount] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {

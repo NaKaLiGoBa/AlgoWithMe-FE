@@ -277,7 +277,6 @@ function CommentSection({ commentData, onDelete }) {
       {areRepliesVisible && (
         <div className="mt-1 space-y-4 p-5">
           {commentData.replies?.map((reply) => (
-          {commentData.replies?.map((reply) => (
             <Comment
               key={reply.id}
               commentData={reply}
@@ -285,8 +284,6 @@ function CommentSection({ commentData, onDelete }) {
               username={reply.username}
               timestamp={reply.timestamp}
               content={reply.content}
-              avatar={reply.avatar || commentData.avatar}
-              handleLike={() => handleLikeReply(reply.id)}
               avatar={reply.avatar || commentData.avatar}
               handleLike={() => handleLikeReply(reply.id)}
             />
