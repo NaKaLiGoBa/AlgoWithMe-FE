@@ -71,7 +71,12 @@ async function postCommentBySolutionId(solutionId, requestData = {}) {
   //    "content": "string"
   // }
 
-  return call(apiUrl, 'POST', requestData);
+try {
+    const response = await call(apiUrl, 'POST', requestData);
+    return response; // 서버 응답을 그대로 반환
+  } catch (error) {
+    return error; // 오류 응답을 반환
+  }
 }
 
 export default postCommentBySolutionId;

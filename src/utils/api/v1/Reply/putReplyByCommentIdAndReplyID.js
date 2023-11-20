@@ -63,12 +63,12 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function putCommentBySolutionIdAndCommentId(
-  solutionId,
+async function putReplyByCommentIdAndReplyID(
   commentId,
+  replyId,
   requestData = {},
 ) {
-  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
+  const apiUrl = `/api/v1/comments/${commentId}/replies/${replyId}`;
 
   // ===예시===
   // requestData = {
@@ -78,4 +78,4 @@ async function putCommentBySolutionIdAndCommentId(
   return call(apiUrl, 'PUT', requestData);
 }
 
-export default putCommentBySolutionIdAndCommentId;
+export default putReplyByCommentIdAndReplyID;

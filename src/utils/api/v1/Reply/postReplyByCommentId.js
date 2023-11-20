@@ -8,8 +8,8 @@ function handleResponse(response) {
   const { status, data } = response;
 
   switch (status) {
-    case 204:
-      // 댓글 수정 완료
+    case 201:
+      // 댓글 작성 완료
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -63,19 +63,15 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function putCommentBySolutionIdAndCommentId(
-  solutionId,
-  commentId,
-  requestData = {},
-) {
-  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
+async function postReplyByCommentId(commentId, requestData = {}) {
+  const apiUrl = `/api/v1/comments/${commentId}/replies`;
 
   // ===예시===
   // requestData = {
   //    "content": "string"
   // }
 
-  return call(apiUrl, 'PUT', requestData);
+  return call(apiUrl, 'POST', requestData);
 }
 
-export default putCommentBySolutionIdAndCommentId;
+export default postReplyByCommentId;

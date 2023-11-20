@@ -8,8 +8,8 @@ function handleResponse(response) {
   const { status, data } = response;
 
   switch (status) {
-    case 204:
-      // 댓글 수정 완료
+    case 200:
+      // 성공
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -22,6 +22,13 @@ function handleError(error) {
     // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
     switch (status) {
+      case 422:
+        // validation error
+        return {
+          success: false,
+          error: 'validation error',
+          details: data,
+        };
       case 500:
         // 서버 내부 오류
         return {
@@ -49,13 +56,13 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, requestData = {}) {
+async function call(apiUrl, method, params = {}) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
       headers: getAuthHeader(),
-      data: requestData,
+      params,
     });
     return handleResponse(response);
   } catch (error) {
@@ -63,19 +70,16 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function putCommentBySolutionIdAndCommentId(
-  solutionId,
-  commentId,
-  requestData = {},
-) {
-  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
-
-  // ===예시===
-  // requestData = {
-  //    "content": "string"
-  // }
-
-  return call(apiUrl, 'PUT', requestData);
-}
-
-export default putCommentBySolutionIdAndCommentId;
+async function getReplyByCommentId(commentId, params = {}) {
+    const apiUrl = `/api/v1/comments/${commentId}/replies`;
+  
+    // ===예시===
+    //   const params = {
+    //     page: page,
+    //     sort: sort
+    //   };
+  
+    return call(apiUrl, 'GET', params);
+  }
+  
+  export default getReplyByCommentId;

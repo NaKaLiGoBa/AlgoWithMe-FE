@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { localHostURL } from '../../../apiConfig';
 import getAuthHeader from '../../../getAuthHeader';
+import getRequestDateTime from '../../../getRequestDateTime';
 
 const hostURL = localHostURL;
 
@@ -8,8 +9,11 @@ function handleResponse(response) {
   const { status, data } = response;
 
   switch (status) {
-    case 204:
-      // 댓글 수정 완료
+    case 200:
+      // 좋아요 완료
+      // {
+      //   "isLike": true
+      // }
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -63,19 +67,14 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function putCommentBySolutionIdAndCommentId(
-  solutionId,
-  commentId,
-  requestData = {},
-) {
-  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
+async function postReplyLikeByCommentIdAndReplyId(commentId, replyId) {
+  const apiUrl = `/api/v1/comments/${commentId}/replies/${replyId}/like`;
 
-  // ===예시===
-  // requestData = {
-  //    "content": "string"
-  // }
+  const requestData = {
+    requestDateTime: getRequestDateTime(),
+  };
 
-  return call(apiUrl, 'PUT', requestData);
+  return call(apiUrl, 'POST', requestData);
 }
 
-export default putCommentBySolutionIdAndCommentId;
+export default postReplyLikeByCommentIdAndReplyId;

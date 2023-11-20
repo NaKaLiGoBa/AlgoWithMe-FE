@@ -13,35 +13,54 @@ import {
   fetchSolution,
   updateSolution,
   deleteSolution,
+  likeSolution,
 } from '../../../../utils/fetchSolution';
 import Button from '../../atoms/Input/Button';
 import CommentsSection from '../CommentsSection';
+import LikeButton from '../../atoms/Input/LikeButton';
+import {
+  selectActiveSolutionId,
+  setActiveSolutionId,
+} from '../../../../store/SolutionsSlice';
 
 export default function SolutionTest() {
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const tabs = useSelector((state) => state.tabs.tabs);
   const dispatch = useDispatch();
-  const [activeSolution, setActiveSolution] = useState(null);
   const navigate = useNavigate();
   const authToken = localStorage.getItem('ACCESS_TOKEN');
+  const [likes, setLikes] = useState(0);
+  const [viewCount, setViewCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   const { problemId } = useParams();
+  const activeSolutionId = useSelector(selectActiveSolutionId);
+  const [solutionData, setSolutionData] = useState(null);
+
 
   useEffect(() => {
-    const fetchSolutionData = async () => {
-      try {
-        const solutionData = await fetchSolution(
-          problemId,
-          activeTab.data.solution.id,
-        );
-        setActiveSolution(solutionData);
-      } catch (error) {
-        console.error('Error fetching solution data:', error);
+    const fetchData = async () => {
+      if (activeSolutionId !== null && activeSolutionId >= 0) {
+        try {
+          const data = await fetchSolution(
+            problemId,
+            activeSolutionId,
+            authToken,
+          );
+          setSolutionData(data);
+        } catch (error) {
+          console.error('Error fetching solution data:', error);
+        }
+      } else {
+        console.error('Active solution ID is not available or invalid');
       }
     };
-    if (activeTab) {
-      fetchSolutionData();
+    // 액션 호출 위치 검토
+    if (activeTab && activeTab.data && activeTab.data.solution) {
+      dispatch(setActiveSolutionId(activeTab.data.solution.id));
+      fetchData();
     }
-  }, [activeTab]);
+  }, [activeSolutionId, problemId, authToken, dispatch, activeTab]);
 
   const handleTabClick = (tab) => {
     dispatch(setActiveTab(tab));
@@ -76,6 +95,20 @@ export default function SolutionTest() {
     }
   };
 
+  const handleLike = async () => {
+    try {
+      const response = await likeSolution(
+        problemId,
+        solutionData.solution.id,
+        authToken,
+      );
+      setLikes(response.likeCount);
+      setIsLiked(response.isLike);
+    } catch (error) {
+      console.error('Error liking the solution:', error);
+    }
+  };
+
   return (
     <div className="SolutionTest">
       <ul className="tabs">
@@ -88,7 +121,7 @@ export default function SolutionTest() {
         ))}
       </ul>
       {/* 게시글 데이터가 로드되었을 때만 내용을 표시 */}
-      {activeSolution && (
+      {solutionData && (
         <div className="bg-gray-200 shadow rounded-b-lg p-6">
           <div className="flex justify-end">
             <Button className="rounded-lg p-2 mr-2.5" onClick={handleUpdate}>
@@ -105,53 +138,57 @@ export default function SolutionTest() {
           <div className="flex items-start space-x-4">
             <img
               className="w-16 h-16 rounded-full object-cover"
-              src={activeSolution.author.avatar}
-              alt={`${activeSolution.author.nickname}'s avatar`}
+              src={solutionData.author.avatar}
+              alt={`${solutionData.author.nickname}'s avatar`}
             />
             <div className="min-w-0 flex-1">
               <p className="text-xl font-bold text-gray-900 truncate">
-                {activeSolution.solution.title}
+                {solutionData.solution.title}
               </p>
               <div className="flex mt-4">
                 <p className="text-sm text-gray-500">
                   <a
-                    href={`/users/${activeSolution.author.nickname}`}
+                    href={`/users/${solutionData.author.nickname}`}
                     className="hover:underline"
                   >
-                    {activeSolution.author.nickname}
+                    {solutionData.author.nickname}
                   </a>
                 </p>
                 <p className="text-sm text-gray-500 ml-5">
                   {new Date(
-                    activeSolution.solution.createdAt,
+                    solutionData.solution.createdAt,
                   ).toLocaleDateString()}
                 </p>
               </div>
-              <p className="mt-2.5 text-sm text-gray-500">
-                <span className="mr-2">언어:</span>
-                {activeSolution.solution.languages.map((language) => (
-                  <span
-                    key={language}
-                    className="inline-block bg-slate-300 rounded-full px-2.5 py-1 font-semibold text-gray-700 mr-2 mb-1"
-                  >
-                    {language}
-                  </span>
-                ))}
-              </p>
+              <div className="flex items-center mt-2">
+                <LikeButton onClick={handleLike} isLiked={isLiked} />
+                <span className="ml-1 text-red-500 ">{likes}</span>
+                <p className="mt-2.5 text-sm text-gray-500">
+                  <span className="mr-2 ml-5">언어:</span>
+                  {solutionData.solution.languages.map((language) => (
+                    <span
+                      key={language}
+                      className="inline-block bg-slate-300 rounded-full px-2.5 py-1 font-semibold text-gray-700 mr-2 mb-1"
+                    >
+                      {language}
+                    </span>
+                  ))}
+                </p>
+              </div>
             </div>
+          </div>
+          <div className="flex justify-between items-center my-2">
+            <div className="mt-1 h-px w-full bg-gray-400" />
+          </div>
+          {/* Viewer */}
+          <div className="markdown-viewer bg-white p-6">
+            <MDEditor.Markdown source={solutionData?.solution.content} />
+          </div>
+          <div className="mt-4">
+            <CommentsSection solutionId={solutionData.solution.id} />
           </div>
         </div>
       )}
-      <div className="flex justify-between items-center my-2">
-        <div className="mt-1 h-px w-full bg-gray-400" />
-      </div>
-      {/* Viewer */}
-      <div className="markdown-viewer bg-white p-6">
-        <MDEditor.Markdown source={activeSolution?.solution.content} />
-      </div>
-      <div className="mt-4">
-        <CommentsSection />
-      </div>
     </div>
   );
 }

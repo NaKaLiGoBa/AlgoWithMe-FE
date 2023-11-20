@@ -9,7 +9,7 @@ function handleResponse(response) {
 
   switch (status) {
     case 204:
-      // 댓글 수정 완료
+      // 댓글 삭제 완료
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -49,13 +49,12 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, requestData = {}) {
+async function call(apiUrl, method) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
       headers: getAuthHeader(),
-      data: requestData,
     });
     return handleResponse(response);
   } catch (error) {
@@ -63,19 +62,10 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function putCommentBySolutionIdAndCommentId(
-  solutionId,
-  commentId,
-  requestData = {},
-) {
-  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
+async function deleteReplyByCommentIdAndReplyId(commentId, replyId) {
+  const apiUrl = `/api/v1/comments/${commentId}/replies/${replyId}`;
 
-  // ===예시===
-  // requestData = {
-  //    "content": "string"
-  // }
-
-  return call(apiUrl, 'PUT', requestData);
+  return call(apiUrl, 'DELETE');
 }
 
-export default putCommentBySolutionIdAndCommentId;
+export default deleteReplyByCommentIdAndReplyId;
