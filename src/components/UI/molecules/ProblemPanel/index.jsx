@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import MDEditor from '@uiw/react-md-editor';
 import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
 
@@ -31,17 +32,10 @@ const index = () => {
         <p>{status}</p>
         <p>{`정답률: ${acceptance}`}</p>
       </div>
-      <div className="flex flex-col gap-4 m-4">
-        <h3>설명</h3>
-        <p>{description}</p>
-      </div>
-      <div className="flex flex-col gap-4 m-4">
-        <h3>입력</h3>
-        <p>placeholder</p>
-      </div>
-      <div className="flex flex-col gap-4 m-4">
-        <h3>출력</h3>
-        <p>placeholder</p>
+      <div className="flex flex-col gap-4">
+        <div className="markdown-viewer bg-white p-6" data-color-mode="light">
+          <MDEditor.Markdown source={description} />
+        </div>
       </div>
       <div className="flex flex-col gap-4 m-4">
         <h3>태그</h3>
