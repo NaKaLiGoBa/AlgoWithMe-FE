@@ -124,7 +124,7 @@ function Signin() {
 
         {errorMessage && <p className="text-red-500 mb-5">{errorMessage}</p>}
 
-        <Button type="submit" className="w-full mb-8" onClick={checkLogin}>
+        <Button type="submit" className="w-full mb-8">
           로그인
         </Button>
         <div className="text-center">
