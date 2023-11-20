@@ -94,10 +94,10 @@ export default function index() {
           </tr>
         </thead>
         <tbody>
-          {slice.map((problem, index) => (
+          {slice.map((problem, order) => (
             <tr
               key={problem.id}
-              className={`${index % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
+              className={`${order % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
             >
               <Td>{problem.number}</Td>
               <Td>{problem.status}</Td>

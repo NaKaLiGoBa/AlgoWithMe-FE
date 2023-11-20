@@ -10,17 +10,17 @@ import AIchat from '../molecules/AICoaching/index';
 import Button from '../atoms/Input/Button';
 
 const index = ({ activeTab, handleChatToggle, showChat }) => (
-  <div>
+  <div className="h-screen">
     <Header />
-    <main className="flex flex-row bg-[#E7E7E7] h-full">
-      <div className="w-[40%] bg-white rounded-xl m-2">
+    <main className="flex flex-row bg-[#E7E7E7] h-[calc(100%-70px)]">
+      <div className="w-[40%] bg-white rounded-xl m-2 h-[100%]">
         <ProblemTab />
         <hr />
         {activeTab.type === 'Description' && <ProblemPanel />}
         {activeTab.type === 'Solutions' && <Solutions />}
         {activeTab.type === 'Post' && <SolutionTest />}
       </div>
-      <div className="grow">
+      <div className="grow h-[100%]">
         <Editor />
         <OutputPanel />
       </div>
