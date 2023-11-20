@@ -7,8 +7,14 @@ export default function index() {
   const initials = useSelector(
     (state) => state.quiz.currentQuiz.choiceOrInitials,
   );
-  const { isAnswered, correctAnswer } = useSelector((state) => state.quiz);
+  const { currentQuiz, isAnswered, correctAnswer } = useSelector(
+    (state) => state.quiz,
+  );
   const [answers, setAnswers] = useState(new Array(initials.length).fill(''));
+
+  useEffect(() => {
+    setAnswers(new Array(currentQuiz.choiceOrInitials.length).fill(''));
+  }, [currentQuiz]);
 
   useEffect(() => {
     const userAnswer = answers.join('');
