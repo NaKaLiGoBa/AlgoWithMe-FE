@@ -28,7 +28,7 @@ function index() {
         error?.response?.data?.message || 'An error occurred during sign in.',
       );
       if (error?.response?.status === 401) {
-        navigate('/signup'); // 회원가입 페이지로 이동
+        navigate('/signup', { state: { statusCode: 0 } }); // 회원가입 페이지로 이동
       }
     } finally {
       setLoading(false); // 로딩 상태 종료
