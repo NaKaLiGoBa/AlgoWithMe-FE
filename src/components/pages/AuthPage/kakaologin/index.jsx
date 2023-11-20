@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { localHostURL } from '../../../../utils/apiConfig';
 
 function index() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   const sendCodeToBackend = async (code) => {
+    setLoading(true);
     try {
       const response = await axios.post(
         `${localHostURL}/api/v1/auth/signin/kakao`,
@@ -15,30 +17,21 @@ function index() {
         },
       );
       // 로그인 처리
-      if (response.status === 200) {
-        // "완료"로 받은 상태 코드
-        if (response.data && response.data.accessToken) {
-          localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
-          // 로그인 후 처리 로직
-          if (response.data.message) {
-            alert(response.data.message);
-          }
-          navigate('/'); // 홈 화면으로 이동
-        }
+      if (response.data && response.data.accessToken) {
+        localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
+        alert(response.data.message);
+        navigate('/'); // 홈 화면으로 이동
       }
     } catch (error) {
       console.error('Error sending code to backend:', error);
-      if (error.response) {
-        // 서버에서 응답 메시지가 있는 경우
-        if (error.response.data && error.response.data.message) {
-          alert(error.response.data.message);
-        }
-        if (error.response.status === 401) {
-          navigate('/signup', { state: { statusCode: 0 } }); // 회원가입 페이지로 이동
-        }
-      } else {
-        // 기타 에러 로직
+      alert(
+        error?.response?.data?.message || 'An error occurred during sign in.',
+      );
+      if (error?.response?.status === 401) {
+        navigate('/signup'); // 회원가입 페이지로 이동
       }
+    } finally {
+      setLoading(false); // 로딩 상태 종료
     }
   };
 
@@ -48,15 +41,17 @@ function index() {
 
     if (code) {
       // 백엔드에 인가 코드 전송
-      sendCodeToBackend(code).then(() => {
-        // 인가 코드를 전송한 후 URL에서 code 파라미터 제거
-        const newURL = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-        window.history.replaceState({}, document.title, newURL);
-      });
+      sendCodeToBackend(code);
+    } else {
+      setLoading(false);
     }
   }, []);
 
-  return <div>로그인 중입니다.</div>;
+  if (loading) {
+    return <div>로그인 중입니다...</div>;
+  } 
+    return <div>로그인에 실패했습니다. 다시 시도해주세요.</div>;
+  
 }
 
 export default index;
