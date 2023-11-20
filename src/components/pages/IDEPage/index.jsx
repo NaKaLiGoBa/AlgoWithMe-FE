@@ -4,13 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setProblem } from '../../../store/problemSlice';
 import IDETemplate from '../../UI/templates/IDETemplate';
 import { resetTab } from '../../../store/tabState';
-<<<<<<< HEAD
 import { toggleChat } from '../../../store/AIChatSlice';
-=======
 import { resetAIChat, toggleChat } from '../../../store/AIChatSlice';
-
-// API
->>>>>>> 928a6a949006b3b7892dbf7aa61217f48f1b6883
 import getProblemById from '../../../utils/api/v1/problem/getProblemById';
 
 function ProblemPage() {
