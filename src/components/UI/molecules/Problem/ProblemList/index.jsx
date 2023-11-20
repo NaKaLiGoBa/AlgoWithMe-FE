@@ -32,6 +32,12 @@ export default function index() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 20;
 
+  function getDifficulty(d) {
+    if (d === '어려움') return (<p className='text-rose-600 '>어려움</p>);
+    if (d === '보통') return (<p className='text-yellow-600'>보통</p>);
+    if (d === '쉬움') return (<p className='text-green-600'>쉬움</p>);
+  }
+
   useEffect(() => {
     const loadProblems = async () => {
       let params = {};
@@ -91,7 +97,7 @@ export default function index() {
                 <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
               </Td>
               <Td>{problem.acceptance}</Td>
-              <Td>{problem.difficulty}</Td>
+              <Td>{getDifficulty(problem.difficulty)}</Td>
             </tr>
           ))}
         </tbody>
