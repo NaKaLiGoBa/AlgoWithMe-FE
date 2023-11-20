@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProblem } from '../../../store/problemSlice';
 import IDETemplate from '../../UI/templates/IDETemplate';
-import constantProblem from './constant';
 import { resetTab } from '../../../store/tabState';
 import { toggleChat } from '../../../store/AIChatSlice';
 

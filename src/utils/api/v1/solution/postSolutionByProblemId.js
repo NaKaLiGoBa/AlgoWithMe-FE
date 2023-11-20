@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { localHostURL } from './apiConfig';
+import { localHostURL } from '../../../apiConfig';
+import getAuthHeader from '../../../getAuthHeader';
 
 const hostURL = localHostURL;
 
@@ -7,11 +8,8 @@ function handleResponse(response) {
   const { status, data } = response;
 
   switch (status) {
-    case 200:
-      // 성공
-      return { success: true, data };
     case 201:
-      // 생성됨
+      // 풀이 글 생성 완료
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -24,21 +22,13 @@ function handleError(error) {
     // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
     switch (status) {
-      case 304:
-        // 잘못된 요청
-        return { success: false, error: 'Bad Request', details: data };
       case 400:
-        // 잘못된 요청
-        return { success: false, error: 'Bad Request', details: data };
-      case 401:
-        // 인증 실패
-        return { success: false, error: 'Unauthorized', details: data };
-      case 403:
-        // 접근 금지
-        return { success: false, error: 'Forbidden', details: data };
-      case 404:
-        // 찾을 수 없음
-        return { success: false, error: 'Not Found', details: data };
+        // validation error
+        return {
+          success: false,
+          error: 'Compile or Runtime Error',
+          details: data,
+        };
       case 500:
         // 서버 내부 오류
         return {
@@ -66,12 +56,13 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, requestData = {}) {
+async function call(apiUrl, method, requestData) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
-      ...requestData,
+      headers: getAuthHeader(),
+      data: requestData,
     });
     return handleResponse(response);
   } catch (error) {
@@ -79,8 +70,14 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function postSubmit(apiUrl, data) {
-  return call(apiUrl, 'POST', { data });
+export default async function postSolutionByProblemId(problemId, requestData = {}) {
+  const apiUrl = `/api/v1/problems/${problemId}/solutions`;
+  return call(apiUrl, 'POST', requestData);
 }
 
-export default postSubmit;
+// ===예시===
+// const requestData = {
+//   title: 'string',
+//   content: 'string',
+//   languages: ['Java'],
+// };
