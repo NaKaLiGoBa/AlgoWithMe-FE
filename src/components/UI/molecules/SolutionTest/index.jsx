@@ -14,6 +14,7 @@ import {
   updateSolution,
   deleteSolution,
   likeSolution,
+  likeSolution,
 } from '../../../../utils/fetchSolution';
 import Button from '../../atoms/Input/Button';
 import CommentsSection from '../CommentsSection';
@@ -29,6 +30,10 @@ export default function SolutionTest() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authToken = localStorage.getItem('ACCESS_TOKEN');
+  const [likes, setLikes] = useState(0);
+  const [viewCount, setViewCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   const { problemId } = useParams();
   const activeSolutionId = useSelector(selectActiveSolutionId);
   const [solutionData, setSolutionData] = useState(null);

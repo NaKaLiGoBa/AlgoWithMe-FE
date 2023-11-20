@@ -12,6 +12,10 @@ import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getComment
 import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
 import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
 import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
+import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getCommentsBySolutionId';
+import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
+import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
 
 function CommentsSection() {
   const [comments, setComments] = useState([]);
@@ -156,11 +160,14 @@ function CommentsSection() {
         <MDEditor
           value={newComment}
           onChange={(val) => setNewComment(val)}
+          value={newComment}
+          onChange={(val) => setNewComment(val)}
           preview="live"
         />
         <div className="mt-4 flex justify-end">
           <button
             className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg"
+            onClick={() => handleSubmitComment()}
             onClick={() => handleSubmitComment()}
           >
             Comment
