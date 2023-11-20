@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import getCoachesByProblemId from '../../../../../utils/api/v1/coach/getCoachesByProblemId';
 
 export default function index() {
-  const problemId = useSelector((state) => state.problem.number);
+  const { problemId } = useParams();
   const [answers, setAnswers] = useState({ answers: [] });
   const selectedProblemId = useSelector(
     (state) => state.chat.selectedProblemId,
