@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import MDEditor from '@uiw/react-md-editor';
 import { selectActiveSolutionId } from '../../../../store/SolutionsSlice';
 import { selectUser } from '../../../../store/userSlice';
-import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import CommentSection from '../CommentSection';
 import ProblemListFooter from '../Problem/ProblemListFooter';
@@ -126,8 +126,8 @@ function CommentsSection() {
   };
 
   const handleDeleteComment = (commentId) => {
-    setComments(currentComments =>
-      currentComments.filter(comment => comment.id !== commentId)
+    setComments((currentComments) =>
+      currentComments.filter((comment) => comment.id !== commentId),
     );
   };
 
@@ -155,15 +155,13 @@ function CommentsSection() {
         <MDEditor
           value={newComment}
           onChange={(val) => setNewComment(val)}
-          value={newComment}
-          onChange={(val) => setNewComment(val)}
           preview="live"
         />
         <div className="mt-4 flex justify-end">
           <button
             className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg"
             onClick={() => handleSubmitComment()}
-            onClick={() => handleSubmitComment()}
+            type="button"
           >
             Comment
           </button>
