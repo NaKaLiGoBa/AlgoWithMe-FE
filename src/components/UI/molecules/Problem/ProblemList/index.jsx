@@ -88,7 +88,7 @@ export default function index() {
               <Td>{problem.number}</Td>
               <Td>{problem.status}</Td>
               <Td className="text-left">
-                <Link to={`/problems/${problem.number}`}>{problem.title}</Link>
+                <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
               </Td>
               <Td>{problem.acceptance}</Td>
               <Td>{problem.difficulty}</Td>
