@@ -1,5 +1,6 @@
 .customTab-scrollbar::-webkit-scrollbar {
   height: 8px;
+  width: 12px;
 }
 
 .customTab-scrollbar::-webkit-scrollbar-thumb {
