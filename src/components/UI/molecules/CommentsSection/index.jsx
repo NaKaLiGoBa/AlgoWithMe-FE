@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { selectActiveSolutionId } from '../../../../store/SolutionsSlice';
+import { selectUser } from '../../../../store/userSlice';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
@@ -10,12 +13,14 @@ import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommen
 import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
 import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
 
-function CommentsSection({ solutionId }) {
+function CommentsSection() {
   const [comments, setComments] = useState([]);
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const [sort, setSort] = useState('recent');
   const [newComment, setNewComment] = useState('');
+  const solutionId = useSelector(selectActiveSolutionId);
+  const currentUser = useSelector(selectUser);
 
   const { slice, range } = usePaginationRange(comments, page, rowsPerPage);
 
@@ -29,6 +34,7 @@ function CommentsSection({ solutionId }) {
       const response = await getCommentsBySolutionId(solutionId, params);
       if (response.success) {
         setComments(response.data.comments);
+        console.log('Comments: ', response.data.comments);
       } else {
         console.error('Failed to fetch comments:', response.error);
       }
@@ -41,11 +47,28 @@ function CommentsSection({ solutionId }) {
   const handleSubmitComment = async (commentText = newComment) => {
     const content = commentText.trim();
     if (!content) return;
-
+    // solutionId 유효성 검사 강화(Id가 0이어도 보이게)
+    if (solutionId === undefined || solutionId === null) {
+      console.error('No solutionId provided');
+      return;
+    }
     try {
+      console.log('Submitting comment:', content); // 입력된 댓글 내용 확인
       const response = await postCommentBySolutionId(solutionId, { content });
+      console.log('Server Response:', response); // 서버로부터 받은 응답 데이터 확인
       if (response.success) {
-        setComments([...comments, response.data]);
+        console.log('Server Response Data2:', response.data);
+        const tempId = Date.now(); // 혹은 다른 임시 id 생성 방법 사용
+        const newCommentData = {
+          id: tempId, // 임시 id 사용, 서버에서 받아야하는지...?
+          content,
+          likes: 0,
+          isLiked: false,
+          solutionId,
+          username: currentUser.username,
+          avatar: currentUser.avatar,
+        };
+        setComments([...comments, newCommentData]);
         setNewComment('');
       } else {
         console.error(response.error);
@@ -103,6 +126,12 @@ function CommentsSection({ solutionId }) {
     }
   };
 
+  const handleDeleteComment = (commentId) => {
+    setComments(currentComments =>
+      currentComments.filter(comment => comment.id !== commentId)
+    );
+  };
+
   return (
     <div className="bg-gray-900 p-8 font-sans text-white">
       <div className="flex items-center justify-between mb-4">
@@ -141,12 +170,14 @@ function CommentsSection({ solutionId }) {
 
       <div className="bg-gray-900 ">
         <div className="space-y-4">
-          {slice.map((commentData) => (
+          {comments.map((commentData) => (
             <CommentSection
               key={commentData.id}
               commentData={commentData}
               handleLikeComment={() => handleLikeComment(commentData.id)}
               handleReplySubmit={handleReplySubmit}
+              currentUser={currentUser}
+              onDelete={() => handleDeleteComment(commentData.id)}
             />
           ))}
         </div>
