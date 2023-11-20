@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setProblems } from '../../../../../store/problemsSlice';
 import Link from '../../../atoms/Text/Link';
 import ProblemListFooter from '../ProblemListFooter';
-import PaginationRange from '../../../../../hooks/usePaginationRange';
 import DropdownMenu from '../../../atoms/Input/Dropdown';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 
@@ -29,12 +28,12 @@ export default function index() {
 
   const dispatch = useDispatch();
   const problems = useSelector((state) => state.problems.problems);
+  const { totalPages } = useSelector((state) => state.problems);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 20;
 
   useEffect(() => {
     const loadProblems = async () => {
-      let params = {};
+      let params = { page: page - 1 };
       if (selectedTag !== '') {
         params = { ...params, tags: selectedTag };
       }
@@ -54,9 +53,7 @@ export default function index() {
     };
 
     loadProblems();
-  }, [dispatch, selectedDifficulty, selectedStatus, selectedTag]);
-
-  const { slice, range } = PaginationRange(problems, page, rowsPerPage);
+  }, [dispatch, page, selectedDifficulty, selectedStatus, selectedTag]);
 
   return (
     <div className="flex flex-col gap-12 items-center">
@@ -80,7 +77,7 @@ export default function index() {
           </tr>
         </thead>
         <tbody>
-          {slice.map((problem, index) => (
+          {problems.map((problem, index) => (
             <tr
               key={problem.id}
               className={`${index % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
@@ -97,10 +94,9 @@ export default function index() {
         </tbody>
       </table>
       <ProblemListFooter
-        range={range}
+        totalPages={totalPages}
+        currentPage={page}
         setPage={setPage}
-        page={page}
-        slice={slice}
       />
     </div>
   );
