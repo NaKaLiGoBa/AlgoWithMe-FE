@@ -16,7 +16,7 @@ function DropdownMenu({ title, list = [], handleSelectItem }) {
   };
 
   return (
-    <div className="relative bg-[#e6e6e6] py-1 px-2 rounded-sm">
+    <div className="relative bg-[#e6e6e6] py-1 px-2 rounded-sm inline-block">
       <button type="button" onClick={toggleDropdown}>
         <div className="flex items-center gap-4">
           {title}{' '}

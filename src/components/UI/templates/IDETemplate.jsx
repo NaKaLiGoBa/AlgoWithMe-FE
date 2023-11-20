@@ -12,8 +12,8 @@ import Button from '../atoms/Input/Button';
 const index = ({ activeTab, handleChatToggle, showChat }) => (
   <div className="h-screen">
     <Header />
-    <main className="flex flex-row bg-[#E7E7E7] h-[calc(100%-70px)]">
-      <div className="w-[40%] bg-white rounded-xl m-2 h-[100%]">
+    <main className="flex flex-row bg-[#E7E7E7] h-[calc(100%-65px)]">
+      <div className="w-[40%] bg-white rounded-xl mt-2 mr-2 h-[100%]">
         <ProblemTab />
         <hr />
         {activeTab.type === 'Description' && <ProblemPanel />}

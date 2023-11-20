@@ -9,6 +9,7 @@ import PaginationRange, {
 } from '../../../../../hooks/usePaginationRange';
 import DropdownMenu from '../../../atoms/Input/Dropdown';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
+import { formatPercentage } from '../../../../../utils/utils';
 
 function Th({ children }) {
   return (
@@ -89,7 +90,7 @@ export default function index() {
             <Th>번호</Th>
             <Th>상태</Th>
             <Th>제목</Th>
-            <Th>정답률</Th>
+            <Th>정답률 (%)</Th>
             <Th>난이도</Th>
           </tr>
         </thead>
@@ -104,7 +105,7 @@ export default function index() {
               <Td className="text-left">
                 <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
               </Td>
-              <Td>{problem.acceptance}</Td>
+              <Td>{formatPercentage(problem.acceptance)}</Td>
               <Td>{getDifficulty(problem.difficulty)}</Td>
             </tr>
           ))}
