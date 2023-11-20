@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {localHostURL} from '../../../../utils/apiConfig'
+import { localHostURL } from '../../../../utils/apiConfig';
 
 function index() {
-  const code = window.location.search;
   const navigate = useNavigate();
 
-  const sendCodeToBackend = async (authCode) => {
+  const sendCodeToBackend = async (code) => {
     try {
       const response = await axios.post(
-        `${localHostURL}/auth/signin/kakao`,
-        { authCode },
+        `${localHostURL}/api/v1/auth/signin/kakao`,
+        {
+          authCode: code,
+        },
       );
       // 로그인 처리
       if (response.status === 200) {
