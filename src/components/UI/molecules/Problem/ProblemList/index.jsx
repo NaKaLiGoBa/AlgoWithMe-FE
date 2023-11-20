@@ -59,7 +59,7 @@ export default function index() {
   const { slice, range } = PaginationRange(problems, page, rowsPerPage);
 
   return (
-    <div className="flex flex-col gap-12 items-center">
+    <div className="flex flex-col gap-12 items-center bg-white py-5 px-5 rounded-xl shadow-lg">
       <div className="flex flex-row gap-8">
         <DropdownMenu
           title="난이도"

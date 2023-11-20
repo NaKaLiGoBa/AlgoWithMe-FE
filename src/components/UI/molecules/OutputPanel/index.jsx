@@ -129,7 +129,7 @@ export default function Index() {
   };
 
   return (
-    <div className="p-2 m-1 bg-white rounded-xl flex flex-col justify-between">
+    <div className="p-2 mt-1 bg-white rounded-xl flex flex-col justify-between">
       <div className="overflow-y-auto mb-2" />
       <TestCasesForm hasRun={hasRun} testcases={testcases} />
       <div className="flex flex-row justify-between items-center">

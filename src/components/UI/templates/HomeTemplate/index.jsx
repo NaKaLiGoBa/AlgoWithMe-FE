@@ -6,7 +6,7 @@ import Footer from '../../molecules/Navigation/Footer';
 const index = () => (
   <div className="min-h-screen w-full flex flex-col">
     <Header />
-    <main className="flex flex-col justify-center items-center flex-grow">
+    <main className="flex flex-col justify-center items-center flex-grow p-10 ">
       <ProblemList />
     </main>
     <Footer />

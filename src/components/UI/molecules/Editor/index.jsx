@@ -10,6 +10,7 @@ function Index() {
   const availableLanguages = Object.keys(defaultCodes);
 
   const storedState = JSON.parse(localStorage.getItem(`editorState_${problemId}`));
+  console.log(storedState);
   const initialEditorState = storedState || {
     ...defaultCodes,
     currentLanguage: availableLanguages[0],
@@ -33,7 +34,7 @@ function Index() {
   };
 
   return (
-    <div className="flex flex-col h-[400px] p-2 m-1 bg-white rounded-xl ">
+    <div className="flex flex-col h-[400px] p-2 mt-2 bg-white rounded-xl ">
       <div className="mx-4 my-2">
         <DropdownMenu
           title={editorState.currentLanguage}
