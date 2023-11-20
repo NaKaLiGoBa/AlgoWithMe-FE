@@ -1,0 +1,86 @@
+{
+  "problems": [
+    {
+      "id": 1,
+      "number": 1,
+      "status": "성공",
+      "title": "문제 1",
+      "acceptance": "75.5",
+      "difficulty": "쉬움",
+      "tags": ["BFS"]
+    },
+    {
+      "id": 2,
+      "number": 2,
+      "status": "실패",
+      "title": "문제 2",
+      "acceptance": "50.3",
+      "difficulty": "보통",
+      "tags": ["DP"]
+    },
+    {
+      "id": 3,
+      "number": 3,
+      "status": "미해결",
+      "title": "문제 3",
+      "acceptance": "30.0",
+      "difficulty": "어려움",
+      "tags": ["그래프"]
+    },
+    {
+      "id": 4,
+      "number": 3,
+      "status": "미해결",
+      "title": "문제 3",
+      "acceptance": "30.0",
+      "difficulty": "어려움",
+      "tags": ["그래프"]
+    },
+    {
+      "id": 5,
+      "number": 3,
+      "status": "미해결",
+      "title": "문제 3",
+      "acceptance": "30.0",
+      "difficulty": "어려움",
+      "tags": ["그래프"]
+    },
+    {
+      "id": 6,
+      "number": 3,
+      "status": "미해결",
+      "title": "문제 3",
+      "acceptance": "30.0",
+      "difficulty": "어려움",
+      "tags": ["그래프"]
+    },
+    {
+      "id": 7,
+      "number": 3,
+      "status": "미해결",
+      "title": "문제 3",
+      "acceptance": "30.0",
+      "difficulty": "어려움",
+      "tags": ["그래프"]
+    },
+    {
+      "id": 8,
+      "number": 3,
+      "status": "미해결",
+      "title": "문제 3",
+      "acceptance": "30.0",
+      "difficulty": "어려움",
+      "tags": ["그래프"]
+    }
+  ],
+  "pageNumber": 0,
+  "totalPages": 1,
+  "totalElements": 3,
+  "size": 3,
+  "numberOfElements": 3,
+  "first": true,
+  "last": true,
+  "status": ["성공", "실패", "미해결"],
+  "tags": ["BFS", "DP", "그래프"],
+  "difficulties": ["쉬움", "보통", "어려움"]
+}

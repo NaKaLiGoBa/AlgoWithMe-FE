@@ -6,6 +6,7 @@ import problemsReducer from './problemsSlice';
 import problemReducer from './problemSlice';
 import userReducer from './userSlice';
 import commentReducer from './commentSlice';
+import AIChatReducer from './AIChatSlice';
 
 export default configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export default configureStore({
     problem: problemReducer,
     user: userReducer,
     comment: commentReducer,
+    chat: AIChatReducer,
   },
 });

@@ -16,7 +16,7 @@ export default function index() {
   const tabs = useSelector((state) => state.tabs.tabs);
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const totalCount = useSelector((state) => state.solutions.totalCount);
-  console.log('tabs', tabs);
+
   // 탭 이름을 결정하는 함수
   const SolutionsTabName = (tab, totalCount) => {
     if (tab.type !== 'Solutions') {

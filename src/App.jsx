@@ -3,14 +3,15 @@ import React from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import SigninPage from './components/pages/AuthPage/SigninPage';
 import SignupPage from './components/pages/AuthPage/SignupPage';
-import HomePage from './components/UI/templates/HomeTemplate/index.jsx';
+import HomePage from './components/UI/templates/HomeTemplate/index';
 import IDEPage from './components/pages/IDEPage';
 import SolutionEditPage from './components/pages/SolutionEditPage';
 import KakaoLogin from './components/pages/AuthPage/kakaologin';
 import PasswordEmailPage from './components/pages/AuthPage/PasswordEmail';
 import PasswordResetPage from './components/pages/AuthPage/PasswordReset';
 import ProblemQuizzesPage from './components/pages/ProblemQuizzesPage';
-import Test from './components/UI/molecules/CommentsSection'
+import Test from './components/UI/molecules/CommentsSection';
+import AuthLayer from './service/AuthLayer';
 
 function App() {
   return (
@@ -26,7 +27,11 @@ function App() {
         />
         <Route
           path="/problems/:problemId/solutions/edit"
-          element={<SolutionEditPage />}
+          element={
+            <AuthLayer>
+              <SolutionEditPage />
+            </AuthLayer>
+          }
         />
         <Route path="/auth/signin/kakao" element={<KakaoLogin />} />
         <Route path="/password" element={<PasswordEmailPage />} />

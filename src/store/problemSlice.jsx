@@ -35,9 +35,12 @@ const problemSlice = createSlice({
     setProblem(state, action) {
       return { ...state, ...action.payload };
     },
-    // 추가적인 액션들을 여기에 정의할 수 있습니다.
+    setTestcases(state, action) {
+      // testcases 필드만 업데이트
+      state.testcases = action.payload;
+    },
   },
 });
 
-export const { setProblem } = problemSlice.actions;
+export const { setProblem, setTestcases } = problemSlice.actions;
 export default problemSlice.reducer;
