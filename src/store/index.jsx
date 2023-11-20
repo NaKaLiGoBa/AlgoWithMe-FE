@@ -4,6 +4,7 @@ import solutionsReducer from './SolutionsSlice';
 import quizReducer from './quizSlice';
 import problemsReducer from './problemsSlice';
 import problemReducer from './problemSlice';
+import AIChatReducer from './AIChatSlice';
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     quiz: quizReducer,
     problems: problemsReducer,
     problem: problemReducer,
+    chat: AIChatReducer,
   },
 });

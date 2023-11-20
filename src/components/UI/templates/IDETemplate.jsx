@@ -6,8 +6,10 @@ import Header from '../molecules/Navigation/Header';
 import ProblemTab from '../molecules/ProblemTab';
 import Solutions from '../molecules/Solutions';
 import SolutionTest from '../molecules/SolutionTest';
+import AIchat from '../molecules/AICoaching/index';
+import Button from '../atoms/Input/Button';
 
-const index = ({ activeTab }) => (
+const index = ({ activeTab, handleChatToggle, showChat }) => (
   <div>
     <Header />
     <main className="flex flex-row bg-[#E7E7E7] h-full">
@@ -21,6 +23,18 @@ const index = ({ activeTab }) => (
       <div className="grow">
         <Editor />
         <OutputPanel />
+      </div>
+      <div className="fixed bottom-4 right-5">
+        {showChat ? (
+          <AIchat handleChatToggle={handleChatToggle} />
+        ) : (
+          <Button
+            className="bg-[#6D4BEB] px-4 py-6 text-lg "
+            onClick={handleChatToggle}
+          >
+            AI
+          </Button>
+        )}
       </div>
     </main>
   </div>
