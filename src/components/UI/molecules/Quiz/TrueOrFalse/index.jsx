@@ -13,26 +13,26 @@ export default function index() {
     <div className="flex justify-center gap-[250px] ">
       <button
         type="button"
-        onClick={() => handleOptionClick('O')}
+        onClick={() => handleOptionClick('o')}
         disabled={isAnswered}
         className={`p-[30px] border-[#385FE7] border shadow-lg  ${
-          selectedOption === 'O' ? 'bg-[#385FE7]' : 'bg-white'
+          selectedOption === 'o' ? 'bg-[#385FE7]' : 'bg-white'
         }`}
       >
         <True
-          color={selectedOption === 'O' ? 'white' : 'black'}
+          color={selectedOption === 'o' ? 'white' : 'black'}
           className="flex justify-center"
         />
       </button>
       <button
         type="button"
-        onClick={() => handleOptionClick('X')}
+        onClick={() => handleOptionClick('x')}
         disabled={isAnswered}
         className={`p-[30px] border border-[#CB3131] shadow-lg ${
-          selectedOption === 'X' ? 'bg-[#CB3131]' : 'bg-white'
+          selectedOption === 'x' ? 'bg-[#CB3131]' : 'bg-white'
         }`}
       >
-        <False color={selectedOption === 'X' ? 'white' : 'black'} />
+        <False color={selectedOption === 'x' ? 'white' : 'black'} />
       </button>
     </div>
   );
