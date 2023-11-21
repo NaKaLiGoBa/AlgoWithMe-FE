@@ -35,14 +35,27 @@ export default function index({ handleChatToggle }) {
       <div className="bg-[#5a5ed4ca] text-white text-base rounded-t-md p-1 w-full ">
         <Close onClick={handleChatToggle} className="p-0 ml-auto pr-1" />
         <div className="flex justify-between p-1 ">
-          <div className="flex items-center ">
-            <Chevron onClick={handlePrevClick} />
-            {currentText.prev && <span>{currentText.prev}</span>}
+          <div className="flex flex-1 items-center justify-start">
+            {currentText.prev && (
+              <>
+                <Chevron onClick={handlePrevClick} />
+                <span>{currentText.prev}</span>
+              </>
+            )}
           </div>
-          {currentText.middle && <span>{currentText.middle}</span>}
-          <div className="flex items-center ">
-            {currentText.next && <span>{currentText.next}</span>}
-            <Chevron className="rotate-180" onClick={handleNextClick} />
+          {currentText.middle && (
+            <div className="flex flex-1 justify-center">
+              <span>{currentText.middle}</span>
+            </div>
+          )}
+
+          <div className="flex flex-1 items-center justify-end">
+            {currentText.next && (
+              <>
+                <span>{currentText.next}</span>
+                <Chevron className="rotate-180" onClick={handleNextClick} />
+              </>
+            )}
           </div>
         </div>
       </div>
