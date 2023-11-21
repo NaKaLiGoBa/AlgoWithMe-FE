@@ -31,7 +31,7 @@ export default function index({ handleChatToggle }) {
     <FixedQuestion />,
   ];
   return (
-    <div className="w-[600px] h-[450px]  bg-gray-100 shadow-2xl rounded-md overflow-auto customTab-scrollbar">
+    <div className="w-[500px] h-[450px]  bg-gray-100 shadow-2xl rounded-md overflow-auto customTab-scrollbar">
       <div className="bg-[#5a5ed4ca] text-white text-base rounded-t-md p-1 w-full ">
         <Close onClick={handleChatToggle} className="p-0 ml-auto pr-1" />
         <div className="flex justify-between p-1 ">
