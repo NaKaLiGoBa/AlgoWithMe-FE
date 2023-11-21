@@ -6,6 +6,7 @@ import IDETemplate from '../../UI/templates/IDETemplate';
 import { resetTab } from '../../../store/tabState';
 import { resetAIChat, toggleChat } from '../../../store/AIChatSlice';
 import getProblemById from '../../../utils/api/v1/problem/getProblemById';
+import { resetQuiz } from '../../../store/quizSlice';
 
 function ProblemPage() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ function ProblemPage() {
   useEffect(() => {
     dispatch(resetTab());
     dispatch(resetAIChat());
+    dispatch(resetQuiz());
     getProblemById(problemId)
       .then((response) => response.data)
       .then((data) => {
