@@ -26,6 +26,11 @@ const index = () => {
   };
 
   const handleClickSubmit = () => {
+    if (!title || title.trim() === '') {
+      alert('제목을 입력해주세요');
+      return;
+    }
+
     const editorState = JSON.parse(
       localStorage.getItem(`editorState_${problemId}`),
     );
