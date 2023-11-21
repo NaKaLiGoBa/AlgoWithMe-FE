@@ -16,7 +16,7 @@ const index = () => {
   const { problemId } = useParams();
 
   return (
-    <div className="bg-white rounded-xl h-[600px] overflow-y-auto">
+    <div className="bg-white rounded-xl h-[calc(100%-30px)] overflow-y-auto">
       <div className="m-4 flex">
         <h2 className="items-center flex ">{`${number}. ${title}`}</h2>
         <Link
