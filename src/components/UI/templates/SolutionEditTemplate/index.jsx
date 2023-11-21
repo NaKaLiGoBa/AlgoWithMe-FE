@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import MdEditor from '../../molecules/MdEditor';
 import Button from '../../atoms/Input/Button';
 import Input from '../../atoms/Input/Input';
@@ -10,9 +10,17 @@ import postSolutionByProblemId from '../../../../utils/api/v1/solution/postSolut
 import contentTemplate from './contentTemplate';
 
 const index = () => {
+  const navigate = useNavigate();
   const { problemId } = useParams();
   const [title, setTitle] = useState();
-  const [content, setContent] = React.useState(contentTemplate);
+
+  // set content from editor code
+  const editorLocalState = JSON.parse(
+    localStorage.getItem(`editorState_${problemId}`),
+  );
+  const code = editorLocalState[editorLocalState.currentLanguage];
+  const [content, setContent] = useState(contentTemplate(code));
+
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -27,7 +35,7 @@ const index = () => {
       content,
       languages: [editorState.currentLanguage],
     };
-    postSolutionByProblemId(problemId, requestData);
+    postSolutionByProblemId(problemId, requestData).then(() => navigate(`/problems/${problemId}`));
   };
 
   return (

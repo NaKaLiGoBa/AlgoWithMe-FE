@@ -1,27 +1,16 @@
-const contentTemplate = `# Intuition
-<!-- Describe your first thoughts on how to solve this problem. -->
+function contentTemplate(code) {
+  return `
+# 설명
 
-# Approach
-<!-- Describe your approach to solving the problem. -->
+# 복잡도
+- 시간 복잡도:
 
-# Complexity
-- Time complexity:
-<!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
-- Space complexity:
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+- 공간 복잡도:
 
 # Code
 \`\`\`
-import java.util.Arrays;
-
-class Solution {
-    public int getLastMoment(int n, int[] left, int[] right) {
-        int maxLeft = left.length == 0 ? 0 : Arrays.stream(left).max().getAsInt();
-        int minRight = right.length == 0 ? n : Arrays.stream(right).min().getAsInt();
-        return Math.max(maxLeft, n - minRight);
-    }
-}
+${code}
 \`\`\``;
+}
 
 export default contentTemplate;
