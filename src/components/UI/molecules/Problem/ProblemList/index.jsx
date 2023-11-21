@@ -88,7 +88,7 @@ export default function index() {
           {problems.map((problem, index) => (
             <tr
               key={problem.id}
-              className={`${order % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
+              className={`${index % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
             >
               <Td>{problem.number}</Td>
               <Td>{problem.status}</Td>
