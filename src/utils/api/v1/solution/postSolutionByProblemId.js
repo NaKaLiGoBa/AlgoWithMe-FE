@@ -29,6 +29,7 @@ function handleError(error) {
           error: 'Compile or Runtime Error',
           details: data,
         };
+      
       case 500:
         // 서버 내부 오류
         return {
@@ -70,7 +71,10 @@ async function call(apiUrl, method, requestData) {
   }
 }
 
-export default async function postSolutionByProblemId(problemId, requestData = {}) {
+export default async function postSolutionByProblemId(
+  problemId,
+  requestData = {},
+) {
   const apiUrl = `/api/v1/problems/${problemId}/solutions`;
   return call(apiUrl, 'POST', requestData);
 }

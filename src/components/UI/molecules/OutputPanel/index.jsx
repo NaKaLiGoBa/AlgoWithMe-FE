@@ -5,6 +5,7 @@ import Button from '../../atoms/Input/Button';
 import postCodeTest from '../../../../utils/api/v1/code/postCodeTest';
 import postCodeSubmit from '../../../../utils/api/v1/code/postCodeSubmit';
 import { setTestcases } from '../../../../store/problemSlice';
+import AuthLayer from '../../../../service/AuthLayer';
 
 const getButtonText = (hasRun, testcase) => {
   if (!hasRun) {

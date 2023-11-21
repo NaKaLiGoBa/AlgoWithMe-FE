@@ -18,6 +18,7 @@ function handleResponse(response) {
 }
 
 function handleError(error) {
+
   if (error.response) {
     // 서버가 응답을 반환했을 때
     const { status, data } = error.response;
@@ -27,6 +28,13 @@ function handleError(error) {
         return {
           success: false,
           error: 'Compile or Runtime Error',
+          details: data,
+        };
+        case 401:
+        // 로그인 필요
+        return {
+          success: false,
+          error: '로그인 해주세요',
           details: data,
         };
       case 500:

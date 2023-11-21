@@ -29,6 +29,13 @@ function handleError(error) {
           error: 'Compile or Runtime Error',
           details: data,
         };
+        case 401:
+        // 로그인 필요
+        return {
+          success: false,
+          error: '로그인 해주세요',
+          details: data,
+        };
       case 500:
         // 서버 내부 오류
         return {
