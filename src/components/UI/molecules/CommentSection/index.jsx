@@ -14,10 +14,7 @@ import deleteCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comm
 import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
 import { selectUser } from '../../../../store/userSlice';
 import putCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentBySolutionIdAndCommentId';
-import {
-  selectActiveCommentId,
-  setActiveCommentId,
-} from '../../../../store/commentSlice';
+import { setActiveCommentId } from '../../../../store/commentSlice';
 
 function CommentSection({ commentData, onDelete }) {
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
@@ -33,8 +30,6 @@ function CommentSection({ commentData, onDelete }) {
   const [isLiked, setIsLiked] = useState(commentData.isLiked || false);
 
   const dispatch = useDispatch();
-  const activeCommentId = useSelector(selectActiveCommentId);
-  console.log('Active Comment ID:', activeCommentId);
 
   // 댓글 ID 설정
   const handleCommentSelect = () => {
@@ -44,20 +39,23 @@ function CommentSection({ commentData, onDelete }) {
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
-    if (areRepliesVisible && replies.length === 0) {
-      getReplyByCommentId(commentData.id)
-        .then((response) => {
-          if (response.success) {
-            setReplies(response.data.replies);
-          } else {
-            console.error(response.error);
-          }
-        })
-        .catch((error) => {
-          console.error('Failed to fetch replies:', error);
-        });
+    const fetchReplies = async () => {
+      try {
+        const response = await getReplyByCommentId(commentData.id);
+        if (response.success) {
+          setReplies(response.data.replies);
+        } else {
+          console.error('Failed to fetch replies:', response.error);
+        }
+      } catch (error) {
+        console.error('Failed to fetch replies:', error);
+      }
+    };
+
+    if (areRepliesVisible && replies.length === 0 && commentData.id) {
+      fetchReplies();
     }
-  }, [areRepliesVisible, commentData]);
+  }, [areRepliesVisible, replies.length, commentData.id]);
 
   const toggleReplyInput = () => {
     setIsReplying(!isReplying); // 댓글 입력 상태 토글
@@ -80,7 +78,7 @@ function CommentSection({ commentData, onDelete }) {
           // 대댓글 작성자 정보 추가
           userId: currentUser.id,
         };
-        setReplies((replies) => [...replies, newReplyData]);
+        setReplies([...replies, newReplyData]);
         setAreRepliesVisible(true);
         setIsReplying(false);
       } else {

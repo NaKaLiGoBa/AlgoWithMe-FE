@@ -57,8 +57,10 @@ function CommentsSection() {
       if (response.success) {
         // 추출된 Location 헤더에서 실제 solution ID 가져오기
         const solutionLocation = response.headers['location'];
-        const createdSolutionId = solutionLocation.substring(solutionLocation.lastIndexOf('/') + 1);
-  
+        const createdSolutionId = solutionLocation.substring(
+          solutionLocation.lastIndexOf('/') + 1,
+        );
+
         const newCommentData = {
           id: createdSolutionId, // 서버에서 반환받은 실제 ID 사용
           content,
@@ -107,16 +109,19 @@ function CommentsSection() {
         content: trimmedReplyText,
       });
       if (response.success) {
+        const newReplyData = {
+          id: replyId, // 서버로부터 받은 ID
+          content: replyText.trim(),
+          userId: currentUser.id,
+          // 기타 필요한 필드들을 여기에 추가
+        };
+
         setComments((currentComments) =>
-          currentComments.map((comment) => {
-            if (comment.id === commentId) {
-              return {
-                ...comment,
-                replies: [...comment.replies, response.data],
-              };
-            }
-            return comment;
-          }),
+          currentComments.map((comment) =>
+            comment.id === commentId
+              ? { ...comment, replies: [...comment.replies, newReplyData] }
+              : comment,
+          ),
         );
       } else {
         console.error(response.error);
