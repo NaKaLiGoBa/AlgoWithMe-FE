@@ -54,12 +54,13 @@ function CommentsSection() {
     try {
       console.log('Submitting comment:', content); // 입력된 댓글 내용 확인
       const response = await postCommentBySolutionId(solutionId, { content });
-      console.log('Server Response:', response); // 서버로부터 받은 응답 데이터 확인
       if (response.success) {
-        console.log('Server Response Data2:', response.data);
-        const tempId = Date.now(); // 혹은 다른 임시 id 생성 방법 사용
+        // 추출된 Location 헤더에서 실제 solution ID 가져오기
+        const solutionLocation = response.headers['location'];
+        const createdSolutionId = solutionLocation.substring(solutionLocation.lastIndexOf('/') + 1);
+  
         const newCommentData = {
-          id: tempId, // 임시 id 사용, 서버에서 받아야하는지...?
+          id: createdSolutionId, // 서버에서 반환받은 실제 ID 사용
           content,
           likes: 0,
           isLiked: false,

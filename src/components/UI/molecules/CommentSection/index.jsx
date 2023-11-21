@@ -40,6 +40,7 @@ function CommentSection({ commentData, onDelete }) {
   const handleCommentSelect = () => {
     dispatch(setActiveCommentId(commentData.id));
   };
+  const canEditComment = currentUser.id === commentData.userId;
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
@@ -65,16 +66,28 @@ function CommentSection({ commentData, onDelete }) {
   const handleReply = async (replyText) => {
     handleCommentSelect();
     if (!replyText.trim()) return;
-    console.log('Replying to comment ID: ', commentData.id);
-    const response = await postReplyByCommentId(commentData.id, {
-      content: replyText.trim(),
-    });
-    if (response.success) {
-      setReplies((replies) => [...replies, response.data]);
-      setAreRepliesVisible(true);
-      setIsReplying(false);
-    } else {
-      console.error(response.error);
+    try {
+      const response = await postReplyByCommentId(commentData.id, {
+        content: replyText.trim(),
+      });
+      if (response.success) {
+        const locationHeader = response.headers['location'];
+        const replyId = locationHeader.split('/').pop(); // URL에서 ID 추출
+
+        const newReplyData = {
+          id: replyId,
+          content: replyText.trim(),
+          // 대댓글 작성자 정보 추가
+          userId: currentUser.id,
+        };
+        setReplies((replies) => [...replies, newReplyData]);
+        setAreRepliesVisible(true);
+        setIsReplying(false);
+      } else {
+        console.error(response.error);
+      }
+    } catch (error) {
+      console.error('Error while posting reply:', error);
     }
   };
 
@@ -246,13 +259,15 @@ function CommentSection({ commentData, onDelete }) {
                   : 'opacity-0'
               }`}
             >
-              <div
-                className="flex cursor-pointer items-center"
-                onClick={toggleEdit}
-              >
-                <Edit /> {/* Edit 버튼 */}
-                <span className="ml-1">Edit</span>
-              </div>
+              {canEditComment && (
+                <div
+                  className="flex ml-5 items-center cursor-pointer"
+                  onClick={toggleEdit}
+                >
+                  <Edit /> {/* 수정 버튼 */}
+                  <span className="ml-1">Edit</span>
+                </div>
+              )}
             </div>
             <div className="flex ml-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <button
