@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import MDEditor from '@uiw/react-md-editor';
 import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
 
@@ -15,7 +16,7 @@ const index = () => {
   const { problemId } = useParams();
 
   return (
-    <div className="bg-white rounded-xl h-[100%] overflow-y-auto">
+    <div className="bg-white rounded-xl h-[600px] overflow-y-auto">
       <div className="m-4 flex">
         <h2 className="items-center flex ">{`${number}. ${title}`}</h2>
         <Link
@@ -32,27 +33,19 @@ const index = () => {
         <p>{`정답률: ${acceptance}`}</p>
       </div>
       <div className="flex flex-col gap-4 m-4">
-        <h3>설명</h3>
-        <p>{description}</p>
-      </div>
-      <div className="flex flex-col gap-4 m-4">
-        <h3>입력</h3>
-        <p>placeholder</p>
-      </div>
-      <div className="flex flex-col gap-4 m-4">
-        <h3>출력</h3>
-        <p>placeholder</p>
-      </div>
-      <div className="flex flex-col gap-4 m-4">
-        <h3>태그</h3>
         <div className="flex flex-row gap-4">
-          {tags.map(({ tag, index }) => (
-            <div key={index}>
-              <p className="m-1 py-1 px-2 bg-slate-600 text-white rounded-xl">
+          {tags.map((tag) => (
+            <div>
+              <p className="m-1 py-1 px-2 text-xs bg-slate-600 text-white rounded-xl">
                 {tag}
               </p>
             </div>
           ))}
+        </div>
+      </div>
+      <div className="flex flex-col gap-4">
+        <div className="markdown-viewer bg-white p-6" data-color-mode="light">
+          <MDEditor.Markdown source={description} />
         </div>
       </div>
     </div>

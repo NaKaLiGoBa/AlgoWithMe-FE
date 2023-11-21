@@ -9,6 +9,9 @@ const initialState = {
   numberOfElements: 0,
   first: true,
   last: true,
+  status: [],
+  tags: [],
+  difficulties: []
 };
 
 const problemsSlice = createSlice({

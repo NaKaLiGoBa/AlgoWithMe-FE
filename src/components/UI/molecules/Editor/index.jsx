@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import DropdownMenu from '../../atoms/Input/Dropdown';
 
 function Index() {
-  const {number, defaultCodes} = useSelector((state) => state.problem);
+  const { defaultCodes } = useSelector((state) => state.problem);
+  const { problemId } = useParams();
   const availableLanguages = Object.keys(defaultCodes);
 
   const storedState = JSON.parse(
-    localStorage.getItem(`editorState_${number}`),
+    localStorage.getItem(`editorState_${problemId}`),
   );
   const initialEditorState = storedState || {
     ...defaultCodes,
@@ -19,10 +21,10 @@ function Index() {
 
   useEffect(() => {
     localStorage.setItem(
-      `editorState_${number}`,
+      `editorState_${problemId}`,
       JSON.stringify(editorState),
     );
-  }, [editorState, number]);
+  }, [editorState, problemId]);
 
   const handleSelectLanguage = (selectedLanguage) => {
     setEditorState((prev) => ({ ...prev, currentLanguage: selectedLanguage }));
@@ -36,7 +38,7 @@ function Index() {
   };
 
   return (
-    <div className="flex flex-col h-[400px] p-2 m-1 bg-white rounded-xl ">
+    <div className="flex flex-col h-[400px] p-2 mt-2 bg-white rounded-xl ">
       <div className="mx-4 my-2">
         <DropdownMenu
           title={editorState.currentLanguage}

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProblems } from '../../../../../store/problemsSlice';
 import Link from '../../../atoms/Text/Link';
 import ProblemListFooter from '../ProblemListFooter';
 import DropdownMenu from '../../../atoms/Input/Dropdown';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
+import { formatPercentage } from '../../../../../utils/utils';
 
 function Th({ children }) {
   return (
@@ -19,9 +20,9 @@ function Td({ children, className = '' }) {
 }
 
 export default function index() {
-  const difficulty = ['쉬움', '보통', '어려움'];
-  const status = ['성공', '실패', '미해결'];
-  const tags = ['DFS', 'BFS', 'Sort'];
+  const difficulty = useSelector((state) => state.problems.difficulties);
+  const status = useSelector((state) => state.problems.status);
+  const tags = useSelector((state) => state.problems.tags);
   const [selectedDifficulty, setDifficulty] = useState('');
   const [selectedStatus, setStatus] = useState('');
   const [selectedTag, setTag] = useState('');
@@ -30,6 +31,13 @@ export default function index() {
   const problems = useSelector((state) => state.problems.problems);
   const { totalPages } = useSelector((state) => state.problems);
   const [page, setPage] = useState(1);
+
+  function getDifficulty(d) {
+    if (d === '어려움') return <p className="text-rose-600 ">어려움</p>;
+    if (d === '보통') return <p className="text-yellow-600">보통</p>;
+    if (d === '쉬움') return <p className="text-green-600">쉬움</p>;
+    return null;
+  }
 
   useEffect(() => {
     const loadProblems = async () => {
@@ -44,19 +52,19 @@ export default function index() {
         params = { ...params, status: selectedStatus };
       }
 
-      try {
-        const response = await getProblems(params);
-        dispatch(setProblems(response.data)); // 데이터를 스토어에 저장
-      } catch (error) {
-        console.error('Error loading problems:', error);
-      }
+      getProblems(params)
+        .then((response) => response.data)
+        .then((data) => {
+          dispatch(setProblems(data));
+        })
+        .catch((error) => console.error('Error loading problems:', error));
     };
 
     loadProblems();
   }, [dispatch, page, selectedDifficulty, selectedStatus, selectedTag]);
 
   return (
-    <div className="flex flex-col gap-12 items-center">
+    <div className="flex flex-col gap-12 items-center bg-white py-5 px-5 rounded-xl shadow-lg">
       <div className="flex flex-row gap-8">
         <DropdownMenu
           title="난이도"
@@ -72,7 +80,7 @@ export default function index() {
             <Th>번호</Th>
             <Th>상태</Th>
             <Th>제목</Th>
-            <Th>정답률</Th>
+            <Th>정답률 (%)</Th>
             <Th>난이도</Th>
           </tr>
         </thead>
@@ -80,15 +88,15 @@ export default function index() {
           {problems.map((problem, index) => (
             <tr
               key={problem.id}
-              className={`${index % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
+              className={`${order % 2 === 0 ? 'bg-[#e6e6e6]' : 'bg-white'}`}
             >
               <Td>{problem.number}</Td>
               <Td>{problem.status}</Td>
               <Td className="text-left">
                 <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
               </Td>
-              <Td>{problem.acceptance}</Td>
-              <Td>{problem.difficulty}</Td>
+              <Td>{formatPercentage(problem.acceptance)}</Td>
+              <Td>{getDifficulty(problem.difficulty)}</Td>
             </tr>
           ))}
         </tbody>

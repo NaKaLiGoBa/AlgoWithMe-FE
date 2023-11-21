@@ -6,6 +6,24 @@ import postCodeTest from '../../../../utils/api/v1/code/postCodeTest';
 import postCodeSubmit from '../../../../utils/api/v1/code/postCodeSubmit';
 import { setTestcases } from '../../../../store/problemSlice';
 
+const getButtonText = (hasRun, testcase) => {
+  if (!hasRun) {
+    return `Case ${testcase.number}`;
+  }
+
+  return testcase.answer
+    ? `✅ Case ${testcase.number}`
+    : `❌ Case ${testcase.number}`;
+};
+
+const getButtonBorder = (hasRun, testcase) => {
+  if (!hasRun) {
+    return ``;
+  }
+
+  return testcase.answer ? `ring ring-green-600` : `ring ring-rose-600`;
+};
+
 function TestCasesForm({ testcases, hasRun = false }) {
   // 첫 번째 테스트 케이스를 기본적으로 활성화합니다.
   const [activeCaseNumber, setActiveCaseNumber] = useState(
@@ -17,19 +35,6 @@ function TestCasesForm({ testcases, hasRun = false }) {
       <div className="flex gap-2">
         {testcases.map((testcase) => (
           <div>
-            {hasRun && (
-              <div>
-                <h2>
-                  {testcase.isAnswer ? (
-                    <span className="text-green-600 text-lg">
-                      ✅ 정답입니다
-                    </span>
-                  ) : (
-                    <span className="text-rose-600 text-lg">❌ 오답입니다</span>
-                  )}
-                </h2>
-              </div>
-            )}
             <button
               type="button"
               key={testcase.number}
@@ -37,10 +42,10 @@ function TestCasesForm({ testcases, hasRun = false }) {
                 activeCaseNumber === testcase.number
                   ? 'bg-slate-300'
                   : 'bg-slate-200'
-              }`}
+              } ${getButtonBorder(hasRun, testcase)}`}
               onClick={() => setActiveCaseNumber(testcase.number)}
             >
-              Case {testcase.number}
+              {getButtonText(hasRun, testcase)}
             </button>
           </div>
         ))}
@@ -71,7 +76,7 @@ function TestCasesForm({ testcases, hasRun = false }) {
                     <h3 className="text-sm text-gray-400">출력값</h3>
                     <div
                       className={`p-2 m-2 bg-slate-100 rounded-md ${
-                        testcase.isAnswer ? 'text-green-600' : 'text-rose-600'
+                        testcase.answer ? 'text-green-600' : 'text-rose-600'
                       }`}
                     >
                       {testcase.output}
@@ -87,7 +92,6 @@ function TestCasesForm({ testcases, hasRun = false }) {
 }
 
 export default function Index() {
-  const problemNumber = useSelector((state) => state.problem.number);
   const { problemId } = useParams();
   const dispatch = useDispatch();
   const testcases = useSelector((state) => state.problem.testcases);
@@ -95,7 +99,7 @@ export default function Index() {
 
   const handleClickRunButton = () => {
     const editorState = JSON.parse(
-      localStorage.getItem(`editorState_${problemNumber}`),
+      localStorage.getItem(`editorState_${problemId}`),
     );
     const request = {
       language: editorState.currentLanguage,
@@ -107,28 +111,28 @@ export default function Index() {
       .then((data) => {
         dispatch(setTestcases(data));
         setHasRun(true);
-      });
+      })
+      .catch((response) => alert(response.error));
   };
 
   const handleClickSubmitButton = () => {
     const editorState = JSON.parse(
-      localStorage.getItem(`editorState_${problemNumber}`),
+      localStorage.getItem(`editorState_${problemId}`),
     );
     const request = {
       language: editorState.currentLanguage,
       code: editorState[editorState.currentLanguage],
     };
     postCodeSubmit(problemId, request).then((response) => {
-      alert(`정답인가요? ${response.data.isAnswer}`);
+      alert(`정답인가요? ${response.data.answer}`);
     });
   };
 
   return (
-    <div className="p-2 m-1 bg-white rounded-xl flex flex-col justify-between">
-      <div className="overflow-y-auto mb-2" />
+    <div className="p-2 mt-1 bg-white rounded-xl flex flex-col justify-between h-[calc(100%-400px)] overflow-y-auto">
+      <div className="mb-2" />
       <TestCasesForm hasRun={hasRun} testcases={testcases} />
       <div className="flex flex-row justify-between items-center">
-        <h2>Console</h2>
         <div className="flex flex-row justify-end gap-4">
           <Button
             className="rounded-xl px-4 py-2"
