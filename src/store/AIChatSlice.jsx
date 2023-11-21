@@ -5,7 +5,7 @@ const initialState = {
   selectedHintOption: null,
   currentScreen: 2,
   selectedProblemId: null,
-  actualProblemId: null,
+  chatProblemId: null,
 };
 export const AIchatSlice = createSlice({
   name: 'chat',
@@ -30,8 +30,8 @@ export const AIchatSlice = createSlice({
     setSeletedProblemId: (state, action) => {
       state.selectedProblemId = action.payload;
     },
-    setActualProblemId: (state, action) => {
-      state.actualProblemId = action.payload;
+    setChatProblemId: (state, action) => {
+      state.chatProblemId = action.payload;
     },
     resetAIChat: () => initialState,
   },
@@ -43,7 +43,7 @@ export const {
   prevScreen,
   nextScreen,
   setSeletedProblemId,
-  setActualProblemId,
+  setChatProblemId,
   resetAIChat,
 } = AIchatSlice.actions;
 

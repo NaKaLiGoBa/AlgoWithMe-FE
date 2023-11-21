@@ -11,6 +11,12 @@ import '../../atoms/Tab/styles.css';
 export default function index({ handleChatToggle }) {
   const dispatch = useDispatch();
   const currentScreen = useSelector((state) => state.chat.currentScreen);
+  const problemTitle = useSelector(
+    (state) =>
+      state.problems.problems.find(
+        (problem) => problem.id === Number(state.chat.chatProblemId),
+      )?.title,
+  );
 
   const handlePrevClick = () => {
     dispatch(prevScreen());
@@ -21,7 +27,7 @@ export default function index({ handleChatToggle }) {
   };
   const screenTexts = [
     { middle: '목록', next: '답변' },
-    { prev: '목록', middle: '답변', next: '힌트' },
+    { prev: '목록', middle: problemTitle, next: '힌트' },
     { prev: '답변', middle: '힌트' },
   ];
   const currentText = screenTexts[currentScreen];
