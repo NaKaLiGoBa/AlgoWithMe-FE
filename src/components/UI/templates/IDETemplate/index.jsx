@@ -14,7 +14,11 @@ import Button from '../../atoms/Input/Button';
 
 function Tab({ name, path, active }) {
   return (
-    <div className={`${active ? 'text-black bg-white' : 'text-gray-400'} hover:bg-white px-4 py-2`}>
+    <div
+      className={`${
+        active ? 'text-black bg-white' : 'text-gray-400'
+      } hover:bg-white px-4 py-2`}
+    >
       <Link to={path}>{name}</Link>
     </div>
   );
