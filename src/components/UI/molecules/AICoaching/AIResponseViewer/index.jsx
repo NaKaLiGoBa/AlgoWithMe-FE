@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import getCoachesByProblemId from '../../../../../utils/api/v1/coach/getCoachesByProblemId';
+import { setChatProblemId } from '../../../../../store/AIChatSlice';
 
 export default function index() {
+  const dispatch = useDispatch();
   const { problemId } = useParams();
   const [answers, setAnswers] = useState({ answers: [] });
-  const selectedProblemId = useSelector(
-    (state) => state.chat.selectedProblemId,
-  );
+  const { selectedProblemId } = useSelector((state) => state.chat);
 
   useEffect(() => {
     async function fetchData() {
       const problemChatId = selectedProblemId || problemId;
+      dispatch(setChatProblemId(problemChatId));
       const response = await getCoachesByProblemId(problemChatId);
       if (response.success) {
         setAnswers(response.data);
