@@ -10,7 +10,6 @@ import postSolutionByProblemId from '../../../../utils/api/v1/solution/postSolut
 import contentTemplate from './contentTemplate';
 
 const index = () => {
-  // const, state, Hooks
   const navigate = useNavigate();
   const { problemId } = useParams();
   const [title, setTitle] = useState();
