@@ -25,7 +25,9 @@ function CommentSection({ commentData, onDelete }) {
   const [isHovering, setIsHovering] = useState(false);
   const currentUser = useSelector(selectUser);
   const [isEditing, setIsEditing] = useState(false); // 댓글 수정 상태
-  const [editedContent, setEditedContent] = useState(commentData.comment.content); // 수정할 댓글 내용
+  const [editedContent, setEditedContent] = useState(
+    commentData.comment.content,
+  ); // 수정할 댓글 내용
   const [likes, setLikes] = useState(commentData.comment.likes || 0);
   const [isLiked, setIsLiked] = useState(commentData.comment.isLiked || false);
 
@@ -39,13 +41,15 @@ function CommentSection({ commentData, onDelete }) {
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
-    
+
     const fetchReplies = async () => {
       if (areRepliesVisible && commentData.comment.id) {
         try {
           const response = await getReplyByCommentId(commentData.comment.id);
           if (response.success) {
-            setReplies(Array.isArray(response.data.replies) ? response.data.replies : []);
+            setReplies(
+              Array.isArray(response.data.replies) ? response.data.replies : [],
+            );
           } else {
             console.error('Failed to fetch replies:', response.error);
           }
@@ -311,11 +315,11 @@ function CommentSection({ commentData, onDelete }) {
             >
               {canEditComment && (
                 <div
-                  className="flex ml-5 items-center cursor-pointer"
+                  className="flex items-center cursor-pointer"
                   onClick={toggleEdit}
                 >
                   <Edit /> {/* 수정 버튼 */}
-                  <span className="ml-1">Edit</span>
+                  <span className="mr-1">Edit</span>
                 </div>
               )}
             </div>
@@ -330,13 +334,6 @@ function CommentSection({ commentData, onDelete }) {
             </div>
           </div>{' '}
         </>
-      )}
-      {isReplying && ( // ReplyButton 클릭시 보이는 CommentInput
-        <CommentInput
-          placeholder={`@${commentData.author.nickname}`}
-          onComment={handleReplySubmit}
-          onCancel={toggleReplyInput}
-        />
       )}
 
       {areRepliesVisible && (
@@ -353,6 +350,13 @@ function CommentSection({ commentData, onDelete }) {
             />
           ))}
         </div>
+      )}
+      {isReplying && ( // ReplyButton 클릭시 보이는 CommentInput
+        <CommentInput
+          placeholder={`@${commentData.author.nickname}`}
+          onComment={handleReplySubmit}
+          onCancel={toggleReplyInput}
+        />
       )}
     </div>
   );
