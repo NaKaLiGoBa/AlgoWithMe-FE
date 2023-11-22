@@ -59,7 +59,7 @@ function CommentsSection(handleReplySubmit) {
     if (solutionId) {
       fetchComments();
     }
-  }, [page, rowsPerPage, sort, solutionId, fetchComments]);
+  }, [page, rowsPerPage, sort, solutionId]);
 
   const handleSubmitComment = async (commentText = newComment) => {
     const content = commentText.trim();
@@ -100,6 +100,7 @@ function CommentsSection(handleReplySubmit) {
         console.log('newcomment:', newCommentData);
         setComments([...comments, newCommentData]);
         setNewComment('');
+        fetchComments();
       } else {
         console.error(response.error);
       }
