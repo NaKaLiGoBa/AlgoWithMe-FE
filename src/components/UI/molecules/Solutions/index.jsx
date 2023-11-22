@@ -17,7 +17,8 @@ export default function index() {
   const { problemId } = useParams();
 
   useEffect(() => {
-    getSolutions(problemId)
+    const params = { cursor: nextCursor, size: 4 };
+    getSolutions(problemId, params)
       .then((response) => response.data)
       .then((data) => {
         dispatch(setSolutionsData(data));
@@ -39,22 +40,19 @@ export default function index() {
   const fetchMoreData = async () => {
     if (!hasMore) return;
     setTimeout(async () => {
-      try {
-        const { data, success } = await getSolutions(problemId, nextCursor, 2);
-        if (success) {
-          dispatch(
-            setSolutionsData({
-              totalCount: data.totalCount,
-              solutions: [...solutions, ...data.solutions],
-            }),
-          );
-          setNextCursor(data._link.nextCursor);
-          setHasMore(data._link.nextCursor !== -1);
-        } else {
-          setHasMore(false);
-        }
-      } catch (error) {
-        console.error('Error fetching more data:', error);
+      const params = { cursor: nextCursor, size: 2 };
+      console.log('Calling fetchMoreData with params:', params);
+      const response = await getSolutions(problemId, params);
+      if (response.success) {
+        dispatch(
+          setSolutionsData({
+            totalCount: response.data.totalCount,
+            solutions: [...solutions, ...response.data.solutions],
+          }),
+        );
+        setNextCursor(response.data._link.nextCursor);
+        setHasMore(response.data._link.nextCursor !== -1);
+      } else {
         setHasMore(false);
       }
     }, 1000);
