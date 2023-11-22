@@ -33,22 +33,20 @@ function TestCasesForm({ testcases, hasRun = false }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
+      <div className="flex flex-row items-center">
         {testcases.map((testcase) => (
-          <div>
-            <button
-              type="button"
-              key={testcase.number}
-              className={`py-1 px-2 text-sm rounded-md ${
-                activeCaseNumber === testcase.number
-                  ? 'bg-slate-300'
-                  : 'bg-slate-200'
-              } ${getButtonBorder(hasRun, testcase)}`}
-              onClick={() => setActiveCaseNumber(testcase.number)}
-            >
-              {getButtonText(hasRun, testcase)}
-            </button>
-          </div>
+          <button
+            type="button"
+            key={testcase.number}
+            className={`py-1 px-2 text-sm rounded-md ${
+              activeCaseNumber === testcase.number
+                ? 'bg-slate-300'
+                : 'bg-slate-200'
+            } ${getButtonBorder(hasRun, testcase)}`}
+            onClick={() => setActiveCaseNumber(testcase.number)}
+          >
+            {getButtonText(hasRun, testcase)}
+          </button>
         ))}
       </div>
 
@@ -130,7 +128,7 @@ export default function Index() {
   };
 
   return (
-    <div className="p-2 mt-1 bg-white rounded-xl flex flex-col justify-between h-[300px] overflow-y-auto">
+    <div className="p-2 flex flex-col justify-between h-[300px] overflow-y-auto border-t-[2px]">
       <div className="mb-2" />
       <TestCasesForm hasRun={hasRun} testcases={testcases} />
       <div className="flex flex-row justify-between items-center">
