@@ -7,6 +7,8 @@ import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
 import getSolutions from '../../../../utils/api/v1/solution/getSolutions';
+import '../../atoms/Tab/styles.css';
+import Spinner from '../../atoms/Spinner/index';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -17,7 +19,7 @@ export default function index() {
   const { problemId } = useParams();
 
   useEffect(() => {
-    const params = { cursor: nextCursor, size: 4 };
+    const params = { cursor: nextCursor, size: 7 };
     getSolutions(problemId, params)
       .then((response) => response.data)
       .then((data) => {
@@ -67,31 +69,31 @@ export default function index() {
       >
         + 풀이 공유
       </Link>
-      <InfiniteScroll
-        dataLength={solutions.length}
-        next={fetchMoreData}
-        hasMore={hasMore}
-        loader={
-          <div className="flex space-x-7 justify-center">
-            <div className="w-5 h-5 bg-gray-300 rounded-full" />
-            <div className="w-5 h-5 bg-gray-300 rounded-full" />
-            <div className="w-5 h-5 bg-gray-300 rounded-full" />
-          </div>
-        }
+      <div
+        id="scrollableDiv"
+        className="overflow-auto h-[calc(100%-30px)] customTab-scrollbar"
       >
-        {solutions.map((solution) => (
-          <ListItem
-            key={solution.solution.id}
-            avatar={solution.author.avatar}
-            nickname={solution.author.nickname}
-            title={solution.solution.title}
-            likeCount={solution.solution.likeCount}
-            viewCount={solution.solution.viewCount}
-            commentCount={solution.solution.commentCount}
-            onClick={() => handleSolutionClick(solution.solution)}
-          />
-        ))}
-      </InfiniteScroll>
+        <InfiniteScroll
+          dataLength={solutions.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<Spinner />}
+          scrollableTarget="scrollableDiv"
+        >
+          {solutions.map((solution) => (
+            <ListItem
+              key={solution.solution.id}
+              avatar={solution.author.avatar}
+              nickname={solution.author.nickname}
+              title={solution.solution.title}
+              likeCount={solution.solution.likeCount}
+              viewCount={solution.solution.viewCount}
+              commentCount={solution.solution.commentCount}
+              onClick={() => handleSolutionClick(solution.solution)}
+            />
+          ))}
+        </InfiniteScroll>
+      </div>
     </div>
   );
 }
