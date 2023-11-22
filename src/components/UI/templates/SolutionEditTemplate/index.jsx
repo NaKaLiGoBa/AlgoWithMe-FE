@@ -10,17 +10,19 @@ import postSolutionByProblemId from '../../../../utils/api/v1/solution/postSolut
 import contentTemplate from './contentTemplate';
 
 const index = () => {
+
+  // const, state, Hooks
   const navigate = useNavigate();
   const { problemId } = useParams();
   const [title, setTitle] = useState();
 
-  // set content from editor code
   const editorLocalState = JSON.parse(
     localStorage.getItem(`editorState_${problemId}`),
   );
   const code = editorLocalState[editorLocalState.currentLanguage];
   const [content, setContent] = useState(contentTemplate(code));
 
+  // handler
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -45,6 +47,7 @@ const index = () => {
     );
   };
 
+  // jsx
   return (
     <>
       <Header />

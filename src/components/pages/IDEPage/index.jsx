@@ -13,7 +13,7 @@ function ProblemPage() {
   const { problemId } = useParams();
   const activeTab = useSelector((state) => state.tabs.activeTab);
   const showChat = useSelector((state) => state.chat.isVisible);
-  const [isDataLoaded, setIsDataLoaded] = useState(false); // Local state to track data loading
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
     dispatch(resetTab());
@@ -23,7 +23,7 @@ function ProblemPage() {
       .then((response) => response.data)
       .then((data) => {
         dispatch(setProblem(data));
-        setIsDataLoaded(true); // Set to true when data is loaded
+        setIsDataLoaded(true); 
       });
   }, [problemId, dispatch]);
 
