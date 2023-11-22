@@ -19,6 +19,7 @@ function CommentsSection(handleReplySubmit) {
   const solutionId = useSelector(selectActiveSolutionId);
   const currentUser = useSelector(selectUser);
 
+
   const [paginationInfo, setPaginationInfo] = useState({
     pageNumber: 0,
     totalPages: 0,
@@ -28,36 +29,37 @@ function CommentsSection(handleReplySubmit) {
     last: true,
   });
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      const params = {
-        page: page - 1,
-        size: rowsPerPage,
-        sort,
-      };
-      const response = await getCommentsBySolutionId(solutionId, params);
-      if (response.success) {
-        const updatedComments = response.data.comments.map((comment) => ({
-          ...comment,
-          solutionId, // 각 댓글에 solutionId 추가
-        }));
-        setComments(updatedComments);
-        setPaginationInfo({
-          pageNumber: response.data.pageNumber,
-          totalPages: response.data.totalPages,
-          size: response.data.size,
-          numberOfElements: response.data.numberOfElements,
-          first: response.data.first,
-          last: response.data.last,
-        });
-      } else {
-        console.error('Failed to fetch comments:', response.error);
-      }
+  const fetchComments = async () => {
+    const params = {
+      page: page - 1,
+      size: rowsPerPage,
+      sort,
     };
+    const response = await getCommentsBySolutionId(solutionId, params);
+    if (response.success) {
+      const updatedComments = response.data.comments.map((comment) => ({
+        ...comment,
+        solutionId, // 각 댓글에 solutionId 추가
+      }));
+      setComments(updatedComments);
+      setPaginationInfo({
+        pageNumber: response.data.pageNumber,
+        totalPages: response.data.totalPages,
+        size: response.data.size,
+        numberOfElements: response.data.numberOfElements,
+        first: response.data.first,
+        last: response.data.last,
+      });
+    } else {
+      console.error('Failed to fetch comments:', response.error);
+    }
+  };
+
+  useEffect(() => {
     if (solutionId) {
       fetchComments();
     }
-  }, [page, rowsPerPage, sort, solutionId]);
+  }, [page, rowsPerPage, sort, solutionId, fetchComments]);
 
   const handleSubmitComment = async (commentText = newComment) => {
     const content = commentText.trim();
@@ -76,20 +78,26 @@ function CommentsSection(handleReplySubmit) {
         const createdSolutionId = solutionLocation.substring(
           solutionLocation.lastIndexOf('/') + 1,
         );
+        const commentLocation = response.headers.location;
+        const createdCommentId = commentLocation.substring(
+          solutionLocation.lastIndexOf('/') + 1,
+        );
 
         const newCommentData = {
-          id: createdSolutionId, // 서버에서 반환받은 실제 ID 사용
           author: {
-            nickname: currentUser.username,
+            id: currentUser.id,
             avatar: currentUser.avatar,
+            nickname: currentUser.nickname,
           },
           comment: {
+            id: createdCommentId,
             content, // 제출된 내용
-            isLiked: false,
             likeCount: 0,
-            solutionId,
+            like: false,
           },
+          solutionId: createdSolutionId, // 서버에서 반환받은 실제 ID 사용
         };
+        console.log('newcomment:', newCommentData);
         setComments([...comments, newCommentData]);
         setNewComment('');
       } else {
@@ -118,12 +126,6 @@ function CommentsSection(handleReplySubmit) {
     } else {
       console.error(response.error);
     }
-  };
-
-  const handleDeleteComment = (commentId) => {
-    setComments((currentComments) =>
-      currentComments.filter((comment) => comment.id !== commentId),
-    );
   };
 
   return (
@@ -172,7 +174,7 @@ function CommentsSection(handleReplySubmit) {
               handleLikeComment={() => handleLikeComment(commentData.id)}
               handleReplySubmit={handleReplySubmit}
               currentUser={currentUser}
-              onDelete={() => handleDeleteComment(commentData.id)}
+              onDelete={fetchComments}
             />
           ))}
         </div>
