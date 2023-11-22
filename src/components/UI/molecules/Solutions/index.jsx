@@ -7,6 +7,8 @@ import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
 import getSolutions from '../../../../utils/api/v1/solution/getSolutions';
+import '../../atoms/Tab/styles.css';
+import Spinner from '../../atoms/Spinner/index';
 
 export default function index() {
   const dispatch = useDispatch();
@@ -67,18 +69,15 @@ export default function index() {
       >
         + 풀이 공유
       </Link>
-      <div id="scrollableDiv" className="overflow-auto h-[calc(100%-30px)]">
+      <div
+        id="scrollableDiv"
+        className="overflow-auto h-[calc(100%-30px)] customTab-scrollbar"
+      >
         <InfiniteScroll
           dataLength={solutions.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={
-            <div className="flex space-x-7 justify-center">
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-              <div className="w-2 h-2 bg-gray-300 rounded-full" />
-            </div>
-          }
+          loader={<Spinner />}
           scrollableTarget="scrollableDiv"
         >
           {solutions.map((solution) => (
