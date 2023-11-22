@@ -35,7 +35,7 @@ function CommentSection({ commentData, onDelete }) {
   const handleCommentSelect = () => {
     dispatch(setActiveCommentId(commentData.comment.id));
   };
-  const canEditComment = currentUser.id === commentData.userId;
+  const canEditComment = currentUser.id === commentData.author.id;
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
@@ -304,7 +304,7 @@ function CommentSection({ commentData, onDelete }) {
             </div>
             <div
               className={`flex ml-5 items-center transition-opacity duration-500 ${
-                isHovering && currentUser?.id === commentData.userId
+                isHovering && currentUser?.id === commentData.author.id
                   ? 'opacity-100'
                   : 'opacity-0'
               }`}
