@@ -38,7 +38,7 @@ function Index() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100%-300px)] p-2 mt-2 bg-white rounded-xl ">
+    <div className="flex flex-col h-[calc(100%-300px)]">
       <div className="mx-4 my-2">
         <DropdownMenu
           title={editorState.currentLanguage}
@@ -46,7 +46,7 @@ function Index() {
           handleSelectItem={handleSelectLanguage}
         />
       </div>
-      <div className="mx-4 my-2 grow">
+      <div className="mx-4 grow">
         <Editor
           key={editorState.currentLanguage}
           width="100%"
