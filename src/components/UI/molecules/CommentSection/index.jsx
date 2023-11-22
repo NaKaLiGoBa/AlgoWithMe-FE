@@ -10,6 +10,8 @@ import Edit from '../../atoms/Icon/Edit';
 import getReplyByCommentId from '../../../../utils/api/v1/Reply/getReplyByCommentId';
 import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
 import postReplyLikeByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/postReplyLikeByCommentIdAndReplyId';
+import deleteReplyByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/deleteReplyByCommentIdAndReplyId';
+import putReplyByCommentIdAndReplyID from '../../../../utils/api/v1/Reply/putReplyByCommentIdAndReplyID';
 import deleteCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/deleteCommentBySolutionIdAndCommentId';
 import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
 import { selectUser } from '../../../../store/userSlice';
@@ -40,49 +42,53 @@ function CommentSection({ commentData, onDelete }) {
   useEffect(() => {
     console.log('Received comment data:', commentData);
     const fetchReplies = async () => {
-      try {
-        const response = await getReplyByCommentId(commentData.id);
-        if (response.success) {
-          setReplies(response.data.replies);
-        } else {
-          console.error('Failed to fetch replies:', response.error);
+      if (areRepliesVisible && commentData.id) {
+        try {
+          const response = await getReplyByCommentId(commentData.id);
+          if (response.success) {
+            setReplies(Array.isArray(response.data) ? response.data : []);
+          } else {
+            console.error('Failed to fetch replies:', response.error);
+          }
+        } catch (error) {
+          console.error('Failed to fetch replies:', error);
         }
-      } catch (error) {
-        console.error('Failed to fetch replies:', error);
       }
     };
-
-    if (areRepliesVisible && replies.length === 0 && commentData.id) {
-      fetchReplies();
-    }
-  }, [areRepliesVisible, replies.length, commentData.id]);
+    fetchReplies();
+  }, [areRepliesVisible, commentData.id]);
 
   const toggleReplyInput = () => {
     setIsReplying(!isReplying); // 댓글 입력 상태 토글
   };
 
-  const handleReply = async (replyText) => {
+  const handleReplySubmit = async (replyText) => {
     handleCommentSelect();
     if (!replyText.trim()) return;
     try {
       const response = await postReplyByCommentId(commentData.id, {
         content: replyText.trim(),
       });
+      console.log('Submitting comment:', replyText.trim()); // 입력된 댓글 내용 확인
       if (response.success) {
-        const locationHeader = response.headers['location'];
+        const locationHeader = response.headers.location;
         const replyId = locationHeader.split('/').pop(); // URL에서 ID 추출
-
+        console.log('replyId:', replyId);
         const newReplyData = {
           id: replyId,
+          author: {
+            nickname: currentUser.username,
+            avatar: currentUser.avatar,
+          },
           content: replyText.trim(),
-          // 대댓글 작성자 정보 추가
-          userId: currentUser.id,
+          likeCount: 0,
+          totalCount: 0,
         };
-        setReplies([...replies, newReplyData]);
+        setReplies((prevReplies) => [...prevReplies, newReplyData]);
         setAreRepliesVisible(true);
         setIsReplying(false);
       } else {
-        console.error(response.error);
+        console.error('Failed to submit reply:', response.error);
       }
     } catch (error) {
       console.error('Error while posting reply:', error);
@@ -131,6 +137,56 @@ function CommentSection({ commentData, onDelete }) {
       );
     } else {
       console.error(response.error);
+    }
+  };
+
+  const handleEditReply = async (replyId, newContent) => {
+    if (!newContent.trim()) {
+      alert('Reply content cannot be empty');
+      return;
+    }
+    try {
+      const response = await putReplyByCommentIdAndReplyID(
+        commentData.id,
+        replyId,
+        {
+          content: newContent.trim(),
+        },
+      );
+      if (response.success) {
+        // 수정 성공: replies 상태 업데이트
+        setReplies(
+          replies.map((reply) =>
+            reply.id === replyId ? { ...reply, content: newContent } : reply,
+          ),
+        );
+        console.log('Reply updated successfully');
+      } else {
+        console.error('Failed to edit reply:', response.error);
+      }
+    } catch (error) {
+      console.error('Error while editing reply:', error);
+    }
+  };
+
+  const handleDeleteReply = async (replyId) => {
+    const confirmDelete = window.confirm('정말로 답글을 삭제하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        const response = await deleteReplyByCommentIdAndReplyId(
+          commentData.id,
+          replyId,
+        );
+        if (response.success) {
+          // 삭제 성공: replies 상태 업데이트
+          setReplies(replies.filter((reply) => reply.id !== replyId));
+          console.log('Reply deleted successfully');
+        } else {
+          console.error('Failed to delete reply:', response.error);
+        }
+      } catch (error) {
+        console.error('Error while deleting reply:', error);
+      }
     }
   };
 
@@ -228,18 +284,15 @@ function CommentSection({ commentData, onDelete }) {
           <div className="flex items-center">
             <img
               className="w-10 h-10 rounded-full mr-4"
-              src={commentData.avatar} // 이미지 URL을 데이터 객체에서 가져오기
-              alt={`${commentData.username}'s avatar`}
+              src={commentData.author.avatar} // 이미지 URL을 데이터 객체에서 가져오기
+              alt={`${commentData.author.nickname}'s avatar`}
             />
 
             <div className="flex flex-grow justify-between items-center">
-              <div className="font-semibold">{commentData.username}</div>
-              <div className=" text-gray-400 text-sm">
-                {commentData.timestamp}
-              </div>
+              <div className="font-semibold">{commentData.author.nickname}</div>
             </div>
           </div>
-          <p className="text-white mt-2">{commentData.content}</p>
+          <p className="text-white mt-2">{commentData.comment.content}</p>
           <div className="flex items-center mt-3">
             <LikeButton isLiked={isLiked} onClick={handleToggleLike} />
             <span className="ml-1 text-red-500 mr-5">{likes}</span>
@@ -281,8 +334,8 @@ function CommentSection({ commentData, onDelete }) {
       )}
       {isReplying && ( // ReplyButton 클릭시 보이는 CommentInput
         <CommentInput
-          placeholder={`@${commentData.username}`}
-          onComment={handleReply}
+          placeholder={`@${commentData.author.nickname}`}
+          onComment={handleReplySubmit}
           onCancel={toggleReplyInput}
         />
       )}
@@ -292,13 +345,12 @@ function CommentSection({ commentData, onDelete }) {
           {commentData.replies?.map((reply) => (
             <Comment
               key={reply.id}
-              commentData={reply}
-              currentUser={currentUser}
-              username={reply.username}
-              timestamp={reply.timestamp}
+              username={reply.author.nickname}
               content={reply.content}
-              avatar={reply.avatar || commentData.avatar}
+              avatar={reply.author.avatar}
               handleLike={() => handleLikeReply(reply.id)}
+              handleEdit={() => handleEditReply(reply.id, reply.content)}
+              handleDelete={() => handleDeleteReply(reply.id)}
             />
           ))}
         </div>

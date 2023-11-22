@@ -10,9 +10,8 @@ import usePaginationRange from '../../../../hooks/usePaginationRange';
 import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getCommentsBySolutionId';
 import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
 import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
-import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
 
-function CommentsSection() {
+function CommentsSection(handleReplySubmit) {
   const [comments, setComments] = useState([]);
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
@@ -56,19 +55,24 @@ function CommentsSection() {
       const response = await postCommentBySolutionId(solutionId, { content });
       if (response.success) {
         // 추출된 Location 헤더에서 실제 solution ID 가져오기
-        const solutionLocation = response.headers['location'];
+        const solutionLocation = response.headers.location;
         const createdSolutionId = solutionLocation.substring(
           solutionLocation.lastIndexOf('/') + 1,
         );
 
         const newCommentData = {
           id: createdSolutionId, // 서버에서 반환받은 실제 ID 사용
-          content,
-          likes: 0,
-          isLiked: false,
-          solutionId,
-          username: currentUser.username,
-          avatar: currentUser.avatar,
+
+          author: {
+            nickname: currentUser.username,
+            avatar: currentUser.avatar,
+          },
+          comment: {
+            content, // 제출된 내용
+            isLiked: false,
+            likeCount: 0,
+            
+          },      
         };
         setComments([...comments, newCommentData]);
         setNewComment('');
@@ -97,37 +101,6 @@ function CommentsSection() {
       );
     } else {
       console.error(response.error);
-    }
-  };
-
-  const handleReplySubmit = async (commentId, replyText) => {
-    const trimmedReplyText = replyText.trim();
-    if (!trimmedReplyText) return;
-
-    try {
-      const response = await postReplyByCommentId(commentId, {
-        content: trimmedReplyText,
-      });
-      if (response.success) {
-        const newReplyData = {
-          id: replyId, // 서버로부터 받은 ID
-          content: replyText.trim(),
-          userId: currentUser.id,
-          // 기타 필요한 필드들을 여기에 추가
-        };
-
-        setComments((currentComments) =>
-          currentComments.map((comment) =>
-            comment.id === commentId
-              ? { ...comment, replies: [...comment.replies, newReplyData] }
-              : comment,
-          ),
-        );
-      } else {
-        console.error(response.error);
-      }
-    } catch (error) {
-      console.error('Failed to submit reply:', error);
     }
   };
 
