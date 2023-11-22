@@ -20,33 +20,32 @@ import { setActiveCommentId } from '../../../../store/commentSlice';
 
 function CommentSection({ commentData, onDelete }) {
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
-  const [replies, setReplies] = useState(
-    Array.isArray(commentData.replies) ? commentData.replies : [],
-  );
+  const [replies, setReplies] = useState([]);
   const [isReplying, setIsReplying] = useState(false); // 댓글 입력 상태
   const [isHovering, setIsHovering] = useState(false);
   const currentUser = useSelector(selectUser);
   const [isEditing, setIsEditing] = useState(false); // 댓글 수정 상태
-  const [editedContent, setEditedContent] = useState(commentData.content); // 수정할 댓글 내용
-  const [likes, setLikes] = useState(commentData.likes || 0);
-  const [isLiked, setIsLiked] = useState(commentData.isLiked || false);
+  const [editedContent, setEditedContent] = useState(commentData.comment.content); // 수정할 댓글 내용
+  const [likes, setLikes] = useState(commentData.comment.likes || 0);
+  const [isLiked, setIsLiked] = useState(commentData.comment.isLiked || false);
 
   const dispatch = useDispatch();
 
   // 댓글 ID 설정
   const handleCommentSelect = () => {
-    dispatch(setActiveCommentId(commentData.id));
+    dispatch(setActiveCommentId(commentData.comment.id));
   };
   const canEditComment = currentUser.id === commentData.userId;
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
+    
     const fetchReplies = async () => {
-      if (areRepliesVisible && commentData.id) {
+      if (areRepliesVisible && commentData.comment.id) {
         try {
-          const response = await getReplyByCommentId(commentData.id);
+          const response = await getReplyByCommentId(commentData.comment.id);
           if (response.success) {
-            setReplies(Array.isArray(response.data) ? response.data : []);
+            setReplies(Array.isArray(response.data.replies) ? response.data.replies : []);
           } else {
             console.error('Failed to fetch replies:', response.error);
           }
@@ -56,7 +55,7 @@ function CommentSection({ commentData, onDelete }) {
       }
     };
     fetchReplies();
-  }, [areRepliesVisible, commentData.id]);
+  }, [areRepliesVisible, commentData.comment.id]);
 
   const toggleReplyInput = () => {
     setIsReplying(!isReplying); // 댓글 입력 상태 토글
@@ -66,7 +65,7 @@ function CommentSection({ commentData, onDelete }) {
     handleCommentSelect();
     if (!replyText.trim()) return;
     try {
-      const response = await postReplyByCommentId(commentData.id, {
+      const response = await postReplyByCommentId(commentData.comment.id, {
         content: replyText.trim(),
       });
       console.log('Submitting comment:', replyText.trim()); // 입력된 댓글 내용 확인
@@ -104,7 +103,7 @@ function CommentSection({ commentData, onDelete }) {
     try {
       const response = await postCommentLikeBySolutionIdAndCommentId(
         commentData.solutionId,
-        commentData.id,
+        commentData.comment.id,
       );
       if (!response.success) {
         console.error(response.error);
@@ -123,7 +122,7 @@ function CommentSection({ commentData, onDelete }) {
   // 대댓글 좋아요
   const handleLikeReply = async (replyId) => {
     const response = await postReplyLikeByCommentIdAndReplyId(
-      commentData.id,
+      commentData.comment.id,
       replyId,
     );
     if (response.success) {
@@ -147,7 +146,7 @@ function CommentSection({ commentData, onDelete }) {
     }
     try {
       const response = await putReplyByCommentIdAndReplyID(
-        commentData.id,
+        commentData.comment.id,
         replyId,
         {
           content: newContent.trim(),
@@ -174,7 +173,7 @@ function CommentSection({ commentData, onDelete }) {
     if (confirmDelete) {
       try {
         const response = await deleteReplyByCommentIdAndReplyId(
-          commentData.id,
+          commentData.comment.id,
           replyId,
         );
         if (response.success) {
@@ -203,11 +202,11 @@ function CommentSection({ commentData, onDelete }) {
       return;
     }
     handleCommentSelect();
-    console.log('Editing comment ID: ', commentData.id);
+    console.log('Editing comment ID: ', commentData.comment.id);
     // 댓글 수정 요청 보내기
     const response = await putCommentBySolutionIdAndCommentId(
       commentData.solutionId,
-      commentData.id,
+      commentData.comment.id,
       {
         content: editedContent,
       },
@@ -215,7 +214,7 @@ function CommentSection({ commentData, onDelete }) {
 
     if (response.success) {
       // 수정 성공 시 댓글 내용 갱신 및 수정 모드 종료
-      commentData.content = editedContent; // 댓글 내용 업데이트
+      commentData.comment.content = editedContent; // 댓글 내용 업데이트
       toggleEdit(); // 수정 모드 종료
     } else {
       console.error(response.error);
@@ -234,7 +233,7 @@ function CommentSection({ commentData, onDelete }) {
     if (confirmDelete) {
       deleteCommentBySolutionIdAndCommentId(
         commentData.solutionId,
-        commentData.id,
+        commentData.comment.id,
       )
         .then((response) => {
           if (response.success) {
@@ -342,7 +341,7 @@ function CommentSection({ commentData, onDelete }) {
 
       {areRepliesVisible && (
         <div className="mt-1 space-y-4 p-5">
-          {commentData.replies?.map((reply) => (
+          {replies?.map((reply) => (
             <Comment
               key={reply.id}
               username={reply.author.nickname}
