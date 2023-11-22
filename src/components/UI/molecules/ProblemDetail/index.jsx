@@ -5,7 +5,7 @@ import MDEditor from '@uiw/react-md-editor';
 import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
 
-const index = () => {
+const index = ({ className }) => {
   const number = useSelector((state) => state.problem.number);
   const title = useSelector((state) => state.problem.title);
   const difficulty = useSelector((state) => state.problem.difficulty);
@@ -16,7 +16,7 @@ const index = () => {
   const { problemId } = useParams();
 
   return (
-    <div className="bg-white rounded-xl h-[calc(100%-30px)] overflow-y-auto">
+    <div className={`bg-white rounded-xl h-[99%] overflow-y-auto ${className}`}>
       <div className="m-4 flex">
         <h2 className="items-center flex ">{`${number}. ${title}`}</h2>
         <Link
@@ -32,21 +32,19 @@ const index = () => {
         <p>{status}</p>
         <p>{`정답률: ${acceptance}`}</p>
       </div>
-      <div className="flex flex-col gap-4 m-4">
-        <div className="flex flex-row gap-4">
+      <div className="flex flex-col m-4">
+        <div className="flex flex-row gap-1">
           {tags.map((tag) => (
             <div>
-              <p className="m-1 py-1 px-2 text-xs bg-slate-600 text-white rounded-xl">
+              <p className="py-1 px-2 text-xs bg-slate-600 text-white rounded-xl">
                 {tag}
               </p>
             </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="markdown-viewer bg-white p-6" data-color-mode="light">
-          <MDEditor.Markdown source={description} />
-        </div>
+      <div className="markdown-viewer bg-white p-6" data-color-mode="light">
+        <MDEditor.Markdown source={description} />
       </div>
     </div>
   );
