@@ -84,7 +84,7 @@ function CommentSection({ commentData, onDelete }) {
           likeCount: 0,
           totalCount: 0,
         };
-        setReplies((prevReplies) => [...prevReplies, newReplyData]);
+        setReplies((currentReplies) => [...currentReplies, newReplyData]);
         setAreRepliesVisible(true);
         setIsReplying(false);
       } else {

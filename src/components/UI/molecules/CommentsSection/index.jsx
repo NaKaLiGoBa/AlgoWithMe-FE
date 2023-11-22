@@ -6,7 +6,6 @@ import { selectUser } from '../../../../store/userSlice';
 import '@uiw/react-md-editor/markdown-editor.css';
 import CommentSection from '../CommentSection';
 import ProblemListFooter from '../Problem/ProblemListFooter';
-import usePaginationRange from '../../../../hooks/usePaginationRange';
 import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getCommentsBySolutionId';
 import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
 import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
@@ -20,19 +19,37 @@ function CommentsSection(handleReplySubmit) {
   const solutionId = useSelector(selectActiveSolutionId);
   const currentUser = useSelector(selectUser);
 
-  const { slice, range } = usePaginationRange(comments, page, rowsPerPage);
+  const [paginationInfo, setPaginationInfo] = useState({
+    pageNumber: 0,
+    totalPages: 0,
+    size: 0,
+    numberOfElements: 0,
+    first: true,
+    last: true,
+  });
 
   useEffect(() => {
     const fetchComments = async () => {
       const params = {
-        page,
+        page: page - 1,
         size: rowsPerPage,
         sort,
       };
       const response = await getCommentsBySolutionId(solutionId, params);
       if (response.success) {
-        setComments(response.data.comments);
-        console.log('Comments: ', response.data.comments);
+        const updatedComments = response.data.comments.map((comment) => ({
+          ...comment,
+          solutionId, // 각 댓글에 solutionId 추가
+        }));
+        setComments(updatedComments);
+        setPaginationInfo({
+          pageNumber: response.data.pageNumber,
+          totalPages: response.data.totalPages,
+          size: response.data.size,
+          numberOfElements: response.data.numberOfElements,
+          first: response.data.first,
+          last: response.data.last,
+        });
       } else {
         console.error('Failed to fetch comments:', response.error);
       }
@@ -62,7 +79,6 @@ function CommentsSection(handleReplySubmit) {
 
         const newCommentData = {
           id: createdSolutionId, // 서버에서 반환받은 실제 ID 사용
-
           author: {
             nickname: currentUser.username,
             avatar: currentUser.avatar,
@@ -71,8 +87,8 @@ function CommentsSection(handleReplySubmit) {
             content, // 제출된 내용
             isLiked: false,
             likeCount: 0,
-            
-          },      
+            solutionId,
+          },
         };
         setComments([...comments, newCommentData]);
         setNewComment('');
@@ -163,12 +179,7 @@ function CommentsSection(handleReplySubmit) {
       </div>
 
       {/* 페이지네이션 컴포넌트 */}
-      <ProblemListFooter
-        range={range}
-        setPage={setPage}
-        page={page}
-        slice={slice}
-      />
+      <ProblemListFooter paginationInfo={paginationInfo} setPage={setPage} />
     </div>
   );
 }
