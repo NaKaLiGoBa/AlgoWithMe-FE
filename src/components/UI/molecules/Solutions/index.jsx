@@ -59,12 +59,10 @@ export default function index() {
       }
     }, 1000);
   };
-  const SolutionsUrl = `${window.location.href}/solutions/edit`;
-
   return (
-    <div className="h-[95%] px-4 py-4">
+    <div className="h-[99%] px-4 py-4  overflow-y-auto ">
       <Link
-        to={SolutionsUrl}
+        to="edit"
         className="w-full flex justify-center bg-[#63B758] text-white py-2 mb-5 rounded-sm"
       >
         + 풀이 공유
@@ -82,16 +80,18 @@ export default function index() {
         }
       >
         {solutions.map((solution) => (
-          <ListItem
-            key={solution.solution.id}
-            avatar={solution.author.avatar}
-            nickname={solution.author.nickname}
-            title={solution.solution.title}
-            likeCount={solution.solution.likeCount}
-            viewCount={solution.solution.viewCount}
-            commentCount={solution.solution.commentCount}
-            onClick={() => handleSolutionClick(solution.solution)}
-          />
+          <Link to={`/problems/${problemId}/solutions/${solution.solution.id}`}>
+            <ListItem
+              key={solution.solution.id}
+              avatar={solution.author.avatar}
+              nickname={solution.author.nickname}
+              title={solution.solution.title}
+              likeCount={solution.solution.likeCount}
+              viewCount={solution.solution.viewCount}
+              commentCount={solution.solution.commentCount}
+              onClick={() => handleSolutionClick(solution.solution)}
+            />
+          </Link>
         ))}
       </InfiniteScroll>
     </div>

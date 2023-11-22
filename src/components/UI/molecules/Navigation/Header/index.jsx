@@ -12,7 +12,7 @@ export default function index({ className }) {
 
   return (
     <header
-      className={`h-[50px] top-0 left-0 right-0 flex items-center px-9 justify-between shadow-md bg-white ${className}`}
+      className={`h-[50px] top-0 left-0 right-0 flex items-center px-9 justify-between shadow-md ${className}`}
     >
       <Logo />
       {token ? (
