@@ -38,7 +38,7 @@ export default function index() {
         {problems.map((problem) => (
           <li
             key={problem.id}
-            className={`p-3 text-lg font-bold border hover:bg-slate-200 ${
+            className={`p-3 font-bold border hover:bg-slate-200 ${
               Number(problem.id) === Number(chatProblemId) ? 'bg-slate-200' : ''
             }`}
           >
