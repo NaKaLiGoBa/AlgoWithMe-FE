@@ -8,8 +8,8 @@ function handleResponse(response) {
   const { status, data } = response;
 
   switch (status) {
-    case 201:
-      // 풀이 글 생성 완료
+    case 204:
+      // 풀이글 삭제 완료
       return { success: true, data };
     default:
       // 기타 상태 코드 처리
@@ -57,13 +57,12 @@ function handleError(error) {
   }
 }
 
-async function call(apiUrl, method, requestData) {
+async function call(apiUrl, method) {
   try {
     const response = await axios({
       url: hostURL + apiUrl,
       method,
       headers: getAuthHeader(),
-      data: requestData,
     });
     return handleResponse(response);
   } catch (error) {
@@ -71,13 +70,9 @@ async function call(apiUrl, method, requestData) {
   }
 }
 
-export default async function putSolutionByProblemIdAndSolutionId(
-  problemId,
-  solutionId,
-  requestData = {},
-) {
+export default async function deleteSolutionByProblemId(problemId, solutionId) {
   const apiUrl = `/api/v1/problems/${problemId}/solutions/${solutionId}`;
-  return call(apiUrl, 'PUT', requestData);
+  return call(apiUrl, 'DELTE');
 }
 
 // ===예시===

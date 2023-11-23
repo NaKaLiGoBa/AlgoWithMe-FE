@@ -51,9 +51,9 @@ const index = () => {
         content,
         languages: [editorState.currentLanguage],
       };
-      postSolutionByProblemId(problemId, requestData).then(() =>
-        navigate(`/problems/${problemId}`),
-      );
+      postSolutionByProblemId(problemId, requestData).then(() => {
+        navigate(`/problems/${problemId}/solutions`);
+      });
     } else {
       const requestData = {
         title,
@@ -64,7 +64,7 @@ const index = () => {
         problemId,
         solutionId,
         requestData,
-      ).then(() => navigate(`/problems/${problemId}`));
+      ).then(() => navigate(`/problems/${problemId}/solutions`));
     }
   };
 

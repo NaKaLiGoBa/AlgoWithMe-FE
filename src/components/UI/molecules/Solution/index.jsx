@@ -5,6 +5,7 @@ import '../../atoms/Tab/styles.css';
 // api
 import MDEditor from '@uiw/react-md-editor';
 import getSolutionByProblemIdAndSolutionId from '../../../../utils/api/v1/solution/getSolutionByProblemIdAndSolutionId';
+import deleteSolution from '../../../../utils/api/v1/solution/deleteSolutionByProblemIdAndSolutionId';
 
 // component
 import Button from '../../atoms/Input/Button';
@@ -35,7 +36,11 @@ export default function index() {
     });
   };
 
-  const handleDelete = async () => {};
+  function handleDelete() {
+    deleteSolution(problemId, solutionId).then(() =>
+      navigate(`/problems/${problemId}/solutions`),
+    );
+  }
 
   const handleLike = async () => {};
   if (!isLoaded) {

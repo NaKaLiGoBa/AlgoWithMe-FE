@@ -5,12 +5,12 @@ import getAuthHeader from '../../../getAuthHeader';
 const hostURL = localHostURL;
 
 function handleResponse(response) {
-  const { status, data } = response;
+  const { status, data, headers } = response;
 
   switch (status) {
     case 201:
       // 풀이 글 생성 완료
-      return { success: true, data };
+      return { success: true, data, headers };
     default:
       // 기타 상태 코드 처리
       return { success: false, error: `Unknown status code: ${status}` };
