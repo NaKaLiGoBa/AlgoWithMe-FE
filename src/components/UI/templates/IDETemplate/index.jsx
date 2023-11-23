@@ -5,30 +5,68 @@ import {
   useParams,
   Navigate,
   Link,
+  useNavigate,
 } from 'react-router-dom';
 import Editor from '../../molecules/Editor';
 import OutputPanel from '../../molecules/OutputPanel';
 import Header from '../../molecules/Navigation/Header';
 import AIchat from '../../molecules/AICoaching/index';
 import Button from '../../atoms/Input/Button';
+import Close from '../../atoms/Icon/Close';
 
-function Tab({ name, path, active }) {
+function DeleteButton({ setTabs, id }) {
+  const navigate = useNavigate();
+  function handleClick() {
+    setTabs((prevTabs) => {
+      const newTabs = prevTabs.filter((tab) => tab.id !== id);
+      const deleteIndex = prevTabs.findIndex((tab) => tab.id === id);
+      const newActiveIndex = deleteIndex === 0 ? 1 : deleteIndex - 1;
+      if (newTabs.length > 0) {
+        navigate(newTabs[newActiveIndex].path);
+      }
+      return newTabs;
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      className="bg-transparent text-black"
+      onClick={handleClick}
+    >
+      <Close className="w-3 h-3 hover:text-rose-600" />
+    </button>
+  );
+}
+
+function Tab({ id, name, path, active, deletable, setTabs }) {
   return (
     <div
       className={`${
         active ? 'text-black bg-white' : 'text-gray-400'
-      } hover:bg-white px-4 py-2`}
+      } hover:bg-white px-4 py-2 flex gap-1`}
     >
-      <Link to={path}>{name}</Link>
+      <Link to={path}>
+        <span className="max-w-[100px] truncate">{name}</span>
+      </Link>
+      {deletable && <DeleteButton setTabs={setTabs} id={id} />}
     </div>
   );
 }
 
-function Tabs({ tabs }) {
+function Tabs({ tabs, setTabs }) {
   return (
-    <div className="h-[40px] flex flex-row items-center bg-gray-100 rounded-xl">
+    <div className="flex flex-nowrap overflow-x-auto items-center bg-gray-100 rounded-xl">
       {tabs.map((tab) => (
-        <Tab key={tab.id} name={tab.name} path={tab.path} active={tab.active} />
+        <Tab
+          key={tab.id}
+          name={tab.name}
+          path={tab.path}
+          active={tab.active}
+          deletable={tab.deletable}
+          id={tab.id}
+          setTabs={setTabs}
+        />
       ))}
     </div>
   );
@@ -73,10 +111,12 @@ const index = ({ handleChatToggle, showChat }) => {
     <div className="h-screen">
       <Header className="bg-transparent" />
       <main className="flex flex-row bg-[#E7E7E7] h-[calc(100%-60px)] gap-1">
-        <div className="w-[40%] bg-white rounded-xl h-[100%]">
-          <Tabs tabs={tabs} />
-          <div className="h-[calc(100%-40px)]">
-            <Outlet />
+        <div className="w-[40%] bg-white rounded-xl h-[100% flex-row">
+          <div className="overflow-x-auto ">
+            <Tabs tabs={tabs} setTabs={setTabs} />
+          </div>
+          <div className="h-[calc(100%-70px)]">
+            <Outlet context={{ setTabs, tabs }} />
           </div>
         </div>
         <div className="grow bg-white rounded-xl  h-[100%]">

@@ -83,15 +83,13 @@ export default function index({
   commentCount,
 }) {
   return (
-    <div className="flex border-b-[1px] py-2">
+    <div className="flex border-b-[1px] py-2" onClick={onClick}>
       <div className="px-2 py-4">
         <Avatar avatar={avatar} />
       </div>
       <div className="flex flex-col flex-grow gap-3 px-4">
         <Text>{nickname}</Text>
-        <button type="button" onClick={onClick}>
-          <h2 className="text-lg font-bold text-left">{title}</h2>
-        </button>
+        <h2 className="text-lg font-bold text-left">{title}</h2>
         <div>tags</div>
         <div className="flex gap-4">
           <LikeCount likeCount={likeCount} />

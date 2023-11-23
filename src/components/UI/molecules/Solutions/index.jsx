@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useParams } from 'react-router-dom';
+import { useParams, useOutletContext } from 'react-router-dom';
 import { addTab, setActiveTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
@@ -12,13 +12,17 @@ import Spinner from '../../atoms/Spinner/index';
 
 export default function index() {
   const dispatch = useDispatch();
+  const { setTabs, tabs } = useOutletContext();
   const solutions = useSelector((state) => state.solutions.solutions);
   const [nextCursor, setNextCursor] = useState(-100);
-  const tabs = useSelector((state) => state.tabs.tabs);
   const [hasMore, setHasMore] = useState(true);
   const { problemId } = useParams();
 
   useEffect(() => {
+    if (solutions.length > 0) {
+      return;
+    }
+
     const params = { cursor: nextCursor, size: 7 };
     getSolutions(problemId, params)
       .then((response) => response.data)
@@ -26,16 +30,19 @@ export default function index() {
         dispatch(setSolutionsData(data));
         setNextCursor(data._link.nextCursor);
       });
-  }, [dispatch]);
+  }, [problemId, dispatch]);
 
   const handleSolutionClick = (solution) => {
-    const TabExisting = tabs.some(
-      (tab) => tab.data.solution.id === solution.id,
-    );
-    if (!TabExisting) {
-      const newTab = { type: 'Post', name: solution.title, data: { solution } };
-      dispatch(addTab(newTab));
-      dispatch(setActiveTab(newTab));
+    const isExist = tabs.some((tab) => tab.id === solution.id.toString());
+    if (!isExist) {
+      const newTab = {
+        key: `${solution.id}`,
+        id: `${solution.id.toString()}`,
+        name: `${solution.title}`,
+        path: `/problems/${problemId}/solutions/${solution.id}`,
+        deletable: true,
+      };
+      setTabs((prev) => [...prev, newTab]);
     }
   };
 
@@ -43,7 +50,6 @@ export default function index() {
     if (!hasMore) return;
     setTimeout(async () => {
       const params = { cursor: nextCursor, size: 2 };
-      console.log('Calling fetchMoreData with params:', params);
       const response = await getSolutions(problemId, params);
       if (response.success) {
         dispatch(
@@ -59,8 +65,9 @@ export default function index() {
       }
     }, 1000);
   };
+
   return (
-    <div className="h-[99%] px-4 py-4  overflow-y-auto ">
+    <div className="h-[99%] px-4 py-4 ">
       <Link
         to="edit"
         className="w-full flex justify-center bg-[#63B758] text-white py-2 mb-5 rounded-sm"
