@@ -77,7 +77,7 @@ export default function index() {
           dataLength={solutions.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<Spinner />}
+          loader={solutions.length > 0 && <Spinner />}
           scrollableTarget="scrollableDiv"
         >
           {solutions.map((solution) => (
