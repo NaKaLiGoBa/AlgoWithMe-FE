@@ -14,18 +14,21 @@ const index = () => {
   const description = useSelector((state) => state.problem.description);
   const tags = useSelector((state) => state.problem.tags);
   const { problemId } = useParams();
+  const quizzes = useSelector((state) => state.quiz.quizzes);
 
   return (
     <div className="bg-white rounded-xl h-[calc(100%-30px)] overflow-y-auto">
       <div className="m-4 flex">
         <h2 className="items-center flex ">{`${number}. ${title}`}</h2>
-        <Link
-          to={`/problems/${problemId}/quizzes`}
-          className="ml-8 bg-[#63B758] text-white px-4 py-1 rounded-md flex"
-        >
-          <Plus />
-          미니퀴즈
-        </Link>
+        {quizzes.length && (
+          <Link
+            to={`/problems/${problemId}/quizzes`}
+            className="ml-8 bg-[#63B758] text-white px-4 py-1 rounded-md flex"
+          >
+            <Plus />
+            미니퀴즈
+          </Link>
+        )}
       </div>
       <div className="flex flex-row gap-4 m-4">
         <p>{difficulty}</p>

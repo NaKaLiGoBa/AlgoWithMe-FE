@@ -6,7 +6,8 @@ import IDETemplate from '../../UI/templates/IDETemplate';
 import { resetTab } from '../../../store/tabState';
 import { resetAIChat, toggleChat } from '../../../store/AIChatSlice';
 import getProblemById from '../../../utils/api/v1/problem/getProblemById';
-import { resetQuiz } from '../../../store/quizSlice';
+import { resetQuiz, setQuizzes } from '../../../store/quizSlice';
+import getQuizzesByProblemId from '../../../utils/api/v1/problem/getQuizzesByProblemId';
 
 function ProblemPage() {
   const dispatch = useDispatch();
@@ -25,6 +26,11 @@ function ProblemPage() {
         dispatch(setProblem(data));
         setIsDataLoaded(true); // Set to true when data is loaded
       });
+    getQuizzesByProblemId(problemId).then((response) => {
+      if (response.success) {
+        dispatch(setQuizzes(response.data));
+      }
+    });
   }, [problemId, dispatch]);
 
   const handleChatToggle = () => {
