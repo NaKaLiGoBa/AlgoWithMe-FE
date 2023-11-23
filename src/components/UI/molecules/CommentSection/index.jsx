@@ -61,8 +61,14 @@ function CommentSection({ commentData, onDelete }) {
       }
     };
     fetchReplies();
-    setIsLiked(commentData.comment.isLiked);
+    setIsLiked(commentData.comment.isLike);
     setLikes(commentData.comment.likeCount);
+    const storedLikeStatus = JSON.parse(
+      localStorage.getItem(`likedComment-${commentData.comment.id}`),
+    );
+    if (storedLikeStatus !== null) {
+      setIsLiked(storedLikeStatus);
+    }
   }, [areRepliesVisible, commentData]);
 
   const toggleReplyInput = () => {
@@ -109,7 +115,7 @@ function CommentSection({ commentData, onDelete }) {
     setIsLiked(updatedIsLiked);
     const newLikesCount = updatedIsLiked ? likes + 1 : likes - 1;
     setLikes(newLikesCount);
-    console.log("isLiked", isLiked);
+    console.log('isLiked', isLiked);
     try {
       const response = await putCommentLikeBySolutionIdAndCommentId(
         commentData.solutionId,
@@ -120,6 +126,10 @@ function CommentSection({ commentData, onDelete }) {
         // 서버에서 에러가 발생한 경우, 좋아요 상태를 원래대로 되돌림
         setIsLiked(isLiked);
         setLikes(likes);
+        localStorage.setItem(
+          `likedComment-${commentData.comment.id}`,
+          JSON.stringify(updatedIsLiked),
+        );
       }
     } catch (error) {
       console.error('Failed to update like:', error);
@@ -320,7 +330,10 @@ function CommentSection({ commentData, onDelete }) {
           </div>
           <p className="text-white mt-2">{commentData.comment.content}</p>
           <div className="flex items-center mt-3">
-            <LikeButton isLiked={commentData.comment.isLike} handleToggleLike={handleToggleLike} />
+            <LikeButton
+              isLiked={commentData.comment.isLike}
+              handleToggleLike={handleToggleLike}
+            />
             <span className="ml-1 text-red-500 mr-5">{likes}</span>
             <RepliesToggleButton
               isVisible={areRepliesVisible}
@@ -331,7 +344,8 @@ function CommentSection({ commentData, onDelete }) {
             </div>
             <div
               className={`flex ml-5 items-center transition-opacity duration-500 ${
-                isHovering && currentUser?.nickname === commentData.author.nickname
+                isHovering &&
+                currentUser?.nickname === commentData.author.nickname
                   ? 'opacity-100'
                   : 'opacity-0'
               }`}
@@ -346,16 +360,16 @@ function CommentSection({ commentData, onDelete }) {
                 </div>
               )}
             </div>
-            {canEditComment &&(
-            <div className="flex ml-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <button
-                className="flex cursor-pointer items-center"
-                onClick={handleDelete}
-              >
-                <Delete />
-                <span className="ml-1">Delete</span>
-              </button>
-            </div>
+            {canEditComment && (
+              <div className="flex ml-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <button
+                  className="flex cursor-pointer items-center"
+                  onClick={handleDelete}
+                >
+                  <Delete />
+                  <span className="ml-1">Delete</span>
+                </button>
+              </div>
             )}
           </div>{' '}
         </>
@@ -399,8 +413,17 @@ function CommentSection({ commentData, onDelete }) {
                 avatar={reply.author.avatar}
                 likes={reply.likeCount}
                 handleLike={() => handleLikeReply(reply.id)}
-                handleEdit={() => startEditReply(reply.id, reply.content)}
-                handleDelete={() => handleDeleteReply(reply.id)}
+                handleEdit={
+                  currentUser.nickname === reply.author.nickname
+                    ? () => startEditReply(reply.id, reply.content)
+                    : null
+                }
+                handleDelete={
+                  currentUser.nickname === reply.author.nickname
+                    ? () => handleDeleteReply(reply.id)
+                    : null
+                }
+                currentUserNickname={currentUser.nickname}
               />
             ),
           )}

@@ -19,7 +19,6 @@ function CommentsSection(handleReplySubmit) {
   const solutionId = useSelector(selectActiveSolutionId);
   const currentUser = useSelector(selectUser);
 
-
   const [paginationInfo, setPaginationInfo] = useState({
     pageNumber: 0,
     totalPages: 0,
@@ -37,10 +36,23 @@ function CommentsSection(handleReplySubmit) {
     };
     const response = await getCommentsBySolutionId(solutionId, params);
     if (response.success) {
-      const updatedComments = response.data.comments.map((comment) => ({
-        ...comment,
-        solutionId, // 각 댓글에 solutionId 추가
-      }));
+      const updatedComments = response.data.comments.map((comment) => {
+        // 각 댓글에 대한 로컬 스토리지에서 좋아요 상태 불러오기
+        const storedLikeStatus = JSON.parse(
+          localStorage.getItem(`likedComment-${comment.comment.id}`),
+        );
+        return {
+          ...comment,
+          comment: {
+            ...comment.comment,
+            isLiked:
+              storedLikeStatus !== null
+                ? storedLikeStatus
+                : comment.comment.isLiked,
+          },
+          solutionId,
+        };
+      });
       setComments(updatedComments);
       setPaginationInfo({
         pageNumber: response.data.pageNumber,
@@ -118,8 +130,14 @@ function CommentsSection(handleReplySubmit) {
     if (response.success) {
       setComments(
         comments.map((comment) => {
-          if (comment.id === commentId) {
-            return { ...comment, isLiked: response.data.isLike };
+          if (comment.comment.id === commentId) {
+            return {
+              ...comment,
+              comment: {
+                ...comment.comment,
+                isLiked: response.data.isLike,
+              },
+            };
           }
           return comment;
         }),
@@ -182,7 +200,11 @@ function CommentsSection(handleReplySubmit) {
       </div>
 
       {/* 페이지네이션 컴포넌트 */}
-      <ProblemListFooter paginationInfo={paginationInfo} setPage={setPage} />
+      <ProblemListFooter
+        totalPages={paginationInfo.totalPages}
+        currentPage={page}
+        setPage={setPage}
+      />
     </div>
   );
 }
