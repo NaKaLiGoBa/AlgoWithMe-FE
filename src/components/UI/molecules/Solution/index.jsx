@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import '../../atoms/Tab/styles.css';
 
 // api
 import MDEditor from '@uiw/react-md-editor';
@@ -35,11 +36,14 @@ export default function index() {
     return <div>Loading...</div>; // 로딩 중일 때 "Loading..." 메시지 표시
   }
   return (
-    <div className="h-[99%] overflow-y-auto">
+    <div className="h-[99%] overflow-y-auto customTab-scrollbar">
       <div className="bg-white shadow rounded-b-lg p-6 ">
-        <div className='bg-zinc-100 rounded-lg p-5 shadow-md shadow-zinc-400'>
+        <div className="bg-zinc-100 rounded-lg p-5 shadow-md shadow-zinc-400">
           <div className="flex justify-end">
-            <Button className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400" onClick={handleUpdate}>
+            <Button
+              className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400"
+              onClick={handleUpdate}
+            >
               수정
             </Button>
             <Button
@@ -76,7 +80,7 @@ export default function index() {
                 </p>
               </div>
               <div className="flex items-center mt-6">
-                <LikeButton onClick={handleLike} isLiked={isLiked}/>
+                <LikeButton onClick={handleLike} isLiked={isLiked} />
                 <span className="ml-1 text-red-500 ">{likes}</span>
                 <p className="text-sm text-gray-500">
                   <span className="mr-2 ml-5">언어:</span>

@@ -6,6 +6,7 @@ import postCodeTest from '../../../../utils/api/v1/code/postCodeTest';
 import postCodeSubmit from '../../../../utils/api/v1/code/postCodeSubmit';
 import { setTestcases } from '../../../../store/problemSlice';
 import AuthLayer from '../../../../service/AuthLayer';
+import '../../atoms/Tab/styles.css';
 
 const getButtonText = (hasRun, testcase) => {
   if (!hasRun) {
@@ -128,7 +129,7 @@ export default function Index() {
   };
 
   return (
-    <div className="p-2 flex flex-col justify-between h-[300px] overflow-y-auto border-t-[2px]">
+    <div className="p-2 flex flex-col justify-between h-[300px] overflow-y-auto border-t-[2px] customTab-scrollbar">
       <div className="mb-2" />
       <TestCasesForm hasRun={hasRun} testcases={testcases} />
       <div className="flex flex-row justify-between items-center">
