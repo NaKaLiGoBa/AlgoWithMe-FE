@@ -13,7 +13,7 @@ import postReplyLikeByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/p
 import deleteReplyByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/deleteReplyByCommentIdAndReplyId';
 import putReplyByCommentIdAndReplyID from '../../../../utils/api/v1/Reply/putReplyByCommentIdAndReplyID';
 import deleteCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/deleteCommentBySolutionIdAndCommentId';
-import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
 import { selectUser } from '../../../../store/userSlice';
 import putCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentBySolutionIdAndCommentId';
 import { setActiveCommentId } from '../../../../store/commentSlice';
@@ -30,8 +30,8 @@ function CommentSection({ commentData, onDelete }) {
   ); // 수정할 댓글 내용
   const [editingReplyId, setEditingReplyId] = useState(null); // 수정 중인 대댓글 ID
   const [editedReplyContent, setEditedReplyContent] = useState(''); // 수정할 대댓글 내용
-  const [likes, setLikes] = useState(commentData.comment.likes || 0);
-  const [isLiked, setIsLiked] = useState(commentData.comment.isLiked || false);
+  const [likes, setLikes] = useState(commentData.comment.likeCount || 0);
+  const [isLiked, setIsLiked] = useState(commentData.comment.isLike || false);
 
   const dispatch = useDispatch();
 
@@ -109,9 +109,9 @@ function CommentSection({ commentData, onDelete }) {
     setIsLiked(updatedIsLiked);
     const newLikesCount = updatedIsLiked ? likes + 1 : likes - 1;
     setLikes(newLikesCount);
-
+    console.log("isLiked", isLiked);
     try {
-      const response = await postCommentLikeBySolutionIdAndCommentId(
+      const response = await putCommentLikeBySolutionIdAndCommentId(
         commentData.solutionId,
         commentData.comment.id,
       );
@@ -320,7 +320,7 @@ function CommentSection({ commentData, onDelete }) {
           </div>
           <p className="text-white mt-2">{commentData.comment.content}</p>
           <div className="flex items-center mt-3">
-            <LikeButton isLiked={isLiked} onClick={handleToggleLike} />
+            <LikeButton isLiked={commentData.comment.isLike} handleToggleLike={handleToggleLike} />
             <span className="ml-1 text-red-500 mr-5">{likes}</span>
             <RepliesToggleButton
               isVisible={areRepliesVisible}

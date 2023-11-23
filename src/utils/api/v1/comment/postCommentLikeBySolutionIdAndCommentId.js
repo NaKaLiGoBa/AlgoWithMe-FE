@@ -67,17 +67,17 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function postCommentAndLikeBySolutionIdAndCommentId(
+async function putCommentAndLikeBySolutionIdAndCommentId(
   solutionId,
   commentId,
 ) {
-  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}`;
+  const apiUrl = `/api/v1/solutions/${solutionId}/comments/${commentId}/like`;
 
   const requestData = {
-    requestDateTime: getRequestDateTime(),
+    requestDateTime: 'string',
   };
 
-  return call(apiUrl, 'POST', requestData);
+  return call(apiUrl, 'PUT', requestData);
 }
 
-export default postCommentAndLikeBySolutionIdAndCommentId;
+export default putCommentAndLikeBySolutionIdAndCommentId;
