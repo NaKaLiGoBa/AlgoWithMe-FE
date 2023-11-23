@@ -1,6 +1,6 @@
 import { useEffect, React } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { setQuizzes } from '../../../store/quizSlice';
 import ProblemQuizzesTemplate from '../../UI/templates/ProblemQuizzesTemplate';
 import getQuizzesByProblemId from '../../../utils/api/v1/problem/getQuizzesByProblemId';
@@ -8,7 +8,12 @@ import getQuizzesByProblemId from '../../../utils/api/v1/problem/getQuizzesByPro
 export default function index() {
   const dispatch = useDispatch();
   const { problemId } = useParams();
-  const currentQuiz = useSelector((state) => state.quiz.currentQuiz);
+  const { currentQuiz, quizzes } = useSelector((state) => state.quiz);
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     async function fetchQuizzes() {
@@ -22,5 +27,11 @@ export default function index() {
     fetchQuizzes();
   }, [dispatch, problemId]);
 
-  return <ProblemQuizzesTemplate currentQuiz={currentQuiz} />;
+  return (
+    <ProblemQuizzesTemplate
+      currentQuiz={currentQuiz}
+      quizzes={quizzes}
+      handleBackClick={handleBackClick}
+    />
+  );
 }
