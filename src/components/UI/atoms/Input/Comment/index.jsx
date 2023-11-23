@@ -11,7 +11,9 @@ function Comment({
   handleLike,
   handleEdit,
   handleDelete,
+  currentUserNickname,
 }) {
+  const canEditOrDelete = currentUserNickname === nickname;
   return (
     <div className="bg-gray-700 text-white p-3 rounded-lg">
       <div className="flex items-center justify-between">
@@ -27,22 +29,32 @@ function Comment({
       <p className="text-gray-200 mt-1">{content}</p>
       <div className="flex mt-2.5">
         {handleLike && (
-          <div className="flex items-center mr-4">
+          <div className="flex items-center mr-5">
             <LikeButton onClick={handleLike} />
-            <span className="ml-1 text-red-500 mr-3">{likes}</span>
+            <span className="ml-1 text-red-500 ">{likes}</span>
           </div>
         )}
-        {handleEdit && (
-          <button className="flex items-center mr-7" onClick={handleEdit}>
-            <Edit />
-            <span className="ml-1">Edit</span>
-          </button>
+        {canEditOrDelete && handleEdit && (
+          <div className="flex ml-5 mr-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <button
+              className="flex cursor-pointer items-center"
+              onClick={handleEdit}
+            >
+              <Edit />
+              <span className="ml-1">Edit</span>
+            </button>
+          </div>
         )}
-        {handleDelete && (
-          <button className="flex items-center ml-1" onClick={handleDelete}>
-            <Delete />
-            <span className="ml-1">Delete</span>
-          </button>
+        {canEditOrDelete && handleDelete && (
+          <div className="flex ml-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <button
+              className="flex cursor-pointer items-center"
+              onClick={handleDelete}
+            >
+              <Delete />
+              <span className="ml-1">Delete</span>
+            </button>
+          </div>
         )}
       </div>
     </div>
