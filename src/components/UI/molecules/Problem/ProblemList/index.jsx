@@ -6,6 +6,7 @@ import ProblemListFooter from '../ProblemListFooter';
 import DropdownMenu from '../../../atoms/Input/Dropdown';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 import { formatPercentage } from '../../../../../utils/utils';
+import Close from '../../../atoms/Icon/Close';
 
 function Th({ children }) {
   return (
@@ -73,6 +74,28 @@ export default function index() {
         />
         <DropdownMenu title="상태" list={status} handleSelectItem={setStatus} />
         <DropdownMenu title="태그" list={tags} handleSelectItem={setTag} />
+      </div>
+      <div className="flex">
+        {selectedDifficulty && (
+          <div className="flex bg-[#44576c] text-white">
+            {selectedDifficulty}
+            <Close className="!w-4 !h-4" onClick={() => setDifficulty('')} />
+          </div>
+        )}
+        {selectedStatus && (
+          <div className="flex">
+            {selectedStatus}
+            <div className="rounded-full bg-[#e6e6e6]">
+              <Close onClick={() => setStatus('')} />
+            </div>
+          </div>
+        )}
+        {selectedTag && (
+          <div className="flex">
+            {selectedTag}
+            <Close onClick={() => setTag('')} />
+          </div>
+        )}
       </div>
       <table className="text-sm w-[800px] table-auto ">
         <thead>
