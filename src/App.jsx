@@ -33,7 +33,7 @@ function App() {
           element={<ProblemQuizzesPage />}
         />
         <Route
-          path="/problems/:problemId/solutions/edit"
+          path="/problems/:problemId/solutions/:solutionId/edit"
           element={
             <AuthLayer>
               <SolutionEditPage />

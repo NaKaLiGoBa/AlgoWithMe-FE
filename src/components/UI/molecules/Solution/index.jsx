@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import '../../atoms/Tab/styles.css';
 
 // api
@@ -10,6 +10,7 @@ import getSolutionByProblemIdAndSolutionId from '../../../../utils/api/v1/soluti
 import Button from '../../atoms/Input/Button';
 import LikeButton from '../../atoms/Input/LikeButton';
 import CommentsSection from '../CommentsSection';
+import Avatar from '../../atoms/Avatar';
 
 export default function index() {
   const [solutionData, setSolutionData] = useState(null);
@@ -27,8 +28,6 @@ export default function index() {
     );
   }, [problemId, solutionId]);
 
-  const handleUpdate = async () => {};
-
   const handleDelete = async () => {};
 
   const handleLike = async () => {};
@@ -40,12 +39,17 @@ export default function index() {
       <div className="bg-white shadow rounded-b-lg p-6 ">
         <div className="bg-zinc-100 rounded-lg p-5 shadow-md shadow-zinc-400">
           <div className="flex justify-end">
-            <Button
-              className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400"
-              onClick={handleUpdate}
+            <Link
+              to={{
+                pathname: `/problems/${problemId}/solutions/${solutionId}/edit`,
+                state: { data: solutionData.solution },
+              }}
             >
-              수정
-            </Button>
+              <Button className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400">
+                수정
+              </Button>
+            </Link>
+
             <Button
               className="bg-red-600 hover:bg-red-400 rounded-lg p-2 shadow-md shadow-red-400"
               onClick={handleDelete}
@@ -55,11 +59,7 @@ export default function index() {
           </div>
 
           <div className="flex items-start space-x-4">
-            <img
-              className="w-16 h-16 rounded-full object-cover m-8"
-              src={solutionData.author.avatar}
-              alt={`${solutionData.author.nickname}'s avatar`}
-            />
+            <Avatar avatar={solutionData.author.avatar} />
             <div className="min-w-0 flex-1">
               <p className="text-2xl font-bold text-gray-900 truncate">
                 {solutionData.solution.title}

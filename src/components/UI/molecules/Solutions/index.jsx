@@ -68,12 +68,12 @@ export default function index() {
     }, 1000);
   };
 
- 
-
   return (
     <div className="h-[99%] px-4 py-4 ">
       <Link
-        to="edit"
+        to={{
+          pathname: `/problems/${problemId}/solutions/new/edit`,
+        }}
         className="w-full flex justify-center bg-[#63B758] text-white py-2 mb-5 rounded-sm"
       >
         + 풀이 공유
