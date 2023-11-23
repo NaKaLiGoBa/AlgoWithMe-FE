@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../../atoms/Tab/styles.css';
 
 // api
@@ -18,6 +18,7 @@ export default function index() {
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getSolutionByProblemIdAndSolutionId(problemId, solutionId).then(
@@ -27,6 +28,12 @@ export default function index() {
       },
     );
   }, [problemId, solutionId]);
+
+  const handleNavigate = () => {
+    navigate(`/problems/${problemId}/solutions/${solutionId}/edit`, {
+      state: { oldSolution: solutionData.solution },
+    });
+  };
 
   const handleDelete = async () => {};
 
@@ -39,17 +46,12 @@ export default function index() {
       <div className="bg-white shadow rounded-b-lg p-6 ">
         <div className="bg-zinc-100 rounded-lg p-5 shadow-md shadow-zinc-400">
           <div className="flex justify-end">
-            <Link
-              to={{
-                pathname: `/problems/${problemId}/solutions/${solutionId}/edit`,
-                state: { data: solutionData.solution },
-              }}
+            <Button
+              className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400"
+              onClick={handleNavigate}
             >
-              <Button className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400">
-                수정
-              </Button>
-            </Link>
-
+              수정
+            </Button>
             <Button
               className="bg-red-600 hover:bg-red-400 rounded-lg p-2 shadow-md shadow-red-400"
               onClick={handleDelete}

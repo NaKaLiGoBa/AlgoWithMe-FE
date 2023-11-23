@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import MdEditor from '../../molecules/MdEditor';
 import Button from '../../atoms/Input/Button';
 import Input from '../../atoms/Input/Input';
 import Header from '../../molecules/Navigation/Header';
 import postSolutionByProblemId from '../../../../utils/api/v1/solution/postSolutionByProblemId';
+import putSolutionByProblemIdAndSolutionId from '../../../../utils/api/v1/solution/putSolutionByProblemIdAndSolutionId';
 
 // const
 import contentTemplate from './contentTemplate';
 
 const index = () => {
   // const, state, Hooks
+  const location = useLocation();
   const navigate = useNavigate();
   const { problemId, solutionId } = useParams();
   const [title, setTitle] = useState();
@@ -21,7 +23,12 @@ const index = () => {
   const code = editorLocalState[editorLocalState.currentLanguage];
   const [content, setContent] = useState(contentTemplate(code));
 
-  
+  useEffect(() => {
+    if (solutionId === 'new') return;
+    const { oldSolution } = location.state;
+    setTitle(oldSolution.title);
+    setContent(oldSolution.content);
+  }, []);
 
   // handler
   const handleTitleChange = (event) => {
@@ -48,9 +55,16 @@ const index = () => {
         navigate(`/problems/${problemId}`),
       );
     } else {
-      // const requestData = {};
-      // putSolutionByProblemIdAndSolutionId();
-      console.log('수정 작업!!');
+      const requestData = {
+        title,
+        content,
+        languages: location.state.oldSolution.languages,
+      };
+      putSolutionByProblemIdAndSolutionId(
+        problemId,
+        solutionId,
+        requestData,
+      ).then(() => navigate(`/problems/${problemId}`));
     }
   };
 
