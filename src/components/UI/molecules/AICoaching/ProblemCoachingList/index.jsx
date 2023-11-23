@@ -4,7 +4,7 @@ import ProblemListFooter from '../../Problem/ProblemListFooter';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 import {
   nextScreen,
-  setSeletedProblemId,
+  setSelectedProblemId,
 } from '../../../../../store/AIChatSlice';
 import { setProblems } from '../../../../../store/problemsSlice';
 
@@ -28,7 +28,7 @@ export default function index() {
   }, [dispatch, page]);
 
   const problemChatClick = (id) => {
-    dispatch(setSeletedProblemId(id));
+    dispatch(setSelectedProblemId(id));
     dispatch(nextScreen());
   };
 
@@ -38,7 +38,7 @@ export default function index() {
         {problems.map((problem) => (
           <li
             key={problem.id}
-            className={`p-3 text-lg font-bold border hover:bg-slate-200 ${
+            className={`p-3 font-bold border hover:bg-slate-200 ${
               Number(problem.id) === Number(chatProblemId) ? 'bg-slate-200' : ''
             }`}
           >
