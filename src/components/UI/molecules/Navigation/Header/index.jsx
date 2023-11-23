@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Link from '../../../atoms/Text/Link';
 import Logo from '../../../atoms/Logo';
 
-export default function index() {
+export default function index({ className }) {
   const [token, setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
 
   const handleLogout = () => {
@@ -11,7 +11,9 @@ export default function index() {
   };
 
   return (
-    <header className="h-[50px] top-0 left-0 right-0 flex items-center px-9 justify-between shadow-md bg-white">
+    <header
+      className={`h-[50px] top-0 left-0 right-0 flex items-center px-9 justify-between shadow-md ${className}`}
+    >
       <Logo />
       {token ? (
         <Link to="/">

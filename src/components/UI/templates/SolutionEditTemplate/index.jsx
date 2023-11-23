@@ -10,17 +10,18 @@ import postSolutionByProblemId from '../../../../utils/api/v1/solution/postSolut
 import contentTemplate from './contentTemplate';
 
 const index = () => {
+  // const, state, Hooks
   const navigate = useNavigate();
   const { problemId } = useParams();
   const [title, setTitle] = useState();
 
-  // set content from editor code
   const editorLocalState = JSON.parse(
     localStorage.getItem(`editorState_${problemId}`),
   );
   const code = editorLocalState[editorLocalState.currentLanguage];
   const [content, setContent] = useState(contentTemplate(code));
 
+  // handler
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -45,6 +46,7 @@ const index = () => {
     );
   };
 
+  // jsx
   return (
     <>
       <Header />
@@ -53,8 +55,8 @@ const index = () => {
           <div className="flex flex-row justify-between items-baseline w-[1200px] mb-4">
             <div className="w-3/5">
               <Input
-                className="h-8 bg-gray-300 border-transparent focus:outline-none"
-                placeholder="Enter your title"
+                className="h-10 bg-white border-[1px] focus:outline-none shadow-none"
+                placeholder="제목을 입력해주세요"
                 value={title}
                 onChange={handleTitleChange}
               />
@@ -71,7 +73,9 @@ const index = () => {
               </Button>
             </div>
           </div>
-          <MdEditor content={content} setContent={setContent} />
+          <div className="markdown-viewer bg-white" data-color-mode="light">
+            <MdEditor content={content} setContent={setContent} />
+          </div>
         </div>
       </div>
     </>

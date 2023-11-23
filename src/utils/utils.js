@@ -1,6 +1,5 @@
 function formatPercentage(input) {
   const num = typeof input === 'string' ? parseFloat(input) : input;
-  console.log(input);
   if (isNaN(num)) {
     return 'Invalid input';
   }

@@ -12,6 +12,9 @@ import PasswordResetPage from './components/pages/AuthPage/PasswordReset';
 import ProblemQuizzesPage from './components/pages/ProblemQuizzesPage';
 import Test from './components/UI/molecules/CommentsSection';
 import AuthLayer from './service/AuthLayer';
+import ProblemDetail from './components/UI/molecules/ProblemDetail';
+import Solutions from './components/UI/molecules/Solutions';
+import Solution from './components/UI/molecules/Solution';
 
 function App() {
   return (
@@ -20,7 +23,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/problems/:problemId" element={<IDEPage />} />
+        <Route path="/problems/:problemId" element={<IDEPage />}>
+          <Route path="description" element={<ProblemDetail />} />
+          <Route path="solutions" element={<Solutions />} />
+          <Route path="solutions/:solutionId" element={<Solution />} />
+        </Route>
         <Route
           path="problems/:problemId/quizzes"
           element={<ProblemQuizzesPage />}
