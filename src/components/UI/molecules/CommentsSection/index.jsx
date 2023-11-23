@@ -8,7 +8,7 @@ import CommentSection from '../CommentSection';
 import ProblemListFooter from '../Problem/ProblemListFooter';
 import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getCommentsBySolutionId';
 import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
-import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentLikeBySolutionIdAndCommentId';
 
 function CommentsSection(handleReplySubmit) {
   const [comments, setComments] = useState([]);
@@ -122,7 +122,7 @@ function CommentsSection(handleReplySubmit) {
   };
 
   const handleLikeComment = async (commentId) => {
-    const response = await postCommentLikeBySolutionIdAndCommentId(
+    const response = await putCommentLikeBySolutionIdAndCommentId(
       solutionId,
       commentId,
     );

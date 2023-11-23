@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { localHostURL } from '../../../apiConfig';
 import getAuthHeader from '../../../getAuthHeader';
-import getRequestDateTime from '../../../getRequestDateTime';
 
 const hostURL = localHostURL;
 
@@ -67,7 +66,7 @@ async function call(apiUrl, method, requestData = {}) {
   }
 }
 
-async function putCommentAndLikeBySolutionIdAndCommentId(
+async function putCommentLikeBySolutionIdAndCommentId(
   solutionId,
   commentId,
 ) {
@@ -80,4 +79,4 @@ async function putCommentAndLikeBySolutionIdAndCommentId(
   return call(apiUrl, 'PUT', requestData);
 }
 
-export default putCommentAndLikeBySolutionIdAndCommentId;
+export default putCommentLikeBySolutionIdAndCommentId;

@@ -9,11 +9,11 @@ import Delete from '../../atoms/Icon/Delete';
 import Edit from '../../atoms/Icon/Edit';
 import getReplyByCommentId from '../../../../utils/api/v1/Reply/getReplyByCommentId';
 import postReplyByCommentId from '../../../../utils/api/v1/Reply/postReplyByCommentId';
-import postReplyLikeByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/postReplyLikeByCommentIdAndReplyId';
+import putReplyLikeByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/putReplyLikeByCommentIdAndReplyId';
 import deleteReplyByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/deleteReplyByCommentIdAndReplyId';
 import putReplyByCommentIdAndReplyID from '../../../../utils/api/v1/Reply/putReplyByCommentIdAndReplyID';
 import deleteCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/deleteCommentBySolutionIdAndCommentId';
-import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentLikeBySolutionIdAndCommentId';
 import { selectUser } from '../../../../store/userSlice';
 import putCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentBySolutionIdAndCommentId';
 import { setActiveCommentId } from '../../../../store/commentSlice';
@@ -141,7 +141,7 @@ function CommentSection({ commentData, onDelete }) {
 
   // 대댓글 좋아요
   const handleLikeReply = async (replyId) => {
-    const response = await postReplyLikeByCommentIdAndReplyId(
+    const response = await putReplyLikeByCommentIdAndReplyId(
       commentData.comment.id,
       replyId,
     );
