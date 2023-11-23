@@ -11,23 +11,24 @@ import Spinner from '../../atoms/Spinner/index';
 
 export default function index() {
   const dispatch = useDispatch();
-  const { setTabs, tabs } = useOutletContext();
-  const solutions = useSelector((state) => state.solutions.solutions);
-  const [nextCursor, setNextCursor] = useState(-100);
-  const [hasMore, setHasMore] = useState(true);
+  const { setTabs, tabs, solutions, setSolutions } = useOutletContext();
   const { problemId } = useParams();
 
   useEffect(() => {
-    if (solutions.length > 0) {
+    if (solutions.solutions.length > 0) {
       return;
     }
 
-    const params = { cursor: nextCursor, size: 7 };
+    const params = { cursor: solutions._link.nextCursor, size: 7 };
     getSolutions(problemId, params)
       .then((response) => response.data)
       .then((data) => {
-        dispatch(setSolutionsData(data));
-        setNextCursor(data._link.nextCursor);
+        setSolutions((prev) => ({
+          ...prev,
+          solutions: [...data.solutions],
+          totalCount: data.totalCount,
+          _link: data._link,
+        }));
       });
   }, [problemId, dispatch]);
 
@@ -46,24 +47,29 @@ export default function index() {
   };
 
   const fetchMoreData = async () => {
-    if (!hasMore) return;
+    if (!solutions.hasMore) return;
     setTimeout(async () => {
-      const params = { cursor: nextCursor, size: 5 };
+      const params = { cursor: solutions._link.nextCursor, size: 5 };
       const response = await getSolutions(problemId, params);
       if (response.success) {
-        dispatch(
-          setSolutionsData({
-            totalCount: response.data.totalCount,
-            solutions: [...solutions, ...response.data.solutions],
-          }),
-        );
-        setNextCursor(response.data._link.nextCursor);
-        setHasMore(response.data._link.nextCursor !== -1);
+        setSolutions((prev) => ({
+          ...prev,
+          solutions: [...prev.solutions, ...response.data.solutions],
+          totalCount: response.totalCount,
+          _link: response.data._link,
+          hasMore: response.data._link.nextCursor !== -1,
+        }));
       } else {
-        setHasMore(false);
+        setSolutions((prev) => ({
+          ...prev,
+          hasMore: false,
+        }));
       }
     }, 1000);
   };
+
+ 
+
   return (
     <div className="h-[99%] px-4 py-4 ">
       <Link
@@ -77,13 +83,13 @@ export default function index() {
         className="overflow-auto h-[calc(100%-30px)] customTab-scrollbar"
       >
         <InfiniteScroll
-          dataLength={solutions.length}
+          dataLength={solutions.solutions.length}
           next={fetchMoreData}
-          hasMore={hasMore}
-          loader={solutions.length > 0 && <Spinner />}
+          hasMore={solutions.hasMore}
+          loader={solutions.solutions.length > 0 && <Spinner />}
           scrollableTarget="scrollableDiv"
         >
-          {solutions.map((solution) => (
+          {solutions.solutions.map((solution) => (
             <Link
               to={`/problems/${problemId}/solutions/${solution.solution.id}`}
             >

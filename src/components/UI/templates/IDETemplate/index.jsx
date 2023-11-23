@@ -7,12 +7,14 @@ import {
   Link,
   useNavigate,
 } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Editor from '../../molecules/Editor';
 import OutputPanel from '../../molecules/OutputPanel';
 import Header from '../../molecules/Navigation/Header';
 import AIchat from '../../molecules/AICoaching/index';
 import Button from '../../atoms/Input/Button';
 import Close from '../../atoms/Icon/Close';
+import { setSolutionsData } from '../../../../store/SolutionsSlice';
 
 function DeleteButton({ setTabs, id }) {
   const navigate = useNavigate();
@@ -75,6 +77,15 @@ function Tabs({ tabs, setTabs }) {
 const index = ({ handleChatToggle, showChat }) => {
   const location = useLocation();
   const { problemId } = useParams();
+  const dispatch = useDispatch();
+  const [solutions, setSolutions] = useState({
+    totalCount: null,
+    solutions: [],
+    hasMore: true,
+    _link: {
+      nextCursor: -100
+    }
+  });
   const initialTabs = [
     {
       id: 'description',
@@ -95,6 +106,7 @@ const index = ({ handleChatToggle, showChat }) => {
   );
 
   useEffect(() => {
+    dispatch(setSolutionsData({ solutions: [] }));
     setTabs((tabs) =>
       tabs.map((tab) => ({
         ...tab,
@@ -116,7 +128,14 @@ const index = ({ handleChatToggle, showChat }) => {
             <Tabs tabs={tabs} setTabs={setTabs} />
           </div>
           <div className="h-[calc(100%-45px)]">
-            <Outlet context={{ setTabs, tabs }} />
+            <Outlet
+              context={{
+                setTabs,
+                tabs,
+                solutions,
+                setSolutions,
+              }}
+            />
           </div>
         </div>
         <div className="grow bg-white rounded-xl  h-[100%]">
