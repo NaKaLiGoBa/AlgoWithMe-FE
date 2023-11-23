@@ -53,6 +53,7 @@ export default function index() {
             value={option}
             onChange={handleOptionClick}
             name="option"
+            className="pl-1 text-base"
           />
         ))}
       </div>

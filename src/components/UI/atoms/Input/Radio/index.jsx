@@ -8,6 +8,7 @@ export default function index({
   onChange,
   disabled,
   id,
+  className,
 }) {
   return (
     <div>
@@ -20,7 +21,9 @@ export default function index({
         disabled={disabled}
         id={id}
       />
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id} className={className}>
+        {label}
+      </label>
     </div>
   );
 }
