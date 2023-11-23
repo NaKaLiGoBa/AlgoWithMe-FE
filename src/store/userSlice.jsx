@@ -10,12 +10,16 @@ export const userSlice = createSlice({
   },
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload;  
     },
+    setNickname: (state, action) => {
+      state.nickname = action.payload
+      console.log('set user', action.payload)
+    }
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setNickname } = userSlice.actions;
 
 export const selectUser = (state) => state.user;
 

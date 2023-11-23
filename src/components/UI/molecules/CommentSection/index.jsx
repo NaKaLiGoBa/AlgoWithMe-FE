@@ -13,7 +13,7 @@ import postReplyLikeByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/p
 import deleteReplyByCommentIdAndReplyId from '../../../../utils/api/v1/Reply/deleteReplyByCommentIdAndReplyId';
 import putReplyByCommentIdAndReplyID from '../../../../utils/api/v1/Reply/putReplyByCommentIdAndReplyID';
 import deleteCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/deleteCommentBySolutionIdAndCommentId';
-import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
 import { selectUser } from '../../../../store/userSlice';
 import putCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentBySolutionIdAndCommentId';
 import { setActiveCommentId } from '../../../../store/commentSlice';
@@ -28,8 +28,10 @@ function CommentSection({ commentData, onDelete }) {
   const [editedContent, setEditedContent] = useState(
     commentData.comment.content,
   ); // 수정할 댓글 내용
-  const [likes, setLikes] = useState(commentData.comment.likes || 0);
-  const [isLiked, setIsLiked] = useState(commentData.comment.isLiked || false);
+  const [editingReplyId, setEditingReplyId] = useState(null); // 수정 중인 대댓글 ID
+  const [editedReplyContent, setEditedReplyContent] = useState(''); // 수정할 대댓글 내용
+  const [likes, setLikes] = useState(commentData.comment.likeCount || 0);
+  const [isLiked, setIsLiked] = useState(commentData.comment.isLike || false);
 
   const dispatch = useDispatch();
 
@@ -37,7 +39,7 @@ function CommentSection({ commentData, onDelete }) {
   const handleCommentSelect = () => {
     dispatch(setActiveCommentId(commentData.comment.id));
   };
-  const canEditComment = currentUser.id === commentData.author.id;
+  const canEditComment = currentUser.nickname === commentData.author.nickname;
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
@@ -59,7 +61,9 @@ function CommentSection({ commentData, onDelete }) {
       }
     };
     fetchReplies();
-  }, [areRepliesVisible, commentData.comment.id]);
+    setIsLiked(commentData.comment.isLiked);
+    setLikes(commentData.comment.likeCount);
+  }, [areRepliesVisible, commentData]);
 
   const toggleReplyInput = () => {
     setIsReplying(!isReplying); // 댓글 입력 상태 토글
@@ -80,7 +84,8 @@ function CommentSection({ commentData, onDelete }) {
         const newReplyData = {
           id: replyId,
           author: {
-            nickname: currentUser.username,
+            id: currentUser.id,
+            nickname: currentUser.nickname,
             avatar: currentUser.avatar,
           },
           content: replyText.trim(),
@@ -100,18 +105,19 @@ function CommentSection({ commentData, onDelete }) {
 
   // 댓글 좋아요
   const handleToggleLike = async () => {
-    setIsLiked(!isLiked);
-    const newLikesCount = isLiked ? likes - 1 : likes + 1;
+    const updatedIsLiked = !isLiked;
+    setIsLiked(updatedIsLiked);
+    const newLikesCount = updatedIsLiked ? likes + 1 : likes - 1;
     setLikes(newLikesCount);
-
+    console.log("isLiked", isLiked);
     try {
-      const response = await postCommentLikeBySolutionIdAndCommentId(
+      const response = await putCommentLikeBySolutionIdAndCommentId(
         commentData.solutionId,
         commentData.comment.id,
       );
       if (!response.success) {
         console.error(response.error);
-        // 실패한 경우 다시 원래 상태로 되돌림
+        // 서버에서 에러가 발생한 경우, 좋아요 상태를 원래대로 되돌림
         setIsLiked(isLiked);
         setLikes(likes);
       }
@@ -133,7 +139,13 @@ function CommentSection({ commentData, onDelete }) {
       setReplies(
         replies.map((reply) => {
           if (reply.id === replyId) {
-            return { ...reply, isLiked: response.data.isLike };
+            return {
+              ...reply,
+              isLiked: response.data.isLike,
+              likeCount: response.data.isLike
+                ? reply.likeCount + 1
+                : reply.likeCount - 1,
+            };
           }
           return reply;
         }),
@@ -164,12 +176,24 @@ function CommentSection({ commentData, onDelete }) {
           ),
         );
         console.log('Reply updated successfully');
+        setEditingReplyId(null);
       } else {
         console.error('Failed to edit reply:', response.error);
       }
     } catch (error) {
       console.error('Error while editing reply:', error);
     }
+  };
+  // 대댓글 수정 시작
+  const startEditReply = (replyId, currentContent) => {
+    setEditingReplyId(replyId);
+    setEditedReplyContent(currentContent);
+  };
+
+  // 대댓글 수정 취소
+  const cancelEditReply = () => {
+    setEditingReplyId(null);
+    setEditedReplyContent('');
   };
 
   const handleDeleteReply = async (replyId) => {
@@ -215,7 +239,6 @@ function CommentSection({ commentData, onDelete }) {
         content: editedContent,
       },
     );
-
     if (response.success) {
       // 수정 성공 시 댓글 내용 갱신 및 수정 모드 종료
       commentData.comment.content = editedContent; // 댓글 내용 업데이트
@@ -297,7 +320,7 @@ function CommentSection({ commentData, onDelete }) {
           </div>
           <p className="text-white mt-2">{commentData.comment.content}</p>
           <div className="flex items-center mt-3">
-            <LikeButton isLiked={isLiked} onClick={handleToggleLike} />
+            <LikeButton isLiked={commentData.comment.isLike} handleToggleLike={handleToggleLike} />
             <span className="ml-1 text-red-500 mr-5">{likes}</span>
             <RepliesToggleButton
               isVisible={areRepliesVisible}
@@ -308,7 +331,7 @@ function CommentSection({ commentData, onDelete }) {
             </div>
             <div
               className={`flex ml-5 items-center transition-opacity duration-500 ${
-                isHovering && currentUser?.id === commentData.author.id
+                isHovering && currentUser?.nickname === commentData.author.nickname
                   ? 'opacity-100'
                   : 'opacity-0'
               }`}
@@ -323,6 +346,7 @@ function CommentSection({ commentData, onDelete }) {
                 </div>
               )}
             </div>
+            {canEditComment &&(
             <div className="flex ml-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <button
                 className="flex cursor-pointer items-center"
@@ -332,23 +356,54 @@ function CommentSection({ commentData, onDelete }) {
                 <span className="ml-1">Delete</span>
               </button>
             </div>
+            )}
           </div>{' '}
         </>
       )}
 
       {areRepliesVisible && (
         <div className="mt-1 space-y-4 p-5">
-          {replies?.map((reply) => (
-            <Comment
-              key={reply.id}
-              username={reply.author.nickname}
-              content={reply.content}
-              avatar={reply.author.avatar}
-              handleLike={() => handleLikeReply(reply.id)}
-              handleEdit={() => handleEditReply(reply.id, reply.content)}
-              handleDelete={() => handleDeleteReply(reply.id)}
-            />
-          ))}
+          {replies?.map((reply) =>
+            editingReplyId === reply.id ? ( // 수정 중인 대댓글 UI
+              <div
+                key={reply.id}
+                className="bg-gray-700 text-white p-3 rounded-lg"
+              >
+                <textarea
+                  className="w-full h-20 p-2 bg-gray-600 rounded-lg text-white"
+                  value={editedReplyContent}
+                  onChange={(e) => setEditedReplyContent(e.target.value)}
+                />
+                <div className="flex justify-end mt-2">
+                  <button
+                    className="mr-2 px-4 py-2 bg-red-600 hover:bg-red-400 text-white rounded-md"
+                    onClick={cancelEditReply}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white rounded-md"
+                    onClick={() =>
+                      handleEditReply(reply.id, editedReplyContent)
+                    }
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Comment
+                key={reply.id}
+                nickname={reply.author.nickname}
+                content={reply.content}
+                avatar={reply.author.avatar}
+                likes={reply.likeCount}
+                handleLike={() => handleLikeReply(reply.id)}
+                handleEdit={() => startEditReply(reply.id, reply.content)}
+                handleDelete={() => handleDeleteReply(reply.id)}
+              />
+            ),
+          )}
         </div>
       )}
       {isReplying && ( // ReplyButton 클릭시 보이는 CommentInput

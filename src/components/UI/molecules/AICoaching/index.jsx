@@ -37,35 +37,34 @@ export default function index({ handleChatToggle }) {
     <FixedQuestion />,
   ];
   return (
-    <div className="w-[500px] h-[450px]  bg-gray-100 shadow-2xl rounded-md overflow-auto customTab-scrollbar">
-      <div className="bg-[#5a5ed4ca] text-white text-base rounded-t-md p-1 w-full ">
-        <Close onClick={handleChatToggle} className="p-0 ml-auto pr-1" />
-        <div className="flex justify-between p-1 ">
-          <div className="flex flex-1 items-center justify-start">
-            {currentText.prev && (
-              <>
-                <Chevron onClick={handlePrevClick} />
-                <span>{currentText.prev}</span>
-              </>
-            )}
-          </div>
-          {currentText.middle && (
-            <div className="flex flex-1 justify-center">
-              <span>{currentText.middle}</span>
-            </div>
+    <div className="w-[400px] shadow-2xl">
+      <div className="flex justify-between p-2 bg-slate-600 text-white text-base rounded-t-md w-full ">
+        <div className="flex flex-1 items-center justify-start">
+          {currentText.prev && (
+            <>
+              <Chevron onClick={handlePrevClick} />
+              <span>{currentText.prev}</span>
+            </>
           )}
-
-          <div className="flex flex-1 items-center justify-end">
-            {currentText.next && (
-              <>
-                <span>{currentText.next}</span>
-                <Chevron className="rotate-180" onClick={handleNextClick} />
-              </>
-            )}
+        </div>
+        {currentText.middle && (
+          <div className="flex flex-1 justify-center">
+            <span>{currentText.middle}</span>
           </div>
+        )}
+
+        <div className="flex flex-1 items-center justify-end">
+          {currentText.next && (
+            <>
+              <span>{currentText.next}</span>
+              <Chevron className="rotate-180" onClick={handleNextClick} />
+            </>
+          )}
         </div>
       </div>
-      {screens[currentScreen]}
+      <div className="bg-gray-100 h-[300px] overflow-auto customTab-scrollbar ">
+        {screens[currentScreen]}
+      </div>
     </div>
   );
 }

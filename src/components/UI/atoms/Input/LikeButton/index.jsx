@@ -1,17 +1,12 @@
-import { React, useState } from 'react';
+import { React } from 'react';
 
-function index() {
-  const [isFilled, setIsFilled] = useState(false);
-
-  const toggleFill = () => {
-    setIsFilled(!isFilled);
-  };
+function index({isLiked, handleToggleLike}) {
 
   return (
     <svg
-      onClick={toggleFill}
       className="h-6 w-6 text-red-500 cursor-pointer"
-      fill={isFilled ? 'currentColor' : 'none'}
+      fill={isLiked ? 'currentColor' : 'none'}
+      onClick={handleToggleLike}
       height="24"
       stroke="currentColor"
       strokeLinecap="round"
