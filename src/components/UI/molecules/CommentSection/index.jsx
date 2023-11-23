@@ -17,6 +17,7 @@ import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/com
 import { selectUser } from '../../../../store/userSlice';
 import putCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentBySolutionIdAndCommentId';
 import { setActiveCommentId } from '../../../../store/commentSlice';
+import Avatar from '../../atoms/Avatar';
 
 function CommentSection({ commentData, onDelete, onLikeUpdate }) {
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
@@ -319,11 +320,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
       ) : (
         <>
           <div className="flex items-center">
-            <img
-              className="w-10 h-10 rounded-full mr-4"
-              src={commentData.author.avatar} // 이미지 URL을 데이터 객체에서 가져오기
-              alt={`${commentData.author.nickname}'s avatar`}
-            />
+            <Avatar avatar={commentData.author.avatar} />
 
             <div className="flex flex-grow justify-between items-center">
               <div className="font-semibold">{commentData.author.nickname}</div>
@@ -435,6 +432,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
           placeholder={`@${commentData.author.nickname}`}
           onComment={handleReplySubmit}
           onCancel={toggleReplyInput}
+          avatar={commentData.author.avatar}
         />
       )}
     </div>

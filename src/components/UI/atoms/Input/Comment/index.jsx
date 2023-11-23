@@ -2,6 +2,7 @@ import React from 'react';
 import LikeButton from '../LikeButton';
 import Delete from '../../Icon/Delete';
 import Edit from '../../Icon/Edit';
+import Avatar from '../../Avatar';
 
 function Comment({
   nickname,
@@ -18,11 +19,7 @@ function Comment({
     <div className="bg-neutral-100 text-black p-3 rounded-lg shadow-md shadow-zinc-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <img
-            className="w-10 h-10 rounded-full mr-4"
-            src={avatar}
-            alt={`${nickname}'s avatar`}
-          />
+          <Avatar avatar={avatar} />
           <div className="font-semibold">{nickname}</div>
         </div>
       </div>

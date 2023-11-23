@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Avatar from '../../Avatar';
 
 function CommentInput({ placeholder, onCancel, onComment, username, avatar }) {
   const [inputText, setInputText] = useState('');
@@ -19,11 +20,8 @@ function CommentInput({ placeholder, onCancel, onComment, username, avatar }) {
 
   return (
     <div className="flex items-center">
-      <img
-        className=" w-10 h-10 rounded-full mr-4"
-        src={avatar}
-        alt={`${username}'s avatar`}
-      />
+      <Avatar avatar={avatar} />
+
       <div className="bg-neutral-100 p-4 mt-4 rounded-lg justify-between items-center w-full shadow-md shadow-zinc-300">
         <textarea
           className="bg-white text-black w-full p-3 rounded-lg flex-1"
