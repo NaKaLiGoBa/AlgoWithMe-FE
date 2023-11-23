@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; 
 import axios from 'axios';
 import Button from '../../../atoms/Input/Button';
 import Heading from '../../../atoms/Text/Heading';
@@ -7,11 +8,14 @@ import Text from '../../../atoms/Text/Text';
 import Input from '../../../atoms/Input/Input';
 import KakaoImage from '../../../../../../public/assets/img/kakao.png';
 import {localHostURL} from '../../../../../utils/apiConfig'
+import { setNickname } from '../../../../../store/userSlice';
 
 function Signin() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +48,8 @@ function Signin() {
         // 성공 로직
         if (response.data && response.data.accessToken) {
           localStorage.setItem('ACCESS_TOKEN', response.data.accessToken);
+          console.log("nickname", response.data.nickname)
+          dispatch(setNickname(response.data.nickname)); 
           setErrorMessage(''); // 에러 상태 초기화
           alert(response.data.message);
           navigate(from);

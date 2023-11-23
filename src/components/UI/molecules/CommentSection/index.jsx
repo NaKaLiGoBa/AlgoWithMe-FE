@@ -39,7 +39,7 @@ function CommentSection({ commentData, onDelete }) {
   const handleCommentSelect = () => {
     dispatch(setActiveCommentId(commentData.comment.id));
   };
-  const canEditComment = currentUser.id === commentData.author.id;
+  const canEditComment = currentUser.nickname === commentData.author.nickname;
 
   useEffect(() => {
     console.log('Received comment data:', commentData);
@@ -84,7 +84,8 @@ function CommentSection({ commentData, onDelete }) {
         const newReplyData = {
           id: replyId,
           author: {
-            nickname: currentUser.username,
+            id: currentUser.id,
+            nickname: currentUser.nickname,
             avatar: currentUser.avatar,
           },
           content: replyText.trim(),
@@ -330,7 +331,7 @@ function CommentSection({ commentData, onDelete }) {
             </div>
             <div
               className={`flex ml-5 items-center transition-opacity duration-500 ${
-                isHovering && currentUser?.id === commentData.author.id
+                isHovering && currentUser?.nickname === commentData.author.nickname
                   ? 'opacity-100'
                   : 'opacity-0'
               }`}
@@ -345,6 +346,7 @@ function CommentSection({ commentData, onDelete }) {
                 </div>
               )}
             </div>
+            {canEditComment &&(
             <div className="flex ml-5 items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <button
                 className="flex cursor-pointer items-center"
@@ -354,6 +356,7 @@ function CommentSection({ commentData, onDelete }) {
                 <span className="ml-1">Delete</span>
               </button>
             </div>
+            )}
           </div>{' '}
         </>
       )}
