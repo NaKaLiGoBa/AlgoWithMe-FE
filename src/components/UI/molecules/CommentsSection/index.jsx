@@ -8,7 +8,7 @@ import CommentSection from '../CommentSection';
 import ProblemListFooter from '../Problem/ProblemListFooter';
 import getCommentsBySolutionId from '../../../../utils/api/v1/comment/getCommentsBySolutionId';
 import postCommentBySolutionId from '../../../../utils/api/v1/comment/postCommentBySolutionId';
-import postCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/postCommentLikeBySolutionIdAndCommentId';
+import putCommentLikeBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentLikeBySolutionIdAndCommentId';
 
 function CommentsSection(handleReplySubmit) {
   const [comments, setComments] = useState([]);
@@ -18,7 +18,6 @@ function CommentsSection(handleReplySubmit) {
   const [newComment, setNewComment] = useState('');
   const solutionId = useSelector(selectActiveSolutionId);
   const currentUser = useSelector(selectUser);
-
 
   const [paginationInfo, setPaginationInfo] = useState({
     pageNumber: 0,
@@ -37,10 +36,23 @@ function CommentsSection(handleReplySubmit) {
     };
     const response = await getCommentsBySolutionId(solutionId, params);
     if (response.success) {
-      const updatedComments = response.data.comments.map((comment) => ({
-        ...comment,
-        solutionId, // 각 댓글에 solutionId 추가
-      }));
+      const updatedComments = response.data.comments.map((comment) => {
+        // 각 댓글에 대한 로컬 스토리지에서 좋아요 상태 불러오기
+        const storedLikeStatus = JSON.parse(
+          localStorage.getItem(`likedComment-${comment.comment.id}`),
+        );
+        return {
+          ...comment,
+          comment: {
+            ...comment.comment,
+            isLiked:
+              storedLikeStatus !== null
+                ? storedLikeStatus
+                : comment.comment.isLiked,
+          },
+          solutionId,
+        };
+      });
       setComments(updatedComments);
       setPaginationInfo({
         pageNumber: response.data.pageNumber,
@@ -109,8 +121,13 @@ function CommentsSection(handleReplySubmit) {
     }
   };
 
+  // 좋아요 상태 변경 후 댓글 목록 새로고침
+  const refreshComments = () => {
+    fetchComments();
+  };
+
   const handleLikeComment = async (commentId) => {
-    const response = await postCommentLikeBySolutionIdAndCommentId(
+    const response = await putCommentLikeBySolutionIdAndCommentId(
       solutionId,
       commentId,
     );
@@ -118,8 +135,14 @@ function CommentsSection(handleReplySubmit) {
     if (response.success) {
       setComments(
         comments.map((comment) => {
-          if (comment.id === commentId) {
-            return { ...comment, isLiked: response.data.isLike };
+          if (comment.comment.id === commentId) {
+            return {
+              ...comment,
+              comment: {
+                ...comment.comment,
+                isLiked: response.data.isLike,
+              },
+            };
           }
           return comment;
         }),
@@ -176,13 +199,18 @@ function CommentsSection(handleReplySubmit) {
               handleReplySubmit={handleReplySubmit}
               currentUser={currentUser}
               onDelete={fetchComments}
+              onLikeUpdate={refreshComments}
             />
           ))}
         </div>
       </div>
 
       {/* 페이지네이션 컴포넌트 */}
-      <ProblemListFooter paginationInfo={paginationInfo} setPage={setPage} />
+      <ProblemListFooter
+        totalPages={paginationInfo.totalPages}
+        currentPage={page}
+        setPage={setPage}
+      />
     </div>
   );
 }
