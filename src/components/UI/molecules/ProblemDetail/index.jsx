@@ -5,6 +5,7 @@ import MDEditor from '@uiw/react-md-editor';
 import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
 import '../../atoms/Tab/styles.css';
+import { formatPercentage } from '../../../../utils/utils';
 
 const index = ({ className }) => {
   const number = useSelector((state) => state.problem.number);
@@ -36,7 +37,7 @@ const index = ({ className }) => {
       <div className="flex flex-row gap-4 m-4">
         <p>{difficulty}</p>
         <p>{status}</p>
-        <p>{`정답률: ${acceptance}`}</p>
+        <p>{`정답률: ${formatPercentage(acceptance)}%`}</p>
       </div>
       <div className="flex flex-col m-4">
         <div className="flex flex-row gap-1">
