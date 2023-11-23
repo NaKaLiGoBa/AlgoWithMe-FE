@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams, useOutletContext } from 'react-router-dom';
-import { addTab, setActiveTab } from '../../../../store/tabState';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
@@ -65,7 +64,6 @@ export default function index() {
       }
     }, 1000);
   };
-
   return (
     <div className="h-[99%] px-4 py-4 ">
       <Link
