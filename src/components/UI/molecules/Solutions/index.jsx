@@ -42,7 +42,7 @@ export default function index() {
   const fetchMoreData = async () => {
     if (!hasMore) return;
     setTimeout(async () => {
-      const params = { cursor: nextCursor, size: 2 };
+      const params = { cursor: nextCursor, size: 5 };
       console.log('Calling fetchMoreData with params:', params);
       const response = await getSolutions(problemId, params);
       if (response.success) {
