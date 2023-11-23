@@ -143,17 +143,14 @@ const index = ({ handleChatToggle, showChat }) => {
           <Editor />
           <OutputPanel />
         </div>
-        <div className="fixed bottom-4 right-5">
-          {showChat ? (
-            <AIchat handleChatToggle={handleChatToggle} />
-          ) : (
-            <Button
-              className="bg-[#6D4BEB] px-4 py-6 text-lg "
-              onClick={handleChatToggle}
-            >
-              AI
-            </Button>
-          )}
+        <div className="fixed bottom-5 right-8 flex flex-col items-end ">
+          {showChat && <AIchat handleChatToggle={handleChatToggle} />}
+          <Button
+            className="!bg-slate-700  px-4 py-6 text-lg mt-2"
+            onClick={handleChatToggle}
+          >
+            AI
+          </Button>
         </div>
       </main>
     </div>
