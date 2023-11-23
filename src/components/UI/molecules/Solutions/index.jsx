@@ -48,7 +48,7 @@ export default function index() {
   const fetchMoreData = async () => {
     if (!hasMore) return;
     setTimeout(async () => {
-      const params = { cursor: nextCursor, size: 2 };
+      const params = { cursor: nextCursor, size: 5 };
       const response = await getSolutions(problemId, params);
       if (response.success) {
         dispatch(
@@ -80,7 +80,7 @@ export default function index() {
           dataLength={solutions.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<Spinner />}
+          loader={solutions.length > 0 && <Spinner />}
           scrollableTarget="scrollableDiv"
         >
           {solutions.map((solution) => (
