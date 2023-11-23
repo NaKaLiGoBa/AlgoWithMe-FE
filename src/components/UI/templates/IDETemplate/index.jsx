@@ -34,7 +34,7 @@ function DeleteButton({ setTabs, id }) {
       className="bg-transparent text-black"
       onClick={handleClick}
     >
-      <Close className="w-3 h-3 hover:text-rose-600" />
+      <Close className="w-[12px] hover:text-rose-600" />
     </button>
   );
 }
