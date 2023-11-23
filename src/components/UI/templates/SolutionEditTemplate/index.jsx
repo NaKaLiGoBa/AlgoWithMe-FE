@@ -12,7 +12,7 @@ import contentTemplate from './contentTemplate';
 const index = () => {
   // const, state, Hooks
   const navigate = useNavigate();
-  const { problemId } = useParams();
+  const { problemId, solutionId } = useParams();
   const [title, setTitle] = useState();
 
   const editorLocalState = JSON.parse(
@@ -20,6 +20,8 @@ const index = () => {
   );
   const code = editorLocalState[editorLocalState.currentLanguage];
   const [content, setContent] = useState(contentTemplate(code));
+
+  
 
   // handler
   const handleTitleChange = (event) => {
@@ -32,18 +34,24 @@ const index = () => {
       return;
     }
 
-    const editorState = JSON.parse(
-      localStorage.getItem(`editorState_${problemId}`),
-    );
+    if (solutionId === 'new') {
+      const editorState = JSON.parse(
+        localStorage.getItem(`editorState_${problemId}`),
+      );
 
-    const requestData = {
-      title,
-      content,
-      languages: [editorState.currentLanguage],
-    };
-    postSolutionByProblemId(problemId, requestData).then(() =>
-      navigate(`/problems/${problemId}`),
-    );
+      const requestData = {
+        title,
+        content,
+        languages: [editorState.currentLanguage],
+      };
+      postSolutionByProblemId(problemId, requestData).then(() =>
+        navigate(`/problems/${problemId}`),
+      );
+    } else {
+      // const requestData = {};
+      // putSolutionByProblemIdAndSolutionId();
+      console.log('수정 작업!!');
+    }
   };
 
   // jsx
