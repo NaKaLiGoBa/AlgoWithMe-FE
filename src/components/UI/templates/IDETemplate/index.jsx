@@ -15,6 +15,7 @@ import AIchat from '../../molecules/AICoaching/index';
 import Button from '../../atoms/Input/Button';
 import Close from '../../atoms/Icon/Close';
 import { setSolutionsData } from '../../../../store/SolutionsSlice';
+import '../../atoms/Tab/styles.css';
 
 function DeleteButton({ setTabs, id }) {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function Tab({ id, name, path, active, deletable, setTabs }) {
 
 function Tabs({ tabs, setTabs }) {
   return (
-    <div className="flex flex-nowrap overflow-x-auto items-center bg-gray-100 rounded-xl">
+    <div className="flex flex-nowrap overflow-x-auto items-center bg-gray-100 rounded-xl customTab-scrollbar">
       {tabs.map((tab) => (
         <Tab
           key={tab.id}
@@ -83,8 +84,8 @@ const index = ({ handleChatToggle, showChat }) => {
     solutions: [],
     hasMore: true,
     _link: {
-      nextCursor: -100
-    }
+      nextCursor: -100,
+    },
   });
   const initialTabs = [
     {

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import MDEditor from '@uiw/react-md-editor';
 import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
+import '../../atoms/Tab/styles.css';
 
 const index = ({ className }) => {
   const number = useSelector((state) => state.problem.number);
@@ -17,7 +18,9 @@ const index = ({ className }) => {
   const quizzes = useSelector((state) => state.quiz.quizzes);
 
   return (
-    <div className={`bg-white rounded-xl h-[99%] overflow-y-auto ${className}`}>
+    <div
+      className={`bg-white rounded-xl h-[99%] overflow-y-auto ${className} customTab-scrollbar`}
+    >
       <div className="m-4 flex">
         <h2 className="items-center flex ">{`${number}. ${title}`}</h2>
         {quizzes.length && (
