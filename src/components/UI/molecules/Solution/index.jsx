@@ -1,76 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+// api
 import MDEditor from '@uiw/react-md-editor';
-import '@uiw/react-md-editor/markdown-editor.css';
-import '@uiw/react-markdown-preview/markdown.css';
-import {
-  setActiveTab,
-  removeTab,
-  updateTabContent,
-} from '../../../../store/tabState';
-import {
-  fetchSolution,
-  updateSolution,
-  deleteSolution,
-  likeSolution,
-} from '../../../../utils/fetchSolution';
+import getSolutionByProblemIdAndSolutionId from '../../../../utils/api/v1/solution/getSolutionByProblemIdAndSolutionId';
+
+// component
 import Button from '../../atoms/Input/Button';
-import CommentsSection from '../CommentsSection';
 import LikeButton from '../../atoms/Input/LikeButton';
-import {
-  selectActiveSolutionId,
-  setActiveSolutionId,
-} from '../../../../store/SolutionsSlice';
+import CommentsSection from '../CommentsSection';
 
 export default function index() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [solutionData, setSolutionData] = useState(null);
+  const { problemId, solutionId } = useParams();
   const [likes, setLikes] = useState(0);
-  const { problemId } = useParams();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleUpdate = async () => {
-    if (window.confirm('정말로 수정하시겠습니까?')) {
-      navigate(
-        `/edit/${problemId}/solution/${activeTab.data.solution.id}/edit`,
-      ); // 그냥 이동?
-    }
-  };
+  useEffect(() => {
+    getSolutionByProblemIdAndSolutionId(problemId, solutionId).then(
+      (response) => {
+        setSolutionData(response.data);
+        setIsLoaded(true);
+      },
+    );
+  }, [problemId, solutionId]);
 
-  const handleDelete = async () => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
-      try {
-        console.log(activeTab);
-        const response = await deleteSolution(
-          problemId,
-          activeTab.data.solution.id,
-          authToken,
-        );
-        alert('풀이 글 삭제 완료');
-        console.log('Delete successful', response);
+  const handleUpdate = async () => {};
 
-        // 삭제 후 행동
-        dispatch(removeTab({ id: activeTab.id }));
-        navigate(`/problems/${problemId}`);
-      } catch (error) {
-        console.error('Error deleting solution:', error);
-      }
-    }
-  };
+  const handleDelete = async () => {};
 
-  const handleLike = async () => {
-    try {
-      const response = await likeSolution(
-        problemId,
-        solutionData.solution.id,
-        authToken,
-      );
-      setLikes(response.likeCount);
-      setIsLiked(response.isLike);
-    } catch (error) {
-      console.error('Error liking the solution:', error);
-    }
-  };
+  const handleLike = async () => {};
+  if (!isLoaded) {
+    return <div>Loading...</div>; // 로딩 중일 때 "Loading..." 메시지 표시
+  }
+  return (
+    <div className="h-[99%] overflow-y-auto">
+      <div className="bg-gray-200 shadow rounded-b-lg p-6 ">
+        <div className="flex justify-end">
+          <Button className="rounded-lg p-2 mr-2.5" onClick={handleUpdate}>
+            수정
+          </Button>
+          <Button
+            className="bg-red-600 hover:bg-red-400 rounded-lg p-2"
+            onClick={handleDelete}
+          >
+            삭제
+          </Button>
+        </div>
 
-  return <div>여기에 solution detail</div>;
+        <div className="flex items-start space-x-4">
+          <img
+            className="w-16 h-16 rounded-full object-cover"
+            src={solutionData.author.avatar}
+            alt={`${solutionData.author.nickname}'s avatar`}
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-xl font-bold text-gray-900 truncate">
+              {solutionData.solution.title}
+            </p>
+            <div className="flex mt-4">
+              <p className="text-sm text-gray-500">
+                <a
+                  href={`/users/${solutionData.author.nickname}`}
+                  className="hover:underline"
+                >
+                  {solutionData.author.nickname}
+                </a>
+              </p>
+              <p className="text-sm text-gray-500 ml-5">
+                {new Date(solutionData.solution.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="flex items-center mt-2">
+              <LikeButton onClick={handleLike} isLiked={isLiked} />
+              <span className="ml-1 text-red-500 ">{likes}</span>
+              <p className="mt-2.5 text-sm text-gray-500">
+                <span className="mr-2 ml-5">언어:</span>
+                {solutionData.solution.languages.map((language) => (
+                  <span
+                    key={language}
+                    className="inline-block bg-slate-300 rounded-full px-2.5 py-1 font-semibold text-gray-700 mr-2 mb-1"
+                  >
+                    {language}
+                  </span>
+                ))}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center my-2">
+          <div className="mt-1 h-px w-full bg-gray-400" />
+        </div>
+        {/* Viewer */}
+        <div className="markdown-viewer bg-white p-6">
+          <MDEditor.Markdown source={solutionData?.solution.content} />
+        </div>
+        <div className="mt-4">
+          <CommentsSection solutionId={solutionData.solution.id} />
+        </div>
+      </div>
+    </div>
+  );
 }

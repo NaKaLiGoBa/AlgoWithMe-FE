@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import MDEditor from '@uiw/react-md-editor';
+import { useParams } from 'react-router-dom';
 import { selectActiveSolutionId } from '../../../../store/SolutionsSlice';
 import { selectUser } from '../../../../store/userSlice';
 import '@uiw/react-md-editor/markdown-editor.css';
@@ -16,7 +17,7 @@ function CommentsSection(handleReplySubmit) {
   const rowsPerPage = 5;
   const [sort, setSort] = useState('recent');
   const [newComment, setNewComment] = useState('');
-  const solutionId = useSelector(selectActiveSolutionId);
+  const { solutionId } = useParams();
   const currentUser = useSelector(selectUser);
 
   const [paginationInfo, setPaginationInfo] = useState({

@@ -115,7 +115,7 @@ const index = ({ handleChatToggle, showChat }) => {
           <div className="overflow-x-auto ">
             <Tabs tabs={tabs} setTabs={setTabs} />
           </div>
-          <div className="h-[calc(100%-70px)]">
+          <div className="h-[calc(100%-45px)]">
             <Outlet context={{ setTabs, tabs }} />
           </div>
         </div>
