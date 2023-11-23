@@ -24,9 +24,9 @@ function CommentInput({ placeholder, onCancel, onComment, username, avatar }) {
         src={avatar}
         alt={`${username}'s avatar`}
       />
-      <div className="bg-gray-800 p-4 mt-4 rounded-lg justify-between items-center w-full">
+      <div className="bg-neutral-100 p-4 mt-4 rounded-lg justify-between items-center w-full shadow-md shadow-zinc-300">
         <textarea
-          className="bg-gray-700 text-white w-full p-3 rounded-lg flex-1"
+          className="bg-white text-black w-full p-3 rounded-lg flex-1"
           placeholder={placeholder}
           value={inputText}
           onChange={handleInputChange}
@@ -34,13 +34,13 @@ function CommentInput({ placeholder, onCancel, onComment, username, avatar }) {
         <div className="flex justify-end mt-3">
           <button
             onClick={handleCancelClick}
-            className="bg-gray-600 hover:bg-gray-500 text-white mr-5 px-3 py-1 rounded-full text-m"
+            className="bg-red-600 hover:bg-red-400 text-white mr-5 px-3 py-1 rounded-full text-m shadow-md shadow-red-400"
           >
             Cancel
           </button>
           <button
             onClick={handleCommentClick}
-            className="bg-green-500 hover:bg-green-400 px-3 py-1 rounded-full text-m"
+            className="bg-green-500 hover:bg-green-400 text-white px-3 py-1 rounded-full text-m shadow-md shadow-green-400"
           >
             Comment
           </button>

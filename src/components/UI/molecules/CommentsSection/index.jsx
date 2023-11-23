@@ -154,16 +154,16 @@ function CommentsSection(handleReplySubmit) {
   };
 
   return (
-    <div className="bg-gray-900 p-8 font-sans text-white">
+    <div className="bg-neutral-100 p-8 font-sans text-black">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-white font-bold text-lg">Comments</h2>
+        <h2 className="text-black font-bold text-lg">Comments</h2>
         <div>
-          <label htmlFor="sort-comments" className="text-gray-400 mr-2">
+          <label htmlFor="sort-comments" className="text-gray-500 mr-2">
             Sort by:
           </label>
           <select
             id="sort-comments"
-            className="bg-gray-700 text-white rounded-lg p-2"
+            className="bg-neutral-200 text-black rounded-lg p-2 shadow-md shadow-zinc-400"
           >
             <option>Best</option>
             <option>Most Votes</option>
@@ -173,7 +173,7 @@ function CommentsSection(handleReplySubmit) {
         </div>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-lg mb-9">
+      <div className="bg-neutral-200 p-4 rounded-lg mb-9 shadow-md shadow-zinc-400">
         <MDEditor
           value={newComment}
           onChange={(val) => setNewComment(val)}
@@ -181,7 +181,7 @@ function CommentsSection(handleReplySubmit) {
         />
         <div className="mt-4 flex justify-end">
           <button
-            className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg"
+            className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg shadow-md shadow-green-400"
             onClick={() => handleSubmitComment()}
             type="button"
           >
@@ -190,7 +190,7 @@ function CommentsSection(handleReplySubmit) {
         </div>
       </div>
 
-      <div className="bg-gray-900 ">
+      <div className="bg-neutral-100">
         <div className="space-y-4">
           {comments.map((commentData) => (
             <CommentSection

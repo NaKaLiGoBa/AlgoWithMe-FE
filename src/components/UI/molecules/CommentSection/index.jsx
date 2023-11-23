@@ -289,7 +289,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
 
   return (
     <div
-      className="group bg-gray-800 text-white p-4 rounded-lg"
+      className="group bg-neutral-200 text-black p-4 rounded-lg shadow-md shadow-zinc-300"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onClick={handleCommentSelect}
@@ -297,19 +297,19 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
       {isEditing ? ( // 수정 중일 때
         <>
           <textarea
-            className="w-full h-20 p-2 bg-gray-700 rounded-lg text-white"
+            className="w-full h-20 p-2 bg-white rounded-lg text-black shadow-md"
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
           />
           <div className="flex justify-end">
             <button
-              className="px-4 py-2 mt-2 bg-red-600 hover:bg-red-400 text-white rounded-md mr-2.5"
+              className="px-4 py-2 mt-2 bg-red-600 hover:bg-red-400 text-white rounded-md mr-2.5 shadow-md shadow-red-400"
               onClick={toggleEdit}
             >
               Cancel
             </button>
             <button
-              className="px-4 py-2 mt-2 bg-green-500 hover:bg-green-400 text-white rounded-md "
+              className="px-4 py-2 mt-2 bg-green-500 hover:bg-green-400 text-white rounded-md shadow-md shadow-green-400"
               onClick={handleEdit}
             >
               Save
@@ -329,7 +329,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
               <div className="font-semibold">{commentData.author.nickname}</div>
             </div>
           </div>
-          <p className="text-white mt-2">{commentData.comment.content}</p>
+          <p className="text-black mt-2">{commentData.comment.content}</p>
           <div className="flex items-center mt-3">
             <LikeButton
               isLiked={commentData.comment.isLike}
@@ -382,22 +382,22 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
             editingReplyId === reply.id ? ( // 수정 중인 대댓글 UI
               <div
                 key={reply.id}
-                className="bg-gray-700 text-white p-3 rounded-lg"
+                className="bg-neutral-100 text-black p-3 rounded-lg shadow-md"
               >
                 <textarea
-                  className="w-full h-20 p-2 bg-gray-600 rounded-lg text-white"
+                  className="w-full h-20 p-2 bg-white rounded-lg text-black"
                   value={editedReplyContent}
                   onChange={(e) => setEditedReplyContent(e.target.value)}
                 />
                 <div className="flex justify-end mt-2">
                   <button
-                    className="mr-2 px-4 py-2 bg-red-600 hover:bg-red-400 text-white rounded-md"
+                    className="mr-2 px-4 py-2 bg-red-600 hover:bg-red-400 text-white rounded-md shadow-md shadow-red-400"
                     onClick={cancelEditReply}
                   >
                     Cancel
                   </button>
                   <button
-                    className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white rounded-md"
+                    className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white rounded-md shadow-md shadow-green-400"
                     onClick={() =>
                       handleEditReply(reply.id, editedReplyContent)
                     }

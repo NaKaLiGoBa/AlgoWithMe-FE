@@ -15,7 +15,7 @@ function Comment({
 }) {
   const canEditOrDelete = currentUserNickname === nickname;
   return (
-    <div className="bg-gray-700 text-white p-3 rounded-lg">
+    <div className="bg-neutral-100 text-black p-3 rounded-lg shadow-md shadow-zinc-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
@@ -26,7 +26,7 @@ function Comment({
           <div className="font-semibold">{nickname}</div>
         </div>
       </div>
-      <p className="text-gray-200 mt-1">{content}</p>
+      <p className="text-black mt-1">{content}</p>
       <div className="flex mt-2.5">
         {handleLike && (
           <div className="flex items-center mr-5">
