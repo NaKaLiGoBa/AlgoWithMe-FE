@@ -18,7 +18,7 @@ import { selectUser } from '../../../../store/userSlice';
 import putCommentBySolutionIdAndCommentId from '../../../../utils/api/v1/comment/putCommentBySolutionIdAndCommentId';
 import { setActiveCommentId } from '../../../../store/commentSlice';
 
-function CommentSection({ commentData, onDelete }) {
+function CommentSection({ commentData, onDelete, onLikeUpdate }) {
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
   const [replies, setReplies] = useState([]);
   const [isReplying, setIsReplying] = useState(false); // 댓글 입력 상태
@@ -130,6 +130,7 @@ function CommentSection({ commentData, onDelete }) {
           `likedComment-${commentData.comment.id}`,
           JSON.stringify(updatedIsLiked),
         );
+        onLikeUpdate();
       }
     } catch (error) {
       console.error('Failed to update like:', error);

@@ -121,6 +121,11 @@ function CommentsSection(handleReplySubmit) {
     }
   };
 
+  // 좋아요 상태 변경 후 댓글 목록 새로고침
+  const refreshComments = () => {
+    fetchComments();
+  };
+
   const handleLikeComment = async (commentId) => {
     const response = await putCommentLikeBySolutionIdAndCommentId(
       solutionId,
@@ -194,6 +199,7 @@ function CommentsSection(handleReplySubmit) {
               handleReplySubmit={handleReplySubmit}
               currentUser={currentUser}
               onDelete={fetchComments}
+              onLikeUpdate={refreshComments}
             />
           ))}
         </div>
