@@ -90,6 +90,7 @@ const index = ({ handleChatToggle, showChat }) => {
       nextCursor: -100,
     },
   });
+  const [submits, setSubmits] = useState(null);
   const initialTabs = [
     {
       id: 'description',
@@ -100,6 +101,11 @@ const index = ({ handleChatToggle, showChat }) => {
       id: 'solutions',
       name: `솔루션(${totalSolutionCount})`,
       path: `/problems/${problemId}/solutions`,
+    },
+    {
+      id: 'submits',
+      name: `제출기록(???)`,
+      path: `/problems/${problemId}/submits`,
     },
   ];
   const [tabs, setTabs] = useState(
@@ -128,7 +134,7 @@ const index = ({ handleChatToggle, showChat }) => {
       <Header className="bg-transparent" />
       <main className="flex flex-row bg-[#E7E7E7] h-[calc(100%-60px)] gap-1">
         <div className="w-[40%] bg-white rounded-xl h-[100% flex-row">
-          <div className="overflow-x-auto ">
+          <div className="overflow-x-auto">
             <Tabs tabs={tabs} setTabs={setTabs} />
           </div>
           <div className="h-[calc(100%-45px)]">
@@ -138,6 +144,8 @@ const index = ({ handleChatToggle, showChat }) => {
                 tabs,
                 solutions,
                 setSolutions,
+                submits,
+                setSubmits,
               }}
             />
           </div>

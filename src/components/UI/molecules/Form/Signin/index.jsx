@@ -117,8 +117,8 @@ function Signin() {
         <Heading level={2}>비밀번호</Heading>
         <Input
           type="password"
-          placeholder="비밀번호"
           value={password}
+          placeholder="비밀번호"
           onChange={(e) => setPassword(e.target.value)}
           className="mb-4"
         />

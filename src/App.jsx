@@ -15,6 +15,7 @@ import AuthLayer from './service/AuthLayer';
 import ProblemDetail from './components/UI/molecules/ProblemDetail';
 import Solutions from './components/UI/molecules/Solutions';
 import Solution from './components/UI/molecules/Solution';
+import Submits from './components/UI/molecules/Submits'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/problems/:problemId" element={<IDEPage />}>
           <Route path="description" element={<ProblemDetail />} />
           <Route path="solutions" element={<Solutions />} />
+          <Route path="submits" element={<Submits />} />
           <Route path="solutions/:solutionId" element={<Solution />} />
         </Route>
         <Route
