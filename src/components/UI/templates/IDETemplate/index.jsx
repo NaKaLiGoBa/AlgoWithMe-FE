@@ -79,9 +79,10 @@ const index = ({ handleChatToggle, showChat }) => {
   const location = useLocation();
   const { problemId } = useParams();
   const dispatch = useDispatch();
-  const totalSolutionCount = useSelector(
-    (state) => state.problem.totalSolutionCount,
+  const { totalSolutionCount, totalSubmitCount } = useSelector(
+    (state) => state.problem,
   );
+
   const [solutions, setSolutions] = useState({
     totalCount: null,
     solutions: [],
@@ -104,7 +105,7 @@ const index = ({ handleChatToggle, showChat }) => {
     },
     {
       id: 'submits',
-      name: `제출기록(???)`,
+      name: `제출기록(${totalSubmitCount})`,
       path: `/problems/${problemId}/submits`,
     },
   ];
