@@ -32,7 +32,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
   const [editingReplyId, setEditingReplyId] = useState(null); // 수정 중인 대댓글 ID
   const [editedReplyContent, setEditedReplyContent] = useState(''); // 수정할 대댓글 내용
   const [likes, setLikes] = useState(commentData.comment.likeCount || 0);
-  const [isLiked, setIsLiked] = useState(commentData.comment.isLike || false);
+  const [isLiked, setIsLiked] = useState(commentData.comment.like || false);
 
   const dispatch = useDispatch();
 
@@ -60,7 +60,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
   useEffect(() => {
     console.log('Received comment data:', commentData);
     fetchReplies();
-    setIsLiked(commentData.comment.isLike);
+    setIsLiked(commentData.comment.like);
     setLikes(commentData.comment.likeCount);
     const storedLikeStatus = JSON.parse(
       localStorage.getItem(`likedComment-${commentData.comment.id}`),
