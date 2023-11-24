@@ -20,9 +20,10 @@ function CommentInput({ placeholder, onCancel, onComment, username, avatar }) {
 
   return (
     <div className="flex items-center">
-      <Avatar avatar={avatar} />
-
-      <div className="bg-neutral-100 p-4 mt-4 rounded-lg justify-between items-center w-full shadow-md shadow-zinc-300">
+      <div>
+        <Avatar avatar={avatar} />
+      </div>
+      <div className="bg-neutral-100 p-4 mt-4 rounded-lg justify-between items-center w-full shadow-md shadow-zinc-300 ml-4">
         <textarea
           className="bg-white text-black w-full p-3 rounded-lg flex-1"
           placeholder={placeholder}

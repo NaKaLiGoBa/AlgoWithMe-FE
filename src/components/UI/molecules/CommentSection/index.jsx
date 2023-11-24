@@ -322,12 +322,12 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
           <div className="flex items-center">
             <Avatar avatar={commentData.author.avatar} />
 
-            <div className="flex flex-grow justify-between items-center">
+            <div className="flex flex-grow justify-between items-center ml-4">
               <div className="font-semibold">{commentData.author.nickname}</div>
             </div>
           </div>
-          <p className="text-black mt-2">{commentData.comment.content}</p>
-          <div className="flex items-center mt-3">
+          <p className="text-black mt-5">{commentData.comment.content}</p>
+          <div className="flex items-center mt-5">
             <LikeButton
               isLiked={commentData.comment.isLike}
               handleToggleLike={handleToggleLike}

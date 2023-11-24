@@ -20,11 +20,11 @@ function Comment({
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Avatar avatar={avatar} />
-          <div className="font-semibold">{nickname}</div>
+          <div className="font-semibold ml-4">{nickname}</div>
         </div>
       </div>
-      <p className="text-black mt-1">{content}</p>
-      <div className="flex mt-2.5">
+      <p className="text-black mt-5">{content}</p>
+      <div className="flex mt-5">
         {handleLike && (
           <div className="flex items-center mr-5">
             <LikeButton onClick={handleLike} />
