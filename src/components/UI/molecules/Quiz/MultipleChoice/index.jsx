@@ -25,6 +25,7 @@ export default function index() {
             onChange={handleOptionChange}
             disabled={isAnswered}
             id={idx}
+            className="pl-1"
           />
         </div>
       ))}

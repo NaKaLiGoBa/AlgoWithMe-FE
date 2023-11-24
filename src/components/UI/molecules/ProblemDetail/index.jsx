@@ -27,7 +27,7 @@ const index = ({ className }) => {
         {quizzes.length && (
           <Link
             to={`/problems/${problemId}/quizzes`}
-            className="ml-8 bg-[#63B758] text-white px-4 py-1 rounded-md flex"
+            className="ml-8 bg-[#63B758] text-white pl-2 pr-4 py-1 rounded-md flex"
           >
             <Plus />
             미니퀴즈
