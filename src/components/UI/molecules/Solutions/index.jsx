@@ -29,8 +29,8 @@ export default function index() {
           _link: data._link,
         }));
       });
-  }, [problemId, dispatch]);
-
+  }, [problemId, dispatch, solutions]);
+  console.log('solutions', solutions);
   const handleSolutionClick = (solution) => {
     const isExist = tabs.some((tab) => tab.id === solution.id.toString());
     if (!isExist) {

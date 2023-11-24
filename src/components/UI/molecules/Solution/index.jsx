@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import '../../atoms/Tab/styles.css';
 import { useSelector } from 'react-redux';
 import MDEditor from '@uiw/react-md-editor';
@@ -22,6 +22,7 @@ export default function index() {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
+  const { setTabs } = useOutletContext();
 
   useEffect(() => {
     getSolutionByProblemIdAndSolutionId(problemId, solutionId).then(
@@ -39,11 +40,11 @@ export default function index() {
       state: { oldSolution: solutionData.solution },
     });
   };
-
   function handleDelete() {
-    deleteSolution(problemId, solutionId).then(() =>
-      navigate(`/problems/${problemId}/solutions`),
-    );
+    deleteSolution(problemId, solutionId).then(() => {
+      setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== solutionId));
+      navigate(`/problems/${problemId}/solutions`);
+    });
   }
 
   // 수정 및 삭제 버튼 표시 여부 결정 함수
@@ -55,7 +56,7 @@ export default function index() {
     setIsLiked(updatedIsLiked);
     const newLikesCount = updatedIsLiked ? likes + 1 : likes - 1;
     setLikes(newLikesCount);
-    
+
     try {
       const response = await putSolutionLikeByProblemIdAndSolutionId(
         problemId,
@@ -147,7 +148,10 @@ export default function index() {
           <div className="mt-1 h-px w-full bg-gray-400" />
         </div>
         {/* Viewer */}
-        <div className="markdown-viewer bg-white p-6 rounded-lg shadow-md shadow-zinc-400" data-color-mode="light">
+        <div
+          className="markdown-viewer bg-white p-6 rounded-lg shadow-md shadow-zinc-400"
+          data-color-mode="light"
+        >
           <MDEditor.Markdown source={solutionData?.solution.content} />
         </div>
         <div className="mt-4 rounded-lg shadow-md shadow-zinc-400">
