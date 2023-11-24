@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams, useOutletContext } from 'react-router-dom';
-import { setSolutionsData } from '../../../../store/SolutionsSlice';
 import ListItem from '../ListItem';
 import Link from '../../atoms/Text/Link';
 import getSolutions from '../../../../utils/api/v1/solution/getSolutions';
@@ -70,14 +69,7 @@ export default function index() {
 
   return (
     <div className="h-[99%] px-4 py-4 ">
-      <Link
-        to={{
-          pathname: `/problems/${problemId}/solutions/new/edit`,
-        }}
-        className="w-full flex justify-center bg-[#63B758] text-white py-2 mb-5 rounded-sm"
-      >
-        + 풀이 공유
-      </Link>
+
       <div
         id="scrollableDiv"
         className="overflow-auto h-[calc(100%-30px)] customTab-scrollbar"

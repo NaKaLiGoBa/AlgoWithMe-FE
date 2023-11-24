@@ -22,7 +22,6 @@ export default function index() {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
-  console.log('isLiked:', isLiked);
 
   useEffect(() => {
     getSolutionByProblemIdAndSolutionId(problemId, solutionId).then(
