@@ -72,7 +72,7 @@ async function call(apiUrl, method) {
 
 export default async function deleteSolutionByProblemId(problemId, solutionId) {
   const apiUrl = `/api/v1/problems/${problemId}/solutions/${solutionId}`;
-  return call(apiUrl, 'DELTE');
+  return call(apiUrl, 'DELETE');
 }
 
 // ===예시===
