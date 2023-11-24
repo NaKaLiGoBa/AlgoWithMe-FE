@@ -23,16 +23,21 @@ function Td({ children, className = '' }) {
 
 function getDifficulty(d) {
   let color = '';
+  let bgColorClass = '';
   if (d === '어려움') {
-    color = 'bg-rose-500 text-rose-200';
+    color = 'text-rose-700';
+    bgColorClass = 'bg-rose-500/30'; // 50% transparency
   } else if (d === '보통') {
-    color = 'bg-yellow-500 text-yellow-200';
+    color = 'text-yellow-700';
+    bgColorClass = 'bg-yellow-500/30'; // 50% transparency
   } else if (d === '쉬움') {
-    color = 'bg-green-500 text-green-200';
+    color = 'text-green-700';
+    bgColorClass = 'bg-green-500/30'; // 50% transparency
   }
 
-  return <p className={`rounded-2xl min-w-[50px] ${color} text-center`}>{d}</p>;
+  return <p className={`rounded-2xl min-w-[50px] ${bgColorClass} ${color} text-center`}>{d}</p>;
 }
+
 
 export default function index() {
   const difficulty = useSelector((state) => state.problems.difficulties);
