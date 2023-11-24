@@ -7,7 +7,7 @@ import {
   Link,
   useNavigate,
 } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Editor from '../../molecules/Editor';
 import OutputPanel from '../../molecules/OutputPanel';
 import Header from '../../molecules/Navigation/Header';
@@ -79,6 +79,9 @@ const index = ({ handleChatToggle, showChat }) => {
   const location = useLocation();
   const { problemId } = useParams();
   const dispatch = useDispatch();
+  const totalSolutionCount = useSelector(
+    (state) => state.problem.totalSolutionCount,
+  );
   const [solutions, setSolutions] = useState({
     totalCount: null,
     solutions: [],
@@ -95,7 +98,7 @@ const index = ({ handleChatToggle, showChat }) => {
     },
     {
       id: 'solutions',
-      name: '솔루션',
+      name: `솔루션(${totalSolutionCount})`,
       path: `/problems/${problemId}/solutions`,
     },
   ];
