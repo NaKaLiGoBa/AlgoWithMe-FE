@@ -21,6 +21,19 @@ function Td({ children, className = '' }) {
   return <td className={`text-center p-2 ${className}`}>{children}</td>;
 }
 
+function getDifficulty(d) {
+  let color = '';
+  if (d === '어려움') {
+    color = 'bg-rose-500 text-rose-200';
+  } else if (d === '보통') {
+    color = 'bg-yellow-500 text-yellow-200';
+  } else if (d === '쉬움') {
+    color = 'bg-green-500 text-green-200';
+  }
+
+  return <p className={`rounded-2xl min-w-[50px] ${color} text-center`}>{d}</p>;
+}
+
 export default function index() {
   const difficulty = useSelector((state) => state.problems.difficulties);
   const status = useSelector((state) => state.problems.status);
@@ -34,12 +47,7 @@ export default function index() {
   const { totalPages } = useSelector((state) => state.problems);
   const [page, setPage] = useState(1);
 
-  function getDifficulty(d) {
-    if (d === '어려움') return <p className="text-rose-600 ">어려움</p>;
-    if (d === '보통') return <p className="text-yellow-600">보통</p>;
-    if (d === '쉬움') return <p className="text-green-600">쉬움</p>;
-    return null;
-  }
+  
 
   useEffect(() => {
     const loadProblems = async () => {
@@ -140,7 +148,7 @@ export default function index() {
                 <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
               </Td>
               <Td>{formatPercentage(problem.acceptance)}</Td>
-              <Td>{getDifficulty(problem.difficulty)}</Td>
+              <Td className="flex justify-center">{getDifficulty(problem.difficulty)}</Td>
             </tr>
           ))}
         </tbody>
@@ -154,3 +162,4 @@ export default function index() {
   );
 }
 
+export {getDifficulty}

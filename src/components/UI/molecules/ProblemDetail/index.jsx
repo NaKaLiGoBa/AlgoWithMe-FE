@@ -6,6 +6,7 @@ import Link from '../../atoms/Text/Link';
 import Plus from '../../atoms/Icon/Plus';
 import '../../atoms/Tab/styles.css';
 import { formatPercentage } from '../../../../utils/utils';
+import { getDifficulty } from '../Problem/ProblemList';
 
 const index = ({ className }) => {
   const number = useSelector((state) => state.problem.number);
@@ -35,7 +36,7 @@ const index = ({ className }) => {
         )}
       </div>
       <div className="flex flex-row gap-4 m-4">
-        <p>{difficulty}</p>
+        {getDifficulty(difficulty)}
         <p>{status}</p>
         <p>{`정답률: ${formatPercentage(acceptance)}%`}</p>
       </div>
