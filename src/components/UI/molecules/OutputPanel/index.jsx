@@ -129,10 +129,11 @@ export default function Index() {
   };
 
   return (
-    <div className="p-2 flex flex-col justify-between h-[300px] overflow-y-auto border-t-[2px] customTab-scrollbar">
-      <div className="mb-2" />
-      <TestCasesForm hasRun={hasRun} testcases={testcases} />
-      <div className="flex flex-row justify-between items-center">
+    <div className="flex flex-col justify-between h-[300px] overflow-y-auto border-t-[2px] customTab-scrollbar">
+      <div className="p-2">
+        <TestCasesForm hasRun={hasRun} testcases={testcases} />
+      </div>
+      <div className="p-2 flex flex-row justify-between items-center sticky bottom-0 bg-gray-100 rounded-b-xl">
         <div className="flex flex-row justify-end gap-4">
           <Button
             className="rounded-xl px-4 py-2"
