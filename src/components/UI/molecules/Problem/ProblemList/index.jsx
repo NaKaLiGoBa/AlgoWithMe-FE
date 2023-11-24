@@ -6,6 +6,8 @@ import ProblemListFooter from '../ProblemListFooter';
 import DropdownMenu from '../../../atoms/Input/Dropdown';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 import { formatPercentage } from '../../../../../utils/utils';
+import Close from '../../../atoms/Icon/Close';
+import Clear from '../../../atoms/Icon/Clear';
 
 function Th({ children }) {
   return (
@@ -63,6 +65,12 @@ export default function index() {
     loadProblems();
   }, [dispatch, page, selectedDifficulty, selectedStatus, selectedTag]);
 
+  const handleClear = () => {
+    setDifficulty('');
+    setStatus('');
+    setTag('');
+  };
+
   return (
     <div className="flex flex-col gap-12 items-center bg-white py-5 px-5 rounded-xl shadow-lg">
       <div className="flex flex-row gap-8">
@@ -73,6 +81,42 @@ export default function index() {
         />
         <DropdownMenu title="상태" list={status} handleSelectItem={setStatus} />
         <DropdownMenu title="태그" list={tags} handleSelectItem={setTag} />
+      </div>
+      <div className="flex gap-2">
+        {selectedDifficulty && (
+          <div className="flex items-center bg-[#efeeee] py-1 px-[6px] rounded-[4px]">
+            {selectedDifficulty}
+            <Close
+              className="!w-4 !h-4 pl-[2px]"
+              onClick={() => setDifficulty('')}
+            />
+          </div>
+        )}
+        {selectedStatus && (
+          <div className="flex items-center bg-[#efeeee] py-1 px-[6px] rounded-[4px]">
+            {selectedStatus}
+            <Close
+              className="!w-4 !h-4 pl-[2px]"
+              onClick={() => setStatus('')}
+            />
+          </div>
+        )}
+        {selectedTag && (
+          <div className="flex items-center bg-[#efeeee] py-1 px-[6px] rounded-[4px]">
+            {selectedTag}
+            <Close className="!w-4 !h-4 pl-[2px]" onClick={() => setTag('')} />
+          </div>
+        )}
+        {(selectedDifficulty || selectedStatus || selectedTag) && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="flex items-center ml-1  bg-[#efeeee] py-1 px-[6px] rounded-[4px]"
+          >
+            <Clear />
+            <span className="text-sm pl-1">초기화</span>
+          </button>
+        )}
       </div>
       <table className="text-sm w-[800px] table-auto ">
         <thead>
