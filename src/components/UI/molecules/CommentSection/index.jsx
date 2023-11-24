@@ -170,8 +170,6 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
     }
   };
 
-
-
   const handleEditReply = async (replyId, newContent) => {
     if (!newContent.trim()) {
       alert('Reply content cannot be empty');
@@ -267,6 +265,13 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
     }
   };
 
+  // 댓글 편집 시작 함수
+  const startEditComment = (commentId, content) => {
+    setIsEditing(true);
+    setEditedContent(content); // 댓글 내용 업데이트
+    dispatch(setActiveCommentId(commentId)); // 현재 편집중인 댓글 ID 업데이트
+  };
+
   const handleDelete = () => {
     if (
       typeof commentData.solutionId === 'undefined' ||
@@ -355,7 +360,12 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
               {canEditComment && (
                 <div
                   className="flex items-center cursor-pointer"
-                  onClick={toggleEdit}
+                  onClick={() =>
+                    startEditComment(
+                      commentData.comment.id,
+                      commentData.comment.content,
+                    )
+                  }
                 >
                   <Edit /> {/* 수정 버튼 */}
                   <span className="mr-1">Edit</span>
