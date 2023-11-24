@@ -148,7 +148,7 @@ export default function index() {
           <div className="mt-1 h-px w-full bg-gray-400" />
         </div>
         {/* Viewer */}
-        <div className="markdown-viewer bg-white p-6 rounded-lg shadow-md shadow-zinc-400">
+        <div className="markdown-viewer bg-white p-6 rounded-lg shadow-md shadow-zinc-400" data-color-mode="light">
           <MDEditor.Markdown source={solutionData?.solution.content} />
         </div>
         <div className="mt-4 rounded-lg shadow-md shadow-zinc-400">

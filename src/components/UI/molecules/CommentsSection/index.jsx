@@ -173,7 +173,7 @@ function CommentsSection(handleReplySubmit) {
         </div>
       </div>
 
-      <div className="bg-neutral-200 p-4 rounded-lg mb-9 shadow-md shadow-zinc-400">
+      <div className="bg-neutral-200 p-4 rounded-lg mb-9 shadow-md shadow-zinc-400" data-color-mode="light">
         <MDEditor
           value={newComment}
           onChange={(val) => setNewComment(val)}
