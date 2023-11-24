@@ -70,10 +70,10 @@ async function putReplyLikeByCommentIdAndReplyId(commentId, replyId) {
   const apiUrl = `/api/v1/comments/${commentId}/replies/${replyId}/like`;
 
   const requestData = {
-    requestDateTime: 'string',
+    requestDateTime: new Date().toISOString(),
   };
 
-  return call(apiUrl, 'POST', requestData);
+  return call(apiUrl, 'PUT', requestData);
 }
 
 export default putReplyLikeByCommentIdAndReplyId;
