@@ -5,7 +5,7 @@ function index({isLiked, handleToggleLike}) {
   return (
     <svg
       className="h-6 w-6 text-red-500 cursor-pointer"
-      fill={isLiked ? 'currentColor' : 'none'}
+      style={{ fill: isLiked ? 'red' : 'none' }}
       onClick={handleToggleLike}
       height="24"
       stroke="currentColor"
