@@ -47,9 +47,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
       try {
         const response = await getReplyByCommentId(commentData.comment.id);
         if (response.success) {
-          setReplies(
-            Array.isArray(response.data.replies) ? response.data.replies : [],
-          );
+          setReplies(response.data.replies || []);
         } else {
           console.error('Failed to fetch replies:', response.error);
         }
@@ -89,7 +87,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
         const replyId = locationHeader.split('/').pop(); // URL에서 ID 추출
         console.log('replyId:', replyId);
         const newReplyData = {
-          id: replyId,
+          replyId,
           author: {
             id: currentUser.id,
             nickname: currentUser.nickname,
@@ -187,7 +185,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
         // 수정 성공: replies 상태 업데이트
         setReplies(
           replies.map((reply) =>
-            reply.id === replyId ? { ...reply, content: newContent } : reply,
+            reply.replyId === replyId ? { ...reply, content: newContent } : reply,
           ),
         );
         console.log('Reply updated successfully');
@@ -222,7 +220,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
         );
         if (response.success) {
           // 삭제 성공: replies 상태 업데이트
-          setReplies(replies.filter((reply) => reply.id !== replyId));
+          setReplies(replies.filter((reply) => reply.replyId !== replyId));
           console.log('Reply deleted successfully');
           fetchReplies();
         } else {
@@ -392,7 +390,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
           {replies?.map((reply) =>
             editingReplyId === reply.replyId ? ( // 수정 중인 대댓글 UI
               <div
-                key={reply.id}
+                key={reply.replyId}
                 className="bg-neutral-100 text-black p-3 rounded-lg shadow-md"
               >
                 <textarea
