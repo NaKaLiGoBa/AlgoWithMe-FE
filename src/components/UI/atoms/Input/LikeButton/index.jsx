@@ -1,12 +1,14 @@
 import { React } from 'react';
 
-function index({isLiked, handleToggleLike}) {
+function index({ isLiked, handleToggleLike }) {
 
   return (
     <svg
-      className="h-6 w-6 text-red-500 cursor-pointer"
-      style={{ fill: isLiked ? 'red' : 'none' }}
+      className={`h-6 w-6 cursor-pointer ${
+        isLiked ? 'text-red-500' : 'text-slate-300'
+      }`}
       onClick={handleToggleLike}
+      fill={isLiked ? 'currentColor' : 'none'}
       height="24"
       stroke="currentColor"
       strokeLinecap="round"

@@ -22,11 +22,14 @@ export default function index() {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
+  console.log('isLiked:', isLiked);
 
   useEffect(() => {
     getSolutionByProblemIdAndSolutionId(problemId, solutionId).then(
       (response) => {
         setSolutionData(response.data);
+        setIsLiked(response.data.solution.like); // 서버로부터 로드된 좋아요 상태로 초기화
+        setLikes(response.data.solution.likeCount); // 좋아요 개수 초기화
         setIsLoaded(true);
       },
     );
@@ -49,26 +52,26 @@ export default function index() {
     currentUser?.nickname === solutionData?.author.nickname;
 
   const handleToggleLike = async () => {
-    const updatedIsLiked = !isLiked;
+    const updatedIsLiked = !isLiked; // 현재 상태를 반전
     setIsLiked(updatedIsLiked);
     const newLikesCount = updatedIsLiked ? likes + 1 : likes - 1;
     setLikes(newLikesCount);
-    console.log('isLiked:', isLiked);
+    
     try {
       const response = await putSolutionLikeByProblemIdAndSolutionId(
         problemId,
         solutionId,
       );
       if (!response.success) {
-        console.error(response.error);
-        // 서버에서 에러가 발생한 경우, 좋아요 상태를 원래대로 되돌림
-        setIsLiked(isLiked);
+        // 요청 실패 시 상태를 원래대로 되돌림
+        setIsLiked(!updatedIsLiked);
         setLikes(likes);
+        console.error(response.error);
       }
     } catch (error) {
       console.error('Failed to update like:', error);
-      // 에러 발생 시 원래 상태로 되돌림
-      setIsLiked(isLiked);
+      // 에러 발생 시 상태를 원래대로 되돌림
+      setIsLiked(!updatedIsLiked);
       setLikes(likes);
     }
   };
@@ -121,7 +124,10 @@ export default function index() {
                 </p>
               </div>
               <div className="flex items-center mt-6">
-                <LikeButton handleToggleLike={handleToggleLike} isLiked={solutionData.solution.isLiked} />
+                <LikeButton
+                  handleToggleLike={handleToggleLike}
+                  isLiked={isLiked}
+                />
                 <span className="ml-1 text-red-500 ">{likes}</span>
                 <p className="text-sm text-gray-500">
                   <span className="mr-2 ml-5">언어:</span>

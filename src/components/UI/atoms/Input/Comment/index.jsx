@@ -10,7 +10,7 @@ function Comment({
   avatar,
   likes,
   handleLike,
-  isliked,
+  isLiked,
   handleEdit,
   handleDelete,
   currentUserNickname,
@@ -28,7 +28,7 @@ function Comment({
       <div className="flex mt-5">
         {handleLike && (
           <div className="flex items-center mr-5">
-            <LikeButton onClick={handleLike} isLiked={isliked}/>
+            <LikeButton handleToggleLike={handleLike} isLiked={isLiked}/>
             <span className="ml-1 text-red-500 ">{likes}</span>
           </div>
         )}

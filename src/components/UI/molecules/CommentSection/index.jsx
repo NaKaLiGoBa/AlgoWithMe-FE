@@ -42,25 +42,25 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
   };
   const canEditComment = currentUser.nickname === commentData.author.nickname;
 
+  const fetchReplies = async () => {
+    if (areRepliesVisible && commentData.comment.id) {
+      try {
+        const response = await getReplyByCommentId(commentData.comment.id);
+        if (response.success) {
+          setReplies(
+            Array.isArray(response.data.replies) ? response.data.replies : [],
+          );
+        } else {
+          console.error('Failed to fetch replies:', response.error);
+        }
+      } catch (error) {
+        console.error('Failed to fetch replies:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     console.log('Received comment data:', commentData);
-
-    const fetchReplies = async () => {
-      if (areRepliesVisible && commentData.comment.id) {
-        try {
-          const response = await getReplyByCommentId(commentData.comment.id);
-          if (response.success) {
-            setReplies(
-              Array.isArray(response.data.replies) ? response.data.replies : [],
-            );
-          } else {
-            console.error('Failed to fetch replies:', response.error);
-          }
-        } catch (error) {
-          console.error('Failed to fetch replies:', error);
-        }
-      }
-    };
     fetchReplies();
     setIsLiked(commentData.comment.isLike);
     setLikes(commentData.comment.likeCount);
@@ -123,9 +123,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
         commentData.comment.id,
       );
       if (!response.success) {
-        console.error(response.error);
-        // 서버에서 에러가 발생한 경우, 좋아요 상태를 원래대로 되돌림
-        setIsLiked(isLiked);
+        setIsLiked(!updatedIsLiked); // 상태를 이전으로 되돌립니다.
         setLikes(likes);
         localStorage.setItem(
           `likedComment-${commentData.comment.id}`,
@@ -134,38 +132,45 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
         onLikeUpdate();
       }
     } catch (error) {
-      console.error('Failed to update like:', error);
-      // 에러 발생 시 원래 상태로 되돌림
-      setIsLiked(isLiked);
+      setIsLiked(!updatedIsLiked); // 에러 발생 시 상태를 이전으로 되돌립니다.
       setLikes(likes);
     }
   };
 
   // 대댓글 좋아요
   const handleLikeReply = async (replyId) => {
-    const response = await putReplyLikeByCommentIdAndReplyId(
-      commentData.comment.id,
-      replyId,
-    );
-    if (response.success) {
-      setReplies(
-        replies.map((reply) => {
-          if (reply.id === replyId) {
-            return {
-              ...reply,
-              isLiked: response.data.isLike,
-              likeCount: response.data.isLike
-                ? reply.likeCount + 1
-                : reply.likeCount - 1,
-            };
-          }
-          return reply;
-        }),
+    const replyIndex = replies.findIndex((reply) => reply.replyId === replyId);
+    if (replyIndex === -1) {
+      console.error('Reply not found');
+      return;
+    }
+    const updatedIsLiked = !replies[replyIndex].like;
+    const newLikesCount = updatedIsLiked
+      ? replies[replyIndex].likeCount + 1
+      : replies[replyIndex].likeCount - 1;
+    // 로컬 상태 업데이트
+    const updatedReplies = [...replies];
+    updatedReplies[replyIndex] = {
+      ...replies[replyIndex],
+      like: updatedIsLiked,
+      likeCount: newLikesCount,
+    };
+    setReplies(updatedReplies);
+    // 서버 요청
+    try {
+      const response = await putReplyLikeByCommentIdAndReplyId(
+        commentData.comment.id,
+        replyId,
       );
-    } else {
-      console.error(response.error);
+      if (!response.success) {
+        console.error('Server request failed:', response.error);
+      }
+    } catch (error) {
+      console.error('Error while updating like:', error);
     }
   };
+
+
 
   const handleEditReply = async (replyId, newContent) => {
     if (!newContent.trim()) {
@@ -189,6 +194,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
         );
         console.log('Reply updated successfully');
         setEditingReplyId(null);
+        fetchReplies();
       } else {
         console.error('Failed to edit reply:', response.error);
       }
@@ -220,6 +226,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
           // 삭제 성공: replies 상태 업데이트
           setReplies(replies.filter((reply) => reply.id !== replyId));
           console.log('Reply deleted successfully');
+          fetchReplies();
         } else {
           console.error('Failed to delete reply:', response.error);
         }
@@ -328,10 +335,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
           </div>
           <p className="text-black mt-5">{commentData.comment.content}</p>
           <div className="flex items-center mt-5">
-            <LikeButton
-              isLiked={commentData.comment.isLike}
-              handleToggleLike={handleToggleLike}
-            />
+            <LikeButton isLiked={isLiked} handleToggleLike={handleToggleLike} />
             <span className="ml-1 text-red-500 mr-5">{likes}</span>
             <RepliesToggleButton
               isVisible={areRepliesVisible}
@@ -376,7 +380,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
       {areRepliesVisible && (
         <div className="mt-1 space-y-4 p-5">
           {replies?.map((reply) =>
-            editingReplyId === reply.id ? ( // 수정 중인 대댓글 UI
+            editingReplyId === reply.replyId ? ( // 수정 중인 대댓글 UI
               <div
                 key={reply.id}
                 className="bg-neutral-100 text-black p-3 rounded-lg shadow-md"
@@ -396,7 +400,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
                   <button
                     className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white rounded-md shadow-md shadow-green-400"
                     onClick={() =>
-                      handleEditReply(reply.id, editedReplyContent)
+                      handleEditReply(reply.replyId, editedReplyContent)
                     }
                   >
                     Save
@@ -405,21 +409,21 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
               </div>
             ) : (
               <Comment
-                key={reply.id}
+                key={reply.replyId}
                 nickname={reply.author.nickname}
                 content={reply.content}
                 avatar={reply.author.avatar}
                 likes={reply.likeCount}
-                handleLike={() => handleLikeReply(reply.id)}
-                isLiked={reply.isLiked}
+                handleLike={() => handleLikeReply(reply.replyId)}
+                isLiked={reply.like}
                 handleEdit={
                   currentUser.nickname === reply.author.nickname
-                    ? () => startEditReply(reply.id, reply.content)
+                    ? () => startEditReply(reply.replyId, reply.content)
                     : null
                 }
                 handleDelete={
                   currentUser.nickname === reply.author.nickname
-                    ? () => handleDeleteReply(reply.id)
+                    ? () => handleDeleteReply(reply.replyId)
                     : null
                 }
                 currentUserNickname={currentUser.nickname}

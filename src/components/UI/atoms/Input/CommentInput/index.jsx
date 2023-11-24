@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Avatar from '../../Avatar';
 
-function CommentInput({ placeholder, onCancel, onComment, username, avatar }) {
+function CommentInput({ placeholder, onCancel, onComment, avatar }) {
   const [inputText, setInputText] = useState('');
 
   const handleInputChange = (e) => {
