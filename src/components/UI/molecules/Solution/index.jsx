@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../atoms/Tab/styles.css';
-
-// api
+import { useSelector } from 'react-redux';
 import MDEditor from '@uiw/react-md-editor';
+import { selectUser } from '../../../../store/userSlice';
+// api
 import getSolutionByProblemIdAndSolutionId from '../../../../utils/api/v1/solution/getSolutionByProblemIdAndSolutionId';
 import deleteSolution from '../../../../utils/api/v1/solution/deleteSolutionByProblemIdAndSolutionId';
-
+import putSolutionLikeByProblemIdAndSolutionId from '../../../../utils/api/v1/solution/putSolutionLikeByProblemIdAndSolutionId';
 // component
 import Button from '../../atoms/Input/Button';
 import LikeButton from '../../atoms/Input/LikeButton';
@@ -15,6 +16,7 @@ import Avatar from '../../atoms/Avatar';
 
 export default function index() {
   const [solutionData, setSolutionData] = useState(null);
+  const currentUser = useSelector(selectUser); // 현재 로그인한 사용자 정보
   const { problemId, solutionId } = useParams();
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -42,7 +44,35 @@ export default function index() {
     );
   }
 
-  const handleLike = async () => {};
+  // 수정 및 삭제 버튼 표시 여부 결정 함수
+  const canEditOrDelete = () =>
+    currentUser?.nickname === solutionData?.author.nickname;
+
+  const handleToggleLike = async () => {
+    const updatedIsLiked = !isLiked;
+    setIsLiked(updatedIsLiked);
+    const newLikesCount = updatedIsLiked ? likes + 1 : likes - 1;
+    setLikes(newLikesCount);
+    console.log('isLiked:', isLiked);
+    try {
+      const response = await putSolutionLikeByProblemIdAndSolutionId(
+        problemId,
+        solutionId,
+      );
+      if (!response.success) {
+        console.error(response.error);
+        // 서버에서 에러가 발생한 경우, 좋아요 상태를 원래대로 되돌림
+        setIsLiked(isLiked);
+        setLikes(likes);
+      }
+    } catch (error) {
+      console.error('Failed to update like:', error);
+      // 에러 발생 시 원래 상태로 되돌림
+      setIsLiked(isLiked);
+      setLikes(likes);
+    }
+  };
+
   if (!isLoaded) {
     return <div>Loading...</div>; // 로딩 중일 때 "Loading..." 메시지 표시
   }
@@ -51,18 +81,22 @@ export default function index() {
       <div className="bg-white shadow rounded-b-lg p-6 ">
         <div className="bg-zinc-100 rounded-lg p-5 shadow-md shadow-zinc-400">
           <div className="flex justify-end">
-            <Button
-              className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400"
-              onClick={handleNavigate}
-            >
-              수정
-            </Button>
-            <Button
-              className="bg-red-600 hover:bg-red-400 rounded-lg p-2 shadow-md shadow-red-400"
-              onClick={handleDelete}
-            >
-              삭제
-            </Button>
+            {currentUser && solutionData && canEditOrDelete() && (
+              <>
+                <Button
+                  className="rounded-lg p-2 mr-2.5 shadow-md shadow-blue-400"
+                  onClick={handleNavigate}
+                >
+                  수정
+                </Button>
+                <Button
+                  className="bg-red-600 hover:bg-red-400 rounded-lg p-2 shadow-md shadow-red-400"
+                  onClick={handleDelete}
+                >
+                  삭제
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="flex items-start space-x-4">
@@ -87,7 +121,7 @@ export default function index() {
                 </p>
               </div>
               <div className="flex items-center mt-6">
-                <LikeButton onClick={handleLike} isLiked={isLiked} />
+                <LikeButton handleToggleLike={handleToggleLike} isLiked={solutionData.solution.isLiked} />
                 <span className="ml-1 text-red-500 ">{likes}</span>
                 <p className="text-sm text-gray-500">
                   <span className="mr-2 ml-5">언어:</span>

@@ -411,6 +411,7 @@ function CommentSection({ commentData, onDelete, onLikeUpdate }) {
                 avatar={reply.author.avatar}
                 likes={reply.likeCount}
                 handleLike={() => handleLikeReply(reply.id)}
+                isLiked={reply.isLiked}
                 handleEdit={
                   currentUser.nickname === reply.author.nickname
                     ? () => startEditReply(reply.id, reply.content)
