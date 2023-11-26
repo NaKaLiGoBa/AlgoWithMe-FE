@@ -165,9 +165,9 @@ function CommentsSection(handleReplySubmit) {
             id="sort-comments"
             className="bg-neutral-200 text-black rounded-lg p-2 shadow-md shadow-zinc-400"
           >
+            <option>Newest to Oldest</option>
             <option>Best</option>
             <option>Most Votes</option>
-            <option>Newest to Oldest</option>
             <option>Oldest to Newest</option>
           </select>
         </div>
