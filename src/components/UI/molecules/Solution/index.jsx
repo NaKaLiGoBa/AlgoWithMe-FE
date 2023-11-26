@@ -13,6 +13,7 @@ import Button from '../../atoms/Input/Button';
 import LikeButton from '../../atoms/Input/LikeButton';
 import CommentsSection from '../CommentsSection';
 import Avatar from '../../atoms/Avatar';
+import getSolutions from '../../../../utils/api/v1/solution/getSolutions';
 
 export default function index() {
   const [solutionData, setSolutionData] = useState(null);
@@ -22,7 +23,7 @@ export default function index() {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
-  const { setTabs } = useOutletContext();
+  const { setTabs, setSolutions } = useOutletContext();
 
   useEffect(() => {
     getSolutionByProblemIdAndSolutionId(problemId, solutionId).then(
@@ -40,12 +41,20 @@ export default function index() {
       state: { oldSolution: solutionData.solution },
     });
   };
-  function handleDelete() {
-    deleteSolution(problemId, solutionId).then(() => {
-      setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== solutionId));
-      navigate(`/problems/${problemId}/solutions`);
-    });
-  }
+  const handleDelete = async () => {
+    await deleteSolution(problemId, solutionId);
+    const response = await getSolutions(problemId, { cursor: null, size: 7 });
+    if (response.success) {
+      setSolutions((prev) => ({
+        ...prev,
+        solutions: response.data.solutions,
+        totalCount: response.totalCount,
+        _link: response.data._link,
+      }));
+    }
+    setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== solutionId));
+    navigate(`/problems/${problemId}/solutions`);
+  };
 
   // 수정 및 삭제 버튼 표시 여부 결정 함수
   const canEditOrDelete = () =>
