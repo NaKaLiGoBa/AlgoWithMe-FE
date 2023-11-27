@@ -100,7 +100,7 @@ const index = ({ handleChatToggle, showChat }) => {
     },
     {
       id: 'solutions',
-      name: `솔루션(${totalSolutionCount})`,
+      name: `솔루션`,
       path: `/problems/${problemId}/solutions`,
     },
     {
