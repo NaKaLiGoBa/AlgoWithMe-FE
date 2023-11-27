@@ -41,7 +41,7 @@ const index = ({ className }) => {
         <p>{`정답률: ${formatPercentage(acceptance)}%`}</p>
       </div>
       <div className="flex flex-col m-4">
-        <div className="flex flex-row gap-1">
+        {/* <div className="flex flex-row gap-1">
           {tags.map((tag) => (
             <div>
               <p className="py-1 px-2 text-xs bg-slate-600 text-white rounded-xl">
@@ -49,7 +49,7 @@ const index = ({ className }) => {
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
       <div className="markdown-viewer bg-white p-6" data-color-mode="light">
         <MDEditor.Markdown source={description} />

@@ -105,7 +105,8 @@ const index = ({ handleChatToggle, showChat }) => {
     },
     {
       id: 'submits',
-      name: `제출기록(${totalSubmitCount})`,
+      // name: `제출기록(${totalSubmitCount})`,
+      name: '제출기록',
       path: `/problems/${problemId}/submits`,
     },
   ];
