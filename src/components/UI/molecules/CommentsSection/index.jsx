@@ -21,6 +21,7 @@ function CommentsSection(handleReplySubmit) {
   const currentUser = useSelector(selectUser);
 
   const [paginationInfo, setPaginationInfo] = useState({
+    totalCount: 0,
     pageNumber: 0,
     totalPages: 0,
     size: 0,
@@ -56,6 +57,7 @@ function CommentsSection(handleReplySubmit) {
       });
       setComments(updatedComments);
       setPaginationInfo({
+        totalCount: response.data.totalCount,
         pageNumber: response.data.pageNumber,
         totalPages: response.data.totalPages,
         size: response.data.size,
@@ -173,7 +175,10 @@ function CommentsSection(handleReplySubmit) {
         </div>
       </div>
 
-      <div className="bg-neutral-200 p-4 rounded-lg mb-9 shadow-md shadow-zinc-400" data-color-mode="light">
+      <div
+        className="bg-neutral-200 p-4 rounded-lg mb-9 shadow-md shadow-zinc-400"
+        data-color-mode="light"
+      >
         <MDEditor
           value={newComment}
           onChange={(val) => setNewComment(val)}
@@ -207,11 +212,14 @@ function CommentsSection(handleReplySubmit) {
       </div>
 
       {/* 페이지네이션 컴포넌트 */}
-      <ProblemListFooter
-        totalPages={paginationInfo.totalPages}
-        currentPage={page}
-        setPage={setPage}
-      />
+      {paginationInfo.totalCount > 0 && (
+        <ProblemListFooter
+          totalPages={paginationInfo.totalPages}
+          pageNumber={paginationInfo.pageNumber}
+          currentPage={page}
+          setPage={setPage}
+        />
+      )}
     </div>
   );
 }
