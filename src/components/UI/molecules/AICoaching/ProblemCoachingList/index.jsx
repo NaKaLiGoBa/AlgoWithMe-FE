@@ -4,6 +4,7 @@ import ProblemListFooter from '../../Problem/ProblemListFooter';
 import getProblems from '../../../../../utils/api/v1/problem/getProblems';
 import {
   nextScreen,
+  setSelectedHintOption,
   setSelectedProblemId,
 } from '../../../../../store/AIChatSlice';
 import { setProblems } from '../../../../../store/problemsSlice';
@@ -30,6 +31,7 @@ export default function index() {
   const problemChatClick = (id) => {
     dispatch(setSelectedProblemId(id));
     dispatch(nextScreen());
+    dispatch(setSelectedHintOption(null));
   };
 
   return (
