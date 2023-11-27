@@ -29,18 +29,22 @@ export default function index() {
     dispatch(setSelectedHintOption(e.target.value));
   };
 
-  const handleCoachingClick = async () => {
-    const storedEditor = localStorage.getItem(`editorState_${problemId}`);
-    const response = await postCoachesByProblemId(
-      problemId,
-      selectedHintOption,
-      storedEditor,
-    );
-    if (response.success) {
-      dispatch(prevScreen());
-    } else {
-      console.log(response.error);
-    }
+  // const handleCoachingClick = async () => {
+  //   const storedEditor = localStorage.getItem(`editorState_${problemId}`);
+  //   const response = await postCoachesByProblemId(
+  //     problemId,
+  //     selectedHintOption,
+  //     storedEditor,
+  //   );
+  //   if (response.success) {
+  //     dispatch(prevScreen());
+  //   } else {
+  //     console.log(response.error);
+  //   }
+  // };
+
+  const handleCoachingClick = () => {
+    dispatch(prevScreen());
   };
 
   return (
